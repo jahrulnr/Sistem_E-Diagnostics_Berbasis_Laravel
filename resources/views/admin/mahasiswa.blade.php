@@ -1,0 +1,204 @@
+@extends('templates.startbootstrap')
+@extends('templates.sidebar')
+
+@section('content')
+
+<!-- Plugin -->
+<style>
+	/* DataTables */
+	@import url('/vendor/datatables/css/dataTables.bootstrap5.min.css');
+	@import url('/vendor/datatables/css/responsive.bootstrap5.min.css');
+	/* Toastr */
+	@import url('/vendor/toastr/toastr.min.css');
+</style>
+<!-- DataTables -->
+<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/js/dataTables.bootstrap5.min.js"></script>
+<script src="/vendor/datatables/js/dataTables.bootstrap5.min.js"></script>
+<script src="/vendor/datatables/js/dataTables.responsive.min.js"></script>
+<script src="/vendor/datatables/js/responsive.bootstrap5.min.js"></script>
+<!-- Toastr -->
+<script src="/vendor/toastr/toastr.min.js"></script>
+
+<div class="container-fluid px-4">
+    <h1 class="my-4">Kelola Akun Mahasiswa</h1>
+	<div class="row">
+	    <div class="col-12">
+	        <table class="table table-bordered" id="table_data">
+	        	<thead>
+	        		<th>No.</th>
+	        		<th>NPM</th>
+	        		<th>Nama</th>
+	        		<th>Kelas</th>
+	        		<th>Email</th>
+	        		<th>Aksi</th>
+	        	</thead>
+	        	<tbody>
+	        		@foreach($data as $d)
+	        		<tr>
+	        			<td align="center">{{ $i++ }}.</td>
+	        			<td>{{ $d->npm }}</td>
+	        			<td>{{ $d->nama_mhs }}</td>
+	        			<td class="ucfirst" align="center">{{ $d->kelas }}</td>
+	        			<td>
+	        				<span onclick="window.open('mailto:{{ $d->email }}', 'mail')">{{ $d->email }}</span>
+	        			</td>
+	        			<td align="center">
+	        				<data id="data-{{ $d->npm}}" class="d-none">{{ json_encode($d) }}</data>
+									<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambah" onclick="edit('#data-{{ $d->npm}}')">
+										<span class="fas fa-pencil-alt"></span>
+									</button>
+									<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus" onclick="hapus('{{ $d->npm}}')">
+										<span class="fas fa-trash"></span>
+									</button>
+	        			</td>
+	        		</tr>
+	        		@endforeach
+	        	</tbody>
+	        </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="tambah" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <form method="POST" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tambah_header">Tambah Materi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        @csrf
+        <div class="form-input mb-3">
+        	<label>NPM</label>
+        	<input type="text" name="npm" class="form-control" placeholder="173500000" required>
+        </div>
+        <div class="form-input mb-3">
+        	<label>Nama</label>
+        	<input type="text" name="nama_mhs" class="form-control" placeholder="Nama" required>
+        </div>
+        <div class="form-input mb-3">
+        	<label>Email</label>
+        	<input type="text" name="email" class="form-control" placeholder="user@contoh.com" required>
+        </div>
+        <div class="form-input mb-3">
+        	<label>Kelas</label>
+        	<input type="text" name="kelas" class="form-control" placeholder="A" required>
+        </div>
+        <div class="form-input mb-3">
+        	<label for="password">Password</label>
+        	<input type="password" name="password" class="form-control" placeholder="Password" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="hapus" tabindex="-1" role="dialog" aria-labelledby="label_hapus" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="label_hapus">
+           Hapus Mahasiswa
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      	Yakin menghapus mahasiswa ini?<br/>
+      	<small class="text-danger">
+      		* Menghapus mahasiswa akan menghapus semua data yang terkait. (Ex. Jawaban dan Nilai)
+      	</small>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">   
+        	Tidak
+        </button>
+        <a href="#" class="btn btn-danger" id="hapus_data">
+        	Ya
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+	var $form = $('form')[0];
+
+	function tambah(){
+		$('form').attr('action', '/admin/mahasiswa/tambah');
+		$('#tambah_header').html("Tambah Akun Mahasiswa");
+		$form.reset();
+		$('input[name="npm"]').removeAttr('readonly');
+		$('label[for="password]"').html('Password');
+		$('input[name="password"]').attr('required', 'required');
+	}
+
+	function edit(id){
+		$('form').attr('action', '/admin/mahasiswa/ubah');
+		$('#tambah_header').html("Ubah Akun Mahasiswa");
+		$form.reset();
+		var data = JSON.parse($(id).html());
+		$('label[for="password"]').html('Password <sup class="text-danger">*Optional</sup>');
+		$('input[name="npm"]').attr('readonly', 'readonly');
+		$('input[name="npm"]').val(data['npm']);
+		$('input[name="nama_mhs"]').val(data['nama_mhs']);
+		$('input[name="email"]').val(data['email']);
+		$('input[name="password"]').removeAttr('required');
+		$('input[name="kelas"]').val(data['kelas']);
+	}
+
+	function hapus(id){
+		$('#hapus_data').attr('href', '/admin/mahasiswa/hapus/' + id);
+	}
+
+	$(document).ready(function(){
+  	var hash = window.location.hash;
+  	if(hash == '#berhasil_disimpan'){
+  		toastr.success('Data berhasil disimpan');
+  	}
+  	else if(hash == '#gagal_disimpan'){
+  		toastr.error('Data gagal disimpan');
+  	}
+  	else if(hash == '#berhasil_diubah'){
+  		toastr.success('Data berhasil diubah');
+  	}
+  	else if(hash == '#gagal_diubah'){
+  		toastr.error('Data gagal diubah');
+  	}
+  	else if(hash == '#berhasil_dihapus'){
+  		toastr.success('Data berhasil dihapus');
+  	}
+  	else if(hash == '#gagal_dihapus'){
+  		toastr.error('Data gagal dihapus');
+  	}
+
+  	$('[name="kelas"]').on("input", function(){
+  		var val = this.value;
+  		if(val.length > 1){
+  			val = val.substr(0, 1);
+  		}
+  		$(this).val(val.toUpperCase());
+  	});
+
+		$('#table_data').DataTable({
+		  "responsive": true,
+		  "autoWidth": false,
+		  "language": {
+			  url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/id.json'
+		  },
+		  "fnDrawCallback": function (oSettings){
+			$('.dataTables_filter').each(function () {
+				if($('#btn_add').length < 1)
+				$(this).append('<button class="btn btn-primary btn-sm" id="btn_add" data-bs-toggle="modal" data-bs-target="#tambah" onclick="tambah()">Tambah</button>');
+			});
+		  }
+		});
+	});
+</script>
+
+@endsection
