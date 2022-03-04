@@ -16,10 +16,15 @@ Route::post('/mahasiswa/login', 'App\Http\Controllers\MainController@verify');
 // Logout 
 Route::get('/keluar', 'App\Http\Controllers\MainController@logout');
 
+// Global API
+Route::get('/api/kelas/{id_dosen}', 'App\Http\Controllers\MainController@getKelas')->name('getKelas');
+
 // Admin
 Route::get('/admin', 'App\Http\Controllers\AdminController@dashboard'); 
 
 Route::get('/admin/dosen', 'App\Http\Controllers\AdminController@dosen'); 
+Route::post('/admin/dosen/kelas/tambah', 'App\Http\Controllers\AdminController@tambah_kelas'); 
+Route::get('/admin/dosen/kelas/hapus/{id}', 'App\Http\Controllers\AdminController@tambah_kelas'); 
 Route::post('/admin/dosen/tambah', 'App\Http\Controllers\AdminController@tambah_dosen'); 
 Route::post('/admin/dosen/ubah', 'App\Http\Controllers\AdminController@ubah_dosen'); 
 Route::get('/admin/dosen/hapus/{id}', 'App\Http\Controllers\AdminController@hapus_dosen'); 

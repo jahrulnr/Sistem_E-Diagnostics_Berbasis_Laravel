@@ -50,12 +50,48 @@ class AdminController extends Controller {
 	    ]);
 	}
 
+	function tambah_kelas(Request $request){
+		if(DB::table('kelas')->where('kelas', $request->kelas)->doesntExist()){
+			$db = DB::table('kelas')
+				->insert([
+					'kelas' => $request->kelas
+				]);
+		}
+
+		return redirect('/admin/dosen#berhasil_disimpan');
+	}
+
+	function hapus_kelas($id_kelas){
+		$db = DB::table('kelas')
+			->insert([
+				'kelas' => $request->kelas
+			]);
+
+		return redirect('/admin/dosen#berhasil_dihapus');
+	}
+
 	function dosen(){
-		$db = DB::table('admin')->select(['id_admin','email','nama_dsn','hak_akses'])->get();
+		$admin = DB::table('admin')
+			->select([
+				'admin.id_admin','email','nama_dsn','hak_akses', 'noHP'
+			])
+			->orderBy('hak_akses', 'asc')
+			->orderBy('nama_dsn', 'asc')
+			->get();
+
+		$temp = [];
+		foreach($admin as $adm){
+			$kelas = DB::table('kelas')
+				->select(DB::raw("group_concat(kelas SEPARATOR ',') as kelas"))
+				->where('id_admin', $adm->id_admin)
+				->orderBy('kelas')
+				->first();
+			$adm->kelas = $kelas->kelas;
+			$temp[] = $adm;
+		}
 
 		return view('admin.dosen', [ 
-			'data'	=> $db,
-			'i'		=> 1 
+			'data'	=> $temp
 		]);
 	}
 
@@ -69,22 +105,24 @@ class AdminController extends Controller {
 				'hak_akses'	=> $request->hak_akses
 			]);
 
-			$datakelas = [];
-			preg_match_all("/[a-zA-Z]+/", strtoupper($request->kelas), $kelas);
+			$data_kelas = [];
+			preg_match_all("/[a-zA-Z]/", strtoupper($request->kelas), $kelas);
 			foreach($kelas[0] as $kls){
-				$datakelas[] = [
-					'id_admin' => $id, 
+				$data_kelas[] = [
+					'id_admin' => $id,
 					'kelas'	   => $kls
 				];
 			}
-
-			$db = DB::table('kelas')->insert($datakelas);
+			
+			if(!empty($data_kelas))
+				DB::table('kelas')
+					->insert($data_kelas);
 
 			return redirect('/admin/dosen#berhasil_disimpan');
 		}
 
 		else
-			return redirect('/admin/dosen#gagal_disimpan');
+			return redirect('/admin/dosen#email_telah_digunakan');
 	}
 
 	function ubah_dosen(Request $request){

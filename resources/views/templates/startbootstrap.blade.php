@@ -65,7 +65,7 @@
 
                             <div class="sb-sidenav-menu-heading">Help</div>
                             <a class="nav-link" href="/help">
-                                <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-info-circle"></i></div>
                                 Tentang
                             </a>
 

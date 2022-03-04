@@ -21,43 +21,45 @@
 <script src="/vendor/toastr/toastr.min.js"></script>
 
 <div class="container-fluid px-4">
-    <h1 class="my-4">Kelola Akun Dosen</h1>
+  <h1 class="my-4">Kelola Akun Dosen</h1>
 	<div class="row">
-	    <div class="col-12">
-	        <table class="table table-bordered" id="table_data">
-	        	<thead>
-	        		<th>No.</th>
-	        		<th>Nama</th>
-	        		<th>Email</th>
-	        		<th>Hak Akses</th>
-	        		<th>Aksi</th>
-	        	</thead>
-	        	<tbody>
-	        		@foreach($data as $d)
-	        		<tr>
-		        		<td align="center">{{ $i++ }}.</td>
-		        		<td>{{ $d->nama_dsn }}</td>
-		        		<td>{{ $d->email }}</td>
-		        		<td class="ucfirst">{{ $d->hak_akses }}</td>
-		        		<td align="center">
-									<data id="data-{{ $d->id_admin}}" class="d-none">{{ json_encode($d) }}</data>
-									<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambah" onclick="edit('#data-{{ $d->id_admin}}')">
-										<span class="fas fa-pencil-alt"></span>
-									</button>
-									<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus" onclick="hapus('{{ $d->id_admin}}')">
-										<span class="fas fa-trash"></span>
-									</button>
-		        		</td>
-		        	</tr>
-	        		@endforeach
-	        	</tbody>
-	        </table>
-        </div>
+    <div class="col-12">
+      <table class="table table-bordered" id="table_data">
+      	<thead>
+      		<th>No.</th>
+      		<th>Nama</th>
+      		<th>Email</th>
+      		<th>Kelas</th>
+      		<th>Hak Akses</th>
+      		<th>Aksi</th>
+      	</thead>
+      	<tbody><?php $i = 1; ?>
+      		@foreach($data as $d)
+      		<tr>
+        		<td align="center">{{ $i++ }}.</td>
+        		<td>{{ $d->nama_dsn }}</td>
+        		<td>{{ $d->email }}</td>
+        		<td>{{ $d->kelas }}</td>
+        		<td class="ucfirst">{{ $d->hak_akses }}</td>
+        		<td align="center">
+							<data id="data-{{ $d->id_admin}}" class="d-none">{{ json_encode($d) }}</data>
+							<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambah" onclick="edit('#data-{{ $d->id_admin}}')">
+								<span class="fas fa-pencil-alt"></span>
+							</button>
+							<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus" onclick="hapus('{{ $d->id_admin}}')">
+								<span class="fas fa-trash"></span>
+							</button>
+        		</td>
+        	</tr>
+      		@endforeach
+      	</tbody>
+      </table>
     </div>
+  </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="tambah" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="tambah" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <form method="POST" class="modal-content">
       <div class="modal-header">
@@ -69,27 +71,27 @@
         <input type="hidden" name="id_admin">
         <div class="form-input mb-3">
         	<label>Nama</label>
-        	<input type="text" name="nama_dsn" class="form-control" required>
+        	<input type="text" name="nama_dsn" class="form-control" placeholder="Jahrul Novario" required>
         </div>
         <div class="form-input mb-3">
         	<label>Email</label>
-        	<input type="email" name="email" class="form-control" required>
+        	<input type="email" name="email" class="form-control" placeholder="jahrulnr@example.com" required>
         </div>
         <div class="form-input mb-3">
         	<label for="password">Password</label>
-        	<input type="password" name="password" class="form-control" required>
+        	<input type="password" name="password" class="form-control" placeholder="*******" required>
         </div>
         <div class="form-input mb-3">
         	<label>No. HP</label>
-        	<input type="text" name="noHP" class="form-control" required>
+        	<input type="text" name="noHP" class="form-control" placeholder="0822xxxxxxxx" required>
         </div>
         <div class="form-input mb-3">
-        	<label>Kelas <sup>(Gunakan koma (,) sebagai pemisah kelas)</sup></label>
-        	<input type="text" name="kelas" class="form-control" required>
+        	<label>Kelas</label>
+        	<input name="kelas" class="form-control" placeholder="A, B, C, ..., n">
         </div>
         <div class="form-input mb-3">
         	<label>Hak Akses</label>
-        	<select type="hak_akses" name="hak_akses" class="form-select" required>
+        	<select name="hak_akses" class="form-select" required>
         		<option selected disabled>-- Pilih Hak Akses</option>
         		<option value="admin">Admin</option>
         		<option value="dosen">Dosen</option>
@@ -140,6 +142,7 @@
 		$form.reset();
 		$('label[for="password]"').html('Password');
 		$('input[name="id_admin"]').removeAttr('required');
+		$('input[name="kelas"]').removeAttr('disabled');
 		$('input[name="password"]').attr('required', 'required');
 	}
 
@@ -153,6 +156,9 @@
 		$('input[name="id_admin"]').val(data['id_admin']);
 		$('input[name="nama_dsn"]').val(data['nama_dsn']);
 		$('input[name="email"]').val(data['email']);
+		$('input[name="noHP"]').val(data['noHP']);
+		$('input[name="kelas"]').val(data['kelas']);
+		$('input[name="kelas"]').attr('disabled', 'disabled');
 		$('input[name="password"]').removeAttr('required');
 		$('select[name="hak_akses"]').val(data['hak_akses']);
 	}
@@ -165,6 +171,9 @@
   	var hash = window.location.hash;
   	if(hash == '#berhasil_disimpan'){
   		toastr.success('Data berhasil disimpan');
+  	}
+  	else if(hash == '#email_telah_digunakan'){
+  		toastr.error('Email telah digunakan, gunakan email lain');
   	}
   	else if(hash == '#gagal_disimpan'){
   		toastr.error('Data gagal disimpan');
@@ -181,6 +190,18 @@
   	else if(hash == '#gagal_dihapus'){
   		toastr.error('Data gagal dihapus');
   	}
+
+  	$('select[name="hak_akses"]').change(function(){
+			if($('form').attr('action').substr(-4) != "ubah")
+	  		if($(this).val() == 'admin'){
+	  			$('input[name="kelas"]').attr('disabled', 'disabled');
+	  			$('input[name="kelas"]').removeAttr('required');
+	  		}
+	  		else{
+	  			$('input[name="kelas"]').attr('required', 'required');
+	  			$('input[name="kelas"]').removeAttr('disabled');
+	  		}
+  	})
 
 		$('#table_data').DataTable({
 		  "responsive": true,
