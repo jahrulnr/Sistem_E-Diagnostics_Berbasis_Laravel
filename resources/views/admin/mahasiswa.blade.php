@@ -33,7 +33,7 @@
 	        		<th>Email</th>
 	        		<th>Aksi</th>
 	        	</thead>
-	        	<tbody>
+	        	<tbody><?php $i = 1; ?>
 	        		@foreach($data as $d)
 	        		<tr>
 	        			<td align="center">{{ $i++ }}.</td>
@@ -65,7 +65,7 @@
   <div class="modal-dialog modal-sm">
     <form method="POST" class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="tambah_header">Tambah Materi</h5>
+        <h5 class="modal-title" id="tambah_header">Tambah Mahasiswa</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -84,10 +84,15 @@
         </div>
         <div class="form-input mb-3">
         	<label>Kelas</label>
-        	<input type="text" name="kelas" class="form-control" placeholder="A" required>
+        	<select name="kelas" class="form-select" required>
+        		<option selected disabled>-- Pilih Kelas Mahasiswa</option>
+        		@foreach($kelas as $kls)
+        		<option value="{{ $kls->id_kelas }}">{{ $kls->kelas }} ({{ $kls->nama_dsn }})</option>
+        		@endforeach
+        	</select>
         </div>
         <div class="form-input mb-3">
-        	<label for="password">Password</label>
+        	<label for="password">Password </label>
         	<input type="password" name="password" class="form-control" placeholder="Password" required>
         </div>
       </div>
@@ -134,8 +139,9 @@
 		$('#tambah_header').html("Tambah Akun Mahasiswa");
 		$form.reset();
 		$('input[name="npm"]').removeAttr('readonly');
-		$('label[for="password]"').html('Password');
+		$('label[for="password"]').html('Password <sup>(Default: 123456)</sup>');
 		$('input[name="password"]').attr('required', 'required');
+		$('input[name="password"]').val('123456');
 	}
 
 	function edit(id){
@@ -149,7 +155,7 @@
 		$('input[name="nama_mhs"]').val(data['nama_mhs']);
 		$('input[name="email"]').val(data['email']);
 		$('input[name="password"]').removeAttr('required');
-		$('input[name="kelas"]').val(data['kelas']);
+		$('select[name="kelas"]').val(data['id_kelas']);
 	}
 
 	function hapus(id){

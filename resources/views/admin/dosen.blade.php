@@ -87,7 +87,7 @@
         </div>
         <div class="form-input mb-3">
         	<label>Kelas</label>
-        	<input name="kelas" class="form-control" placeholder="A, B, C, ..., n">
+        	<input name="kelas" class="form-control" placeholder="A, B, C, ..., n" required>
         </div>
         <div class="form-input mb-3">
         	<label>Hak Akses</label>
@@ -142,8 +142,8 @@
 		$form.reset();
 		$('label[for="password]"').html('Password');
 		$('input[name="id_admin"]').removeAttr('required');
-		$('input[name="kelas"]').removeAttr('disabled');
 		$('input[name="password"]').attr('required', 'required');
+		$('input[name="kelas"]').removeAttr('disabled');
 	}
 
 	function edit(id){
@@ -158,9 +158,11 @@
 		$('input[name="email"]').val(data['email']);
 		$('input[name="noHP"]').val(data['noHP']);
 		$('input[name="kelas"]').val(data['kelas']);
-		$('input[name="kelas"]').attr('disabled', 'disabled');
 		$('input[name="password"]').removeAttr('required');
 		$('select[name="hak_akses"]').val(data['hak_akses']);
+
+		if(data['hak_akses'] == 'admin')
+			$('input[name="kelas"]').attr('disabled', 'disabled');
 	}
 
 	function hapus(id){

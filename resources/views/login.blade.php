@@ -45,13 +45,32 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <form method="POST" action="/login">
+                                        <!-- Admin/Dosen Login -->
+                                        <form method="POST" action="/login" id="inputEmail">
                                             @csrf
-                                            <div class="form-floating mb-3" id="inputEmail">
+                                            <div class="form-floating mb-3">
                                                 <input class="form-control" id="email" type="email" placeholder="nama@contoh.com" name="email" required />
                                                 <label for="email">Email</label>
                                             </div>
-                                            <div class="form-floating mb-3" id="inputNPM" style="display: none;">
+                                            <div class="input-group mb-3">
+                                                <div class="form-floating flex-grow-1">
+                                                    <input class="form-control" id="password" type="password" placeholder="Password" name="password" required />
+                                                    <label for="password">Password</label>
+                                                </div>
+                                                <a href="#" class="input-group-text" id="cp_type">
+                                                    <span class="fas fa-eye-slash"></span>
+                                                </a>
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                                <a class="small" href="password.html">Lupa Password?</a>
+                                                <button type="submit" class="btn btn-primary">Login</button>
+                                            </div>
+                                        </form>
+
+                                        <!-- Mahasiswa Login -->
+                                        <form method="POST" action="/mahasiswa/login" id="inputNPM" style="display: none;">
+                                            @csrf
+                                            <div class="form-floating mb-3">
                                                 <input class="form-control" id="npm" type="text" placeholder="173500000" name="npm" />
                                                 <label for="npm">NPM</label>
                                             </div>
@@ -109,16 +128,10 @@
                     $('#inputNPM').toggle();
 
                     if($('#inputEmail').css('display') == 'none'){
-                        $('form').attr('action', '/mahasiswa/login');
-                        $('#inputEmail input').removeAttr('required');
-                        $('#inputNPM input').attr('required', 'required');
                         $this.find('span').html($this.find('span').html().replace('Admin?', 'Mahasiwa?'));
                         $this.find('a').html($this.find('a').html().replace('Mahasiswa', 'Admin'));
                     }
                     else {
-                        $('form').attr('action', '/login');
-                        $('#inputEmail input').attr('required', 'required');
-                        $('#inputNPM input').removeAttr('required');
                         $this.find('span').html($this.find('span').html().replace('Mahasiwa?', 'Admin?'));
                         $this.find('a').html($this.find('a').html().replace('Admin', 'Mahasiswa'));
                     }

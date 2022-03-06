@@ -16,6 +16,20 @@ $(document).ready(function(){
 
 		theme();
 	});
+
+  	var hash = window.location.hash;
+  	if(hash == '#berhasil_disimpan'){
+  		toastr.success('Data berhasil disimpan');
+  	}
+  	else if(hash == '#gagal_disimpan'){
+  		toastr.error('Data gagal disimpan');
+  	}
+  	else if(hash == '#berhasil_dihapus'){
+  		toastr.success('Data berhasil dihapus');
+  	}
+  	else if(hash == '#gagal_dihapus'){
+  		toastr.error('Data gagal dihapus');
+  	}
 });
 
 var changeTheme = "dark-bg";

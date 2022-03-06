@@ -72,21 +72,13 @@ class DosenController extends Controller {
 	}
 
 	function hapus_materi($id){
-		$db = false;
-
-		try {
 		$db = DB::table('soal')
 			->where('id_soal', $id)
 			->where('id_admin', session('id'))
 			->delete();
 
-			if(!$db)
-				return redirect('/dosen/materi#gagal_dihapus');
-		}
-		catch(\Illuminate\Database\QueryException $ex){ 
-		  return $ex->getMessage(); 
-		}
-
+		if(!$db)
+			return redirect('/dosen/materi#gagal_dihapus');
 		return redirect('/dosen/materi#berhasil_dihapus');
 	}
 
@@ -104,10 +96,8 @@ class DosenController extends Controller {
 			->where('id_materi', $id_materi)
 			->first()->judul_materi;
 
-		$kelas = DB::table('mahasiswa')
-			->select('kelas')
-			->orderBy('kelas', 'asc')
-			->groupBy('kelas')
+		$kelas = DB::table('kelas')
+			->where('id_admin', session('id'))
 			->get();
 
 		return view('dosen.data_jawaban', [
@@ -117,30 +107,44 @@ class DosenController extends Controller {
 	}
 
 	function api_mahasiswa($kelas){
-		header('Content-Type: application/json');
-
 		$json = array();
 		$db = DB::table('mahasiswa')
-			->where('mahasiswa.kelas', $kelas)
+			->where('id_kelas', $kelas)
+			->orderBy('nama_mhs', 'asc')
 			->get();
 
+		$id_materi = strpos("@".parse_url(url()->previous())['path'], '/dosen/materi/penilaian/') > 0 ? 
+			substr(parse_url(url()->previous())['path'], 24) : false;
 		if($db){
 			foreach($db as $data){
-					unset($data->password);
-					$json[] = $data;
+				if($id_materi > 0){
+					$c_jawaban = DB::table('soal')
+						->join('jawaban', 'soal.id_soal', 'jawaban.id_soal')
+						->join('mahasiswa', 'jawaban.npm', 'mahasiswa.npm')
+						->where('soal.id_materi', $id_materi)
+						->where('mahasiswa.npm', $data->npm)
+						->count();
+					$data->c_jawaban = $c_jawaban;
+				}
+
+				unset($data->password);
+				$json[] = $data;
 			}
 		}
 
-		return json_encode($json);
+		return $json;
 	}
 
 	function api_jawaban($id_materi, $npm){
-		header('Content-Type: application/json');
-
 		$json = [];
 		$db = DB::table('soal')
+			->select([
+				'mahasiswa.npm','mahasiswa.email','mahasiswa.nama_mhs','kelas.kelas',
+				'jawaban.*', 'soal.*'
+			])
 			->join('jawaban', 'soal.id_soal', 'jawaban.id_soal')
 			->join('mahasiswa', 'jawaban.npm', 'mahasiswa.npm')
+			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
 			->where('soal.id_materi', $id_materi)
 			->where('mahasiswa.npm', $npm)
 			->get();
@@ -149,29 +153,34 @@ class DosenController extends Controller {
 			unset($data->password);
 			$json[] = $data;
 		}
-		return json_encode($json);
+		if(empty($json))
+			return false;
+		else
+			return $json;
 	}
 
 	function nilai_jawaban(Request $request){
-
+		# ------------------------------------------------------------------------------------
+		# ------------------------------------------------------------------------------------
+		# ------------------------------------------------------------------------------------
+		# ------------------------------------------------------------------------------------
 	}
 
 	function mahasiswa(){
 		$mahasiswa = DB::table('mahasiswa')
+			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
 			->orderBy('kelas', 'asc')
 			->orderBy('nama_mhs', 'asc')
 			->get();
 
-		$kelas = DB::table('mahasiswa')
-			->select('kelas')
+		$kelas = DB::table('kelas')
+			->where('id_admin', session('id'))
 			->orderBy('kelas', 'asc')
-			->groupBy('kelas')
 			->get();
 
 		return view('dosen.mahasiswa', [ 
 			'data'	 => $mahasiswa,
-			'kelas'	 => $kelas,
-			'i'		 => 1 
+			'kelas'	 => $kelas
 		]);
 	}
 

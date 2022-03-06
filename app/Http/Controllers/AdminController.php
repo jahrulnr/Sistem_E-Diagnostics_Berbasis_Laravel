@@ -50,26 +50,6 @@ class AdminController extends Controller {
 	    ]);
 	}
 
-	function tambah_kelas(Request $request){
-		if(DB::table('kelas')->where('kelas', $request->kelas)->doesntExist()){
-			$db = DB::table('kelas')
-				->insert([
-					'kelas' => $request->kelas
-				]);
-		}
-
-		return redirect('/admin/dosen#berhasil_disimpan');
-	}
-
-	function hapus_kelas($id_kelas){
-		$db = DB::table('kelas')
-			->insert([
-				'kelas' => $request->kelas
-			]);
-
-		return redirect('/admin/dosen#berhasil_dihapus');
-	}
-
 	function dosen(){
 		$admin = DB::table('admin')
 			->select([
@@ -87,7 +67,7 @@ class AdminController extends Controller {
 				->orderBy('kelas')
 				->first();
 			$adm->kelas = $kelas->kelas;
-			$temp[] = $adm;
+			$temp[] = $adm;  
 		}
 
 		return view('admin.dosen', [ 
@@ -107,6 +87,7 @@ class AdminController extends Controller {
 
 			$data_kelas = [];
 			preg_match_all("/[a-zA-Z]/", strtoupper($request->kelas), $kelas);
+			$kelas[0] = array_unique($kelas[0]);
 			foreach($kelas[0] as $kls){
 				$data_kelas[] = [
 					'id_admin' => $id,
@@ -135,38 +116,71 @@ class AdminController extends Controller {
 		if(!empty($request->password))
 			$data['password'] = bcrypt($request->password);
 
-		$db = DB::table('admin')
+		DB::table('admin')
 			->where('id_admin', $request->id_admin)
 			->update($data);
 
-		if(!$db)
-			return redirect('/admin/dosen#gagal_diubah');
+		// String ke array untuk kelas
+		preg_match_all("/[a-zA-Z]/", strtoupper($request->kelas), $kelas);
+		$db_kelas = DB::table('kelas')
+			->select(DB::raw('GROUP_CONCAT(kelas) as kelas'))
+			->where('id_admin', $request->id_admin)
+			->first();
+
+		// return explode(',', $db_kelas->kelas);
+		$kls_temp = [];
+		$db_kelas = explode(',', $db_kelas->kelas);
+		$kelas_merge = array_merge($db_kelas, $kelas[0]);
+		$kelas_merge = array_unique($kelas_merge);
+		foreach ($kelas_merge as $kls) {
+			$exist = DB::table('kelas')
+						->where('id_admin', $request->id_admin)
+						->where('kelas', $kls)
+						->exists();
+			if(!$exist and in_array($kls, $kelas[0])){
+				DB::table('kelas')->insert([
+					'id_admin' => $request->id_admin,
+					'kelas'	   => $kls
+					]);
+			}
+			elseif($exist and !in_array($kls, $kelas[0])){
+				DB::table('kelas')
+					->where('id_admin', $request->id_admin)
+					->where('kelas', $kls)
+					->delete();
+			}
+			// else
+			// 	$kls_temp[] = [$kls, 'skip'];
+		}
+
 		return redirect('/admin/dosen#berhasil_diubah');
 	}
 
 	function hapus_dosen($id){
 		$db = false;
+		if($id != session('id_admin'))
+			$db = DB::table('admin')->where('id_admin', $id)->delete();
 
-		try {
-			if($id != session('id_admin'))
-				$db = DB::table('admin')->where('id_admin', $id)->delete();
-
-			if(!$db)
-				return redirect('/admin/dosen#gagal_dihapus');
-		}
-		catch(\Illuminate\Database\QueryException $ex){ 
-		  return $ex->getMessage(); 
-		}
-
+		if(!$db)
+			return redirect('/admin/dosen#gagal_dihapus');
 		return redirect('/admin/dosen#berhasil_dihapus');
 	}
 
 	function mahasiswa(){
-		$db = DB::table('mahasiswa')->select(['npm','email','nama_mhs','kelas'])->get();
+		$db = DB::table('mahasiswa')
+			->select(['npm','email','nama_mhs','kelas.id_kelas','kelas.kelas'])
+			->join('kelas', 'kelas.id_kelas', 'mahasiswa.id_kelas')
+			->get();
+
+		$kelas = DB::table('kelas')
+			->join('admin', 'admin.id_admin', 'kelas.id_admin')
+			->orderBy('kelas', 'asc')
+			->orderBy('nama_dsn', 'asc')
+			->get();
 
 		return view('admin.mahasiswa', [ 
 			'data'	=> $db,
-			'i'		=> 1 
+			'kelas' => $kelas
 		]);
 	}
 
@@ -176,7 +190,7 @@ class AdminController extends Controller {
 			'nama_mhs'	=> $request->nama_mhs,
 			'email'		=> $request->email,
 			'password'	=> bcrypt($request->password),
-			'kelas'	=> $request->kelas
+			'id_kelas'	=> $request->kelas
 		]);
 
 		if(!$db)
@@ -188,7 +202,7 @@ class AdminController extends Controller {
 		$data = [
 				'nama_mhs'	=> $request->nama_mhs,
 				'email'		=> $request->email,
-				'kelas'		=> $request->kelas
+				'id_kelas'	=> $request->kelas
 			];
 		if(!empty($request->password))
 			$data['password'] = bcrypt($request->password);
@@ -203,18 +217,10 @@ class AdminController extends Controller {
 	}
 
 	function hapus_mahasiswa($id){
-		$db = false;
+		$db = DB::table('mahasiswa')->where('npm', $id)->delete();
 
-		try {
-			$db = DB::table('mahasiswa')->where('npm', $id)->delete();
-
-			if(!$db)
-				return redirect('/admin/mahasiswa#gagal_dihapus');
-		}
-		catch(\Illuminate\Database\QueryException $ex){ 
-		  return $ex->getMessage(); 
-		}
-
+		if(!$db)
+			return redirect('/admin/mahasiswa#gagal_dihapus');
 		return redirect('/admin/mahasiswa#berhasil_dihapus');
 	}
 

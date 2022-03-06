@@ -28,7 +28,7 @@
 					<th>Kelas</th>
 					<th>Email</th>
 				</thead>
-				<tbody>
+				<tbody><?php $i = 1; ?>
 				@foreach($data as $d)
 					<tr>
 						<td align="center">{{ $i++ }}.</td>

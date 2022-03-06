@@ -39,7 +39,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="view-jawaban" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <form method="POST" action="/dosen/materi/penilaian/nilai" class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Periksa Jawaban</h5>
@@ -85,13 +85,13 @@
 		<select name="kelas" class="form-select form-select-sm d-inline-block w-auto" onchange="update_kelas(this)">
 			<option disabled>-- Pilih Kelas</option>
 			@foreach($kelas as $data)
-			<option value="{{ $data->kelas }}">{{ $data->kelas }}</option>
+			<option value="{{ $data->id_kelas }}">{{ $data->kelas }}</option>
 			@endforeach
 		</select>
 	</div>
 	<div id="td_aksi">
-		<button class="btn btn-primary" onclick="view_jawaban('--NPM--');">
-			<span class="fas fa-info px-1"></span>
+		<button class="btn btn-primary" onclick="view_jawaban('--NPM--');" disabled>
+			<span class="far fa-clipboard px-1"></span>
 		</button>
 	</div>
 	<div id="div-soal">
@@ -134,7 +134,7 @@
 	  }
 	});
 
-	getMhs('A');
+	getMhs($('select[name="kelas"]').val());
 	
 	function update_kelas(id){
 		var kelas = $(id).val();
@@ -156,17 +156,18 @@
 		var aksi = $('#td_aksi').html();
 		var request = $.ajax({
 		  url: "/dosen/materi/penilaian/kelas/" + kelas,
-		  success: function(msg){
+		  success: function(json){
 		  	var tb = [];
-		  	var json = JSON.parse(msg);
 
      		$.each(json, function(i, v){
-     			aksi = aksi.replaceAll('--NPM--', v.npm);
-     			var data_temp = [(i+1) + ".", v.npm, v.nama_mhs, "0", aksi];
+     			var aksi_temp = aksi.replaceAll('--NPM--', v.npm);
+     			if(v.c_jawaban > 0) aksi_temp = aksi_temp.replace('disabled', '');
+     			var data_temp = [(i+1) + ".", v.npm, v.nama_mhs, "0", aksi_temp];
      			tb.push(data_temp);
      		});
- 			table_draw(tb);
-  		  }
+
+ 				table_draw(tb);
+  		}
 		});
 
 		request.fail(function(jqXHR, textStatus) {
@@ -177,28 +178,31 @@
 	function view_jawaban(npm){
 		var request = $.ajax({
 		  url: "/dosen/materi/penilaian/" + window.location.pathname.substr(-1) + "/" + npm,
-		  success: function(msg){
-		  	var data = JSON.parse(msg);
-		  	console.log(msg);
-		  	var template = $('#div-soal').html();
-		  	var div = "";
+		  success: function(data){
+		  	if(data !== false){
+			  	var template = $('#div-soal').html();
+			  	var div = "";
 
-		  	$('input[name="nama"]').val(data[0].nama_mhs);
-		  	$('input[name="email"]').val(data[0].email);
-		  	$('input[name="kelas_mhs"]').val(data[0].kelas);
-		  	$.each(data, function(i, v){
-		  		div += template
-		  			.replaceAll('_table', '')
-		  			.replace('--NO--', (i+1)+ ".")
-		  			.replace('--SOAL--', v.soal)
-		  			.replace('--JAWABAN_SOAL--', v.jawaban_soal)
-		  			.replace('--JAWABAN_MHS--', v.jawaban_mhs)
-		  			.replaceAll('--INDEX--', i);
-		  	});
+			  	$('input[name="nama"]').val(data[0].nama_mhs);
+			  	$('input[name="email"]').val(data[0].email);
+			  	$('input[name="kelas_mhs"]').val(data[0].kelas);
+			  	$.each(data, function(i, v){
+			  		div += template
+			  			.replaceAll('_table', '')
+			  			.replace('--NO--', (i+1)+ ".")
+			  			.replace('--SOAL--', v.soal)
+			  			.replace('--JAWABAN_SOAL--', v.jawaban_soal)
+			  			.replace('--JAWABAN_MHS--', v.jawaban_mhs)
+			  			.replaceAll('--INDEX--', i);
+			  	});
 
-		  	$('#list-soal').html(div);
-		  	$('#view-jawaban').modal('show');
-  		  }
+			  	$('#list-soal').html(div);
+			  	$('#view-jawaban').modal('show');
+			  }
+			  else {
+
+			  }
+  		}
 		});
 
 		request.fail(function(jqXHR, textStatus) {

@@ -16,6 +16,7 @@
         <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
 
         <!-- Script -->
+        <script type="text/javascript">console.warn = () => {};</script>
         <script src="/vendor/jQuery/jquery-3.6.0.min.js"></script>
         <!-- <script src="/vendor/fontawesome/js/all.min.js"></script> -->
         <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

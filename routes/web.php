@@ -61,7 +61,7 @@ Route::post('/dosen/mahasiswa/tambah', 'App\Http\Controllers\DosenController@tam
 Route::post('/dosen/mahasiswa/ubah', 'App\Http\Controllers\DosenController@ubah_mahasiswa'); 
 Route::get('/dosen/mahasiswa/hapus/{id}', 'App\Http\Controllers\DosenController@hapus_mahasiswa'); 
 
-// -- Diagnosis
+// -- Diagnosis -- belum siap
 Route::get('/dosen/diagnostics', 'App\Http\Controllers\DosenController@diagnostics');
 
 // -- Profil

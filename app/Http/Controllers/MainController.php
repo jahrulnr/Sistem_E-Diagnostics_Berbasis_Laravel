@@ -39,7 +39,6 @@ class MainController extends Controller {
                     $session['is_dosen'] = true;
 
                 session($session);
-
                 return redirect('/');
             }else{
                 return redirect('/#login_gagal');
@@ -53,7 +52,7 @@ class MainController extends Controller {
                     'is_mahasiswa' => true,
                     'id'   => $status->npm,
                     'nama' => $status->nama_mhs,
-                    'kelas' => $status->kelas
+                    'id_kelas' => $status->id_kelas 
                 );
 
                 session($session);
@@ -66,12 +65,12 @@ class MainController extends Controller {
 
 	function logout(Request $request){
 		$session = array(
-            'is_admin' => '',
-			'is_dosen' => '',
-			'is_mahasiswa' => '',
-            'id_user' => '',
-            'nama' => '',
-            'kelas' => ''
+            'is_admin'     => null,
+			'is_dosen'     => null,
+			'is_mahasiswa' => null,
+            'id_user'      => null,
+            'nama'         => null,
+            'id_kelas'     => null
         );
         session($session);
         return redirect('/');
