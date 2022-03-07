@@ -1,6 +1,11 @@
-# GitHub Action for Laravel
-name: Testing Laravel
-on: [push, pull_request]
+name: Laravel
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
   laravel:
     name: Laravel (PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }})
@@ -9,12 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         operating-system: [ubuntu-latest, windows-latest, macos-latest]
-        php-versions: ['7.4', '8.0', '8.1']
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+        php-versions: ['8.0']
 
-      # Docs: https://github.com/shivammathur/setup-php
+    steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -22,28 +24,33 @@ jobs:
           extensions: mbstring, dom, fileinfo
           coverage: xdebug
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          # Use composer.json for key, if composer.lock is not committed.
-          # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
-      - name: Install Composer dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: Prepare the application
+      - name: Generate key
+        run: php artisan key:generate
+
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+
+      - name: Create Database
         run: |
-          php -r "file_exists('.env') || copy('.env.example', '.env');"
-          php artisan key:generate
-      - name: Clear Config
-        run: php artisan config:clear
+          mkdir -p database
+          touch database/database.sqlite
+
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+          
+      - name: migrate database
+        run: php artisan migrate
 
       - name: Test with phpunit
         run: vendor/bin/phpunit --coverage-text
