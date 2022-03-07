@@ -10,7 +10,8 @@ class CreateTable extends Migration
 {
     public function up()
     {
-        DB::unprepared(file_get_contents('../ediagnostics.sql'));
+        $backup = __DIR__ . '../ediagnostics.sql';
+        DB::unprepared(file_get_contents($backup));
     }
 
     /**
