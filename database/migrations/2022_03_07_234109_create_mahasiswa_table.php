@@ -36,6 +36,7 @@ class CreateMahasiswaTable extends Migration
         // ["password","char(60)","utf8mb4_general_ci","NO","",null,"","select,insert,update,references",""]
             $table->char('password', 60);
             $table->index(["id_kelas"]);
+            $table->primary(["npm"]);
         });
     }
 
