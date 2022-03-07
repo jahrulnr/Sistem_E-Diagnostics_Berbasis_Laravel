@@ -9,7 +9,7 @@ class CreateMahasiswaTable extends Migration
     public function up()
     {
         Schema::create('mahasiswa', function (Blueprint $table) {
-    		$table->string('npm',9)->unique()->primary();
+    		$table->string('npm',9)->primary();
     		$table->string('email',60);
     		$table->string('nama_mhs',60);
     		$table->integer('id_kelas',10)->nullable()->default(null);
