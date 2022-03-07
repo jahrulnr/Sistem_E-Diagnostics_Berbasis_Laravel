@@ -74,6 +74,13 @@ class MahasiswaController extends Controller {
 	function submit_soal($id_materi, Request $request){
 		$data = [];
 		foreach($request->jawaban as $id => $jawaban){
+			if( 
+			DB::table('jawaban')
+				->where('npm', session('id'))
+				->where('id_soal', $id)
+				->exists()
+			)
+
 			$data[] = [
 				'npm'	  	  => session('id'),
 				'id_soal' 	  => $id,
@@ -81,8 +88,9 @@ class MahasiswaController extends Controller {
 			];
 		}
 
-		DB::table('jawaban')
-			->insert($data);
+		if(!empty($data))
+			DB::table('jawaban')
+				->insert($data);
 
 		return redirect(url()->previous() . '#berhasil_disimpan');
 	}

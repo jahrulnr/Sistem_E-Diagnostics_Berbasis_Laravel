@@ -121,10 +121,11 @@ class DosenController extends Controller {
 					$c_jawaban = DB::table('soal')
 						->join('jawaban', 'soal.id_soal', 'jawaban.id_soal')
 						->join('mahasiswa', 'jawaban.npm', 'mahasiswa.npm')
+						->leftJoin('nilai', 'soal.id_materi', 'nilai.id_materi')
 						->where('soal.id_materi', $id_materi)
-						->where('mahasiswa.npm', $data->npm)
-						->count();
-					$data->c_jawaban = $c_jawaban;
+						->where('mahasiswa.npm', $data->npm);
+					$data->c_jawaban = $c_jawaban->count();
+					$data->nilai = $data->c_jawaban > 0 ? $c_jawaban->first()->nilai_akhir : 0;
 				}
 
 				unset($data->password);
@@ -160,10 +161,35 @@ class DosenController extends Controller {
 	}
 
 	function nilai_jawaban(Request $request){
-		# ------------------------------------------------------------------------------------
-		# ------------------------------------------------------------------------------------
-		# ------------------------------------------------------------------------------------
-		# ------------------------------------------------------------------------------------
+		$data = [
+			'npm'	    => $request->npm,
+			'id_materi' => $request->id_materi
+		];
+
+		if(
+			DB::table('nilai')
+				->where('npm', $data['npm'])
+				->where('id_materi', $data['id_materi'])
+				->doesntExist()
+		){
+			$data['nilai_akhir'] = (array_sum($request->soal) / $request->soal_total) * 100;
+			DB::table('nilai')
+				->insert($data);
+		}
+		else {
+			DB::table('nilai')
+				->where($data)
+				->update(['nilai_akhir' => (array_sum($request->soal) / $request->soal_total) * 100]);
+		}
+
+		// Server ga bisa nangkap hash dari browser
+		// Jadi ga bisa pake script di bawah ini
+		// return redirect(url()->previous());
+
+		// Untuk fix nya, kita pake javascript buat ngalihkan halaman
+		return '
+			<html style="background: #000"></html>
+			<script>window.location.href = "'.url()->previous().'" + window.location.hash;</script>';
 	}
 
 	function mahasiswa(){

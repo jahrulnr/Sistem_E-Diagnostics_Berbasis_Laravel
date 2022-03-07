@@ -36,10 +36,11 @@
 						<td>{{ $d->nama_mhs }}</td>
 						<td>{{ $d->kelas }}</td>
 						<td>
-							<span onclick="window.open('mailto:{{ $d->email }}', 'mail')">{{ $d->email }}</span>
+							{{ $d->email }}
+							<span style="cursor: pointer;" onclick="window.open('mailto:{{ $d->email }}', 'mail')" class="fas fa-external-link-alt fa-sm"></span>
 						</td>
 					</tr>
-      	@endforeach
+      			@endforeach
 				</tbody>
 			</table>
 		</div>

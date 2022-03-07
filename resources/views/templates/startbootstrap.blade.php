@@ -13,7 +13,10 @@
         <link href="/css/styles.css" rel="stylesheet" />
         <link href="/css/custom.css" rel="stylesheet" />
         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'>
-        <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+        <link href="/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet"> 
+        <link href="/vendor/fontawesome/css/brands.min.css" rel="stylesheet"> 
+        <link href="/vendor/fontawesome/css/regular.min.css" rel="stylesheet"> 
+        <link href="/vendor/fontawesome/css/solid.min.css" rel="stylesheet"> 
 
         <!-- Script -->
         <script type="text/javascript">console.warn = () => {};</script>
@@ -46,7 +49,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="./">
+                            <a class="nav-link" href="/">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
