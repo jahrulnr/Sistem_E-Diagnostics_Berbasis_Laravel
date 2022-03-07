@@ -35,7 +35,7 @@ class CreateAdminTable extends Migration
         // ["password","char(60)","utf8mb4_general_ci","NO","",null,"","select,insert,update,references",""]
             $table->char('password', 60);
         // ["hak_akses","enum('admin','dosen')","utf8mb4_general_ci","NO","",null,"","select,insert,update,references",""]
-            $table->enum('hak_akses', 'admin', 'dosen');
+            $table->enum('hak_akses', ['admin', 'dosen']);
         });
     }
 
