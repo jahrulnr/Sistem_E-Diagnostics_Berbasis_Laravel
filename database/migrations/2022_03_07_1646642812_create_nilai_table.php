@@ -9,7 +9,7 @@ class CreateNilaiTable extends Migration
     public function up()
     {
         Schema::create('nilai', function (Blueprint $table) {
-    		$table->integer('id_nilai')->length(100)->unsigned();
+    		$table->integer('id_nilai')->length(100);
     		$table->string('npm',9);
     		$table->integer('id_materi',10);
     		$table->integer('nilai_akhir',100);

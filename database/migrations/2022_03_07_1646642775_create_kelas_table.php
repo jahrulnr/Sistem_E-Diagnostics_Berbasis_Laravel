@@ -9,7 +9,7 @@ class CreateKelasTable extends Migration
     public function up()
     {
         Schema::create('kelas', function (Blueprint $table) {
-    		$table->integer('id_kelas')->length(10)->unsigned();
+    		$table->integer('id_kelas')->length(10);
     		$table->integer('id_admin',10);
     		$table->char('kelas',1);
         });

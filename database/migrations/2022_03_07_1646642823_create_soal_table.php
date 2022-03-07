@@ -9,7 +9,7 @@ class CreateSoalTable extends Migration
     public function up()
     {
         Schema::create('soal', function (Blueprint $table) {
-    		$table->integer('id_soal')->length(100)->unsigned();
+    		$table->integer('id_soal')->length(100);
     		$table->integer('id_materi',10);
     		$table->integer('id_admin',10);
     		$table->text('soal');

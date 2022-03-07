@@ -9,7 +9,7 @@ class CreateMateriTable extends Migration
     public function up()
     {
         Schema::create('materi', function (Blueprint $table) {
-    		$table->integer('id_materi')->length(10)->unsigned();
+    		$table->integer('id_materi')->length(10);
     		$table->string('judul_materi',60);
     		$table->integer('pertemuan',3);
         });

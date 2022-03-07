@@ -9,7 +9,7 @@ class CreateJawabanTable extends Migration
     public function up()
     {
         Schema::create('jawaban', function (Blueprint $table) {
-    		$table->integer('id_jawaban')->length(100)->unsigned();
+    		$table->integer('id_jawaban')->length(100);
     		$table->string('npm',9);
     		$table->integer('id_soal',100);
     		$table->text('jawaban_mhs');
