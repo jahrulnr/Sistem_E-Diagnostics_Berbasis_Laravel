@@ -12,7 +12,7 @@ class CreateMahasiswaTable extends Migration
     		$table->string('npm')->length(9);
     		$table->string('email',60);
     		$table->string('nama_mhs',60);
-    		$table->integer('id_kelas',10)->nullable()->default('NULL');
+    		$table->integer('id_kelas',10)->nullable()->default(null);
     		$table->char('password',60);
         });
     }
