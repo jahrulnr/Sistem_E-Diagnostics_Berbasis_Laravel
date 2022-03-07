@@ -41,8 +41,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id_admin`, `email`, `nama_dsn`, `noHP`, `password`, `hak_akses`) VALUES
-(1, 'jahrulnr@gmail.com', 'Jahrulnrr', '082218594993', '$2a$12$royGgfCsGcm/KvDy9rcBjejcKh/2ARrFcwJLz9Wd389QbeZqlNovS', 'admin'),
-(3, 'ocha@exp.com', 'Ocha Aliena', '082218595016', '$2y$10$DnAU8GnSoxgNueDDBJuiwedm4EJZUZXSiZXMA26v70TzRzHb9e4jq', 'dosen');
+(1, 'jahrulnr@gmail.com', 'Jahrulnrr', '082218594993', '$2a$12$royGgfCsGcm/KvDy9rcBjejcKh/2ARrFcwJLz9Wd389QbeZqlNovS', 'admin');
 
 -- --------------------------------------------------------
 
@@ -58,16 +57,6 @@ CREATE TABLE `jawaban` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `jawaban`
---
-
-INSERT INTO `jawaban` (`id_jawaban`, `npm`, `id_soal`, `jawaban_mhs`) VALUES
-(10, '173510428', 2, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
-(11, '173510428', 3, 'asa');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `kelas`
 --
 
@@ -76,19 +65,6 @@ CREATE TABLE `kelas` (
   `id_admin` int(10) NOT NULL,
   `kelas` char(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `kelas`
---
-
-INSERT INTO `kelas` (`id_kelas`, `id_admin`, `kelas`) VALUES
-(4, 3, 'D'),
-(5, 1, 'E'),
-(6, 3, 'F'),
-(7, 1, 'G'),
-(8, 3, 'H');
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `mahasiswa`
@@ -103,17 +79,6 @@ CREATE TABLE `mahasiswa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `mahasiswa`
---
-
-INSERT INTO `mahasiswa` (`npm`, `email`, `nama_mhs`, `id_kelas`, `password`) VALUES
-('123', 'tstfhk', 'attes', 6, ''),
-('1233', 'astfhkasa', 'ttesaaa', 6, ''),
-('173510428', 'jahrulnr@gmail.com', 'Jahrul Novario', 6, '$2y$10$tsdM2dRY0aee1xIR5rjAnuiXJh4vihRZHwkoOUtmCJXqH5MmBcEya');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `materi`
 --
 
@@ -122,19 +87,6 @@ CREATE TABLE `materi` (
   `judul_materi` varchar(60) NOT NULL,
   `pertemuan` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `materi`
---
-
-INSERT INTO `materi` (`id_materi`, `judul_materi`, `pertemuan`) VALUES
-(2, 'Logika dan Algoritma Pemrograman', 1),
-(3, 'Pengenalan Pascal', 2),
-(4, 'Input dan Output Pemrograman Pascal', 3),
-(5, 'Kondisi atau Percabangan', 5),
-(6, 'Kondisi Bersarang', 6);
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `nilai`
@@ -148,15 +100,6 @@ CREATE TABLE `nilai` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `nilai`
---
-
-INSERT INTO `nilai` (`id_nilai`, `npm`, `id_materi`, `nilai_akhir`) VALUES
-(1, '173510428', 2, 63);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `soal`
 --
 
@@ -167,18 +110,6 @@ CREATE TABLE `soal` (
   `soal` text NOT NULL,
   `jawaban_soal` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `soal`
---
-
-INSERT INTO `soal` (`id_soal`, `id_materi`, `id_admin`, `soal`, `jawaban_soal`) VALUES
-(2, 2, 3, 'laborum est id anim mollit deserunt officia qui culpa in sunt proident, non cupidatat occaecat sint Excepteur pariatur. nulla fugiat eu dolore cillum esse velit voluptate in reprehenderit in dolor irure aute Duis consequat. commodo ea ex aliquip ut nisi laboris ullamco exercitation nostrud quis veniam, minim ad enim Ut aliqua. magna dolore et labore ut incididunt tempor eiusmod do sed elit, adipisicing consectetur amet, sit dolor ipsum Lorem.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
-(3, 2, 3, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'laborum est id anim mollit deserunt officia qui culpa in sunt proident, non cupidatat occaecat sint Excepteur pariatur. nulla fugiat eu dolore cillum esse velit voluptate in reprehenderit in dolor irure aute Duis consequat. commodo ea ex aliquip ut nisi laboris ullamco exercitation nostrud quis veniam, minim ad enim Ut aliqua. magna dolore et labore ut incididunt tempor eiusmod do sed elit, adipisicing consectetur amet, sit dolor ipsum Lorem.');
-
---
--- Indexes for dumped tables
---
 
 --
 -- Indexes for table `admin`
