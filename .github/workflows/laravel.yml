@@ -69,9 +69,6 @@ jobs:
           php -r "file_exists('.env') || copy('.env.example', '.env');"
           php artisan key:generate
 
-      - name: Clear Config
-        run: php artisan config:clear
-
       - name: Run Migration
         run: php artisan migrate -v
         env:
@@ -83,3 +80,6 @@ jobs:
         env:
           DB_PORT: ${{ job.services.mysql.ports['3306'] }}
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+
+      - name: Clear Config
+        run: php artisan config:clear

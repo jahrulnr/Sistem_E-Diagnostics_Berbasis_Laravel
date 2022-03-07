@@ -10,7 +10,7 @@ class SetupTable extends Migration
         DB::statement('ALTER TABLE `admin` MODIFY `id_admin` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT');
         DB::statement('ALTER TABLE `jawaban` MODIFY `id_jawaban` int(100) NOT NULL PRIMARY KEY AUTO_INCREMENT');
         DB::statement('ALTER TABLE `kelas` MODIFY `id_kelas` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT');
-        DB::statement('ALTER TABLE `mahasiswa` ADD PRIMARY KEY (`npm`)');
+        // DB::statement('ALTER TABLE `mahasiswa` ADD PRIMARY KEY (`npm`)');
         DB::statement('ALTER TABLE `materi` MODIFY `id_materi` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT');
         DB::statement('ALTER TABLE `nilai` MODIFY `id_nilai` int(100) NOT NULL PRIMARY KEY AUTO_INCREMENT');
         DB::statement('ALTER TABLE `soal` MODIFY `id_soal` int(100) NOT NULL PRIMARY KEY AUTO_INCREMENT');
