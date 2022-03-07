@@ -37,15 +37,6 @@ CREATE TABLE `admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `admin`
---
-
-INSERT INTO `admin` (`id_admin`, `email`, `nama_dsn`, `noHP`, `password`, `hak_akses`) VALUES
-(1, 'jahrulnr@gmail.com', 'Jahrulnrr', '082218594993', '$2a$12$royGgfCsGcm/KvDy9rcBjejcKh/2ARrFcwJLz9Wd389QbeZqlNovS', 'admin');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `jawaban`
 --
 
