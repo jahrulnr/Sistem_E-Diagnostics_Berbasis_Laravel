@@ -20,7 +20,7 @@ jobs:
     - name: Set up MySQL
       env:
         DB_USERNAME: root
-        DB_PASSWORD: root
+        DB_PASSWORD: 
         DB_DATABASE: mysql_testing
       run: |
         sudo /etc/init.d/mysql start
@@ -39,8 +39,6 @@ jobs:
       run: chmod -R 777 storage bootstrap/cache
 
     - name: Execute Feature test via PHPUnit
-      env:
-        DB_PASSWORD: root
       run: vendor/bin/phpunit
 
     - name: Run Migration
