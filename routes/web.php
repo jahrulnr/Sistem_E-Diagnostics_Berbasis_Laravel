@@ -21,6 +21,7 @@ Route::get('/api/kelas/{id_dosen}', 'App\Http\Controllers\MainController@getKela
 
 // Admin
 Route::get('/admin', 'App\Http\Controllers\AdminController@dashboard'); 
+Route::post('/admin/importExcel', 'App\Http\Controllers\AdminController@importExel');
 
 Route::get('/admin/dosen', 'App\Http\Controllers\AdminController@dosen'); 
 Route::post('/admin/dosen/kelas/tambah', 'App\Http\Controllers\AdminController@tambah_kelas'); 

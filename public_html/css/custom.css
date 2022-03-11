@@ -87,7 +87,7 @@ a {
   color: var(--bs-light) !important;
 }
 
-#btn_add {
+.btn_datatables {
   margin-bottom: 0.2rem;
   margin-left: 0.5rem;
 }

@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
- 
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\DataImport;
+use App\Imports\MahasiswaImport;
+
 class AdminController extends Controller {
 
 	public function __construct(){
@@ -48,6 +52,71 @@ class AdminController extends Controller {
 	    	'ram'	  => $ram,
 	    	'uptime'  => $uptime
 	    ]);
+	}
+
+	function importExel(Request $data){
+
+		$file = $data->excel->move('../temp', gmdate("d-m-Y H.i.s", time()+3600*7) . ".xlsx");
+		$data = Excel::toCollection(new DataImport, $file);
+
+		$dataDosen = $dataMahasiswa = [];
+		foreach($data[0] as $i => $v){
+			if($i > 1){
+				if( $v[0] != null && 
+					DB::table('admin')
+						->where('email', strtolower($v[1]))
+						->doesntExist()
+				){
+					$noHP = substr($v[2], 0, 2) == '08' ?
+						$v[2] : "08" . $v[2];
+					$data = [
+						'nama_dsn'  => $v[0],
+						'email'	    => $v[1],
+						'noHP' 	    => $noHP,
+						'password'  => bcrypt($v[4]),
+						'hak_akses'	=> 'dosen'
+					];
+
+					$id = DB::table('admin')->insertGetId($data);
+					$dataDosen[] = $data;
+
+					$data_kelas = [];
+					preg_match_all("/[a-zA-Z]/", strtoupper($v[3]), $kelas);
+					$kelas[0] = array_unique($kelas[0]);
+					foreach($kelas[0] as $kls){
+						$data_kelas[] = [
+							'id_admin' => $id,
+							'kelas'	   => $kls
+						];
+					}
+					
+					if(!empty($data_kelas))
+						DB::table('kelas')
+							->insert($data_kelas);
+				}
+
+				if($v[6] != null &&
+					DB::table('mahasiswa')
+						->where('npm', $v[6])
+						->doesntExist()
+				){
+					$kelas = DB::table('kelas')
+						->where('kelas', strtoupper($v[9]))
+						->first()->id_kelas;
+					$data = [
+			            'npm' 	   => $v[6],
+			            'nama_mhs' => $v[7],
+			            'email'    => $v[8],
+			            'id_kelas' => $kelas,
+			            'password' => bcrypt($v[10])
+					];
+					$db = DB::table('mahasiswa')->insert($data);
+					$dataMahasiswa[] = $data;
+				}
+			}
+		}
+
+		return [$dataDosen, $dataMahasiswa];
 	}
 
 	function dosen(){
@@ -185,13 +254,15 @@ class AdminController extends Controller {
 	}
 
 	function tambah_mahasiswa(Request $request){
-		$db = DB::table('mahasiswa')->insert([
-			'npm'	=> $request->npm,
-			'nama_mhs'	=> $request->nama_mhs,
-			'email'		=> $request->email,
-			'password'	=> bcrypt($request->password),
-			'id_kelas'	=> $request->kelas
-		]);
+		$db = false;
+		if(DB::table('mahasiswa')->where('npm', $request->npm)->doesntExist())
+			$db = DB::table('mahasiswa')->insert([
+				'npm'	=> $request->npm,
+				'nama_mhs'	=> $request->nama_mhs,
+				'email'		=> $request->email,
+				'password'	=> bcrypt($request->password),
+				'id_kelas'	=> $request->kelas
+			]);
 
 		if(!$db)
 			return redirect('/admin/mahasiswa#gagal_disimpan');

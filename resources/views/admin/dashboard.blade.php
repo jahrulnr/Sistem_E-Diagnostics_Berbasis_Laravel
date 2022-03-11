@@ -47,6 +47,34 @@
 	  </div>
 	</div>
 
+	<div class="modal fade" id="importDB" tabindex="-1" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <form method="POST" action="/admin/importExcel" enctype="multipart/form-data" class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title">
+	           Import Data Dosen dan Mahasiswa
+	        </h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+      		<p class="mb-3">Unduh templatenya di <a href="/files/DataMahasiswa.xlsx">sini</a></p>
+      		@csrf
+      		<input type="file" name="excel" accept=".xlsx" class="form-control" required>
+      		<div class="text-end">
+      		</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">   
+	        	Kembali
+	        </button>
+      		<button class="btn btn-primary">
+      			Import
+      		</button>
+	      </div>
+	    </form>
+	  </div>
+	</div>
+
 	<div class="row">
 	    <div class="col-xl-3 col-md-6">
 	        <a href="/admin/dosen" class="card bg-secondary text-white mb-4 pt-2 text-center">
@@ -64,6 +92,12 @@
 	        <a href="/admin/materi" class="card bg-success text-white mb-4 pt-2 text-center">
 	        	<div class="card-header"><span class="fas fa-book fa-4x"></span></div>
 	            <div class="card-body">Materi</div>
+	        </a>
+	    </div>
+	    <div class="col-xl-3 col-md-6">
+	        <a href="#" class="card bg-secondary text-white mb-4 pt-2 text-center" data-bs-toggle="modal" data-bs-target="#importDB">
+	        	<div class="card-header"><span class="fas fa-file-import fa-4x"></span></div>
+	            <div class="card-body">Import Dosen & Mahasiswa</div>
 	        </a>
 	    </div>
 	</div>

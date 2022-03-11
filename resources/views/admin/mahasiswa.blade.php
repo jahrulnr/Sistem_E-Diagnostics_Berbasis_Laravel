@@ -162,6 +162,12 @@
 		$('#hapus_data').attr('href', '/admin/mahasiswa/hapus/' + id);
 	}
 
+	function importExcel(){
+		$('#btn_import').click(function(){
+			$('[name="tes"]').trigger('click');
+		});
+	}
+
 	$(document).ready(function(){
   	var hash = window.location.hash;
   	if(hash == '#berhasil_disimpan'){
@@ -199,8 +205,10 @@
 		  },
 		  "fnDrawCallback": function (oSettings){
 			$('.dataTables_filter').each(function () {
-				if($('#btn_add').length < 1)
-				$(this).append('<button class="btn btn-primary btn-sm" id="btn_add" data-bs-toggle="modal" data-bs-target="#tambah" onclick="tambah()">Tambah</button>');
+				if($('#btn_add').length < 1){
+					$(this).append('<button class="btn btn-primary btn-sm btn_datatables" id="btn_add" data-bs-toggle="modal" data-bs-target="#tambah" onclick="tambah()">Tambah</button>');
+					importExcel();
+				}
 			});
 		  }
 		});
