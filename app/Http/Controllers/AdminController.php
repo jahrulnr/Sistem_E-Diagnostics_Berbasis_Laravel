@@ -116,7 +116,8 @@ class AdminController extends Controller {
 			}
 		}
 
-		return [$dataDosen, $dataMahasiswa];
+		// return [$dataDosen, $dataMahasiswa];
+		return back()->with('success', [count($dataDosen), count($dataMahasiswa)]);
 	}
 
 	function dosen(){

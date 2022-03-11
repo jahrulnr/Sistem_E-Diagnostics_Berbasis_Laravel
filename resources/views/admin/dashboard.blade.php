@@ -103,4 +103,15 @@
 	</div>
 </div>
 
+<style type="text/css">
+	/* Toastr */
+	@import url('/vendor/toastr/toastr.min.css');
+</style>
+<script src="/vendor/toastr/toastr.min.js"></script>
+<script type="text/javascript">
+	@if($msg = Session::get('success'))
+	toastr.success('{{ $msg[0] }} Dosen dan {{ $msg[1] }} Mahasiswa berhasil diimport');
+	@endif
+</script>
+
 @endsection
