@@ -48,7 +48,7 @@
     <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
     Profil
 </a>
-<a class="nav-link" href="/mahasiswa/diagnostics">
+<a class="nav-link" href="/mahasiswa/hasil_tes">
     <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
     Hasil Tes
 </a>

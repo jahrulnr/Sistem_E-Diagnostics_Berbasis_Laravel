@@ -72,13 +72,14 @@ class MahasiswaController extends Controller {
 	}
 
 	function submit_soal($id_materi, Request $request){
-		$data = [];
+		$data = []; 
+		$db = null;
 		foreach($request->jawaban as $id => $jawaban){
 			if( 
 			DB::table('jawaban')
 				->where('npm', session('id'))
 				->where('id_soal', $id)
-				->exists()
+				->doesntExist()
 			)
 
 			$data[] = [
@@ -89,9 +90,75 @@ class MahasiswaController extends Controller {
 		}
 
 		if(!empty($data))
-			DB::table('jawaban')
+			$db = DB::table('jawaban')
 				->insert($data);
 
+		if(!$db)
+			return redirect(url()->previous() . '#gagal_disimpan');
+
 		return redirect(url()->previous() . '#berhasil_disimpan');
+	}
+
+	function profil(){
+		$data = DB::table('mahasiswa')
+			->select([
+				'mahasiswa.*',
+				'kelas.kelas',
+				'admin.nama_dsn'
+			])
+			->where('npm', session('id'))
+			->leftJoin('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
+			->leftJoin('admin', 'kelas.id_admin', 'admin.id_admin')
+			->first();
+
+		return view('mahasiswa.profil', [
+			'data' => $data
+		]);
+	}
+
+	function ubah_profil(Request $req){
+		$data = [
+			'nama_mhs'  => $req->nama_mhs,
+			'email' 	=> $req->email
+		];
+
+		if($req->password != null){
+			if(strlen($req->password) < 5){
+				return redirect(url()->previous() . '#password_kurang');
+			}else{
+				$data['password'] = bcrypt($req->password);
+			}
+		}
+
+		$db = DB::table('mahasiswa')
+			->where('npm', session('id'))
+			->update($data);
+
+		if($db){
+			session('nama', $data['nama_mhs']);
+			return redirect(url()->previous() . '#berhasil_disimpan');
+		}
+		else
+			return redirect(url()->previous() . '#gagal_disimpan');
+	}
+
+	function hasil_tes(){
+		$hasil = DB::table('nilai')
+			->join('materi', 'nilai.id_materi', 'materi.id_materi')
+			->where('npm', session('id'))
+			->get();
+
+		$nilai = DB::table('nilai')
+			->select([
+				DB::raw("SUM(nilai_akhir) as total"),
+				DB::raw("AVG(nilai_akhir) as rata_rata")
+			])
+			->where('npm', session('id'))
+			->first();
+
+		return view('mahasiswa.hasil_tes', [
+			'hasil' => $hasil,
+			'nilai' => $nilai
+		]);
 	}
 }

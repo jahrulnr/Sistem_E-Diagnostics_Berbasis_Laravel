@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+require_once 'apiAndroid.php';
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -75,3 +76,6 @@ Route::get('/mahasiswa/materi', 'App\Http\Controllers\MahasiswaController@materi
 Route::get('/mahasiswa/materi/{id_materi}', 'App\Http\Controllers\MahasiswaController@form_tes');  
 Route::post('/mahasiswa/materi/{id_materi}', 'App\Http\Controllers\MahasiswaController@submit_soal');  
 Route::post('/mahasiswa/materi/{id_materi}/{id_dosen}', 'App\Http\Controllers\MahasiswaController@api_soal');  
+Route::get('/mahasiswa/profil', 'App\Http\Controllers\MahasiswaController@profil');  
+Route::post('/mahasiswa/profil/simpan', 'App\Http\Controllers\MahasiswaController@ubah_profil');  
+Route::get('/mahasiswa/hasil_tes', 'App\Http\Controllers\MahasiswaController@hasil_tes');  

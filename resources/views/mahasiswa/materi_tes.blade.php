@@ -140,7 +140,6 @@
 					return false;
 				}
 			});
-			console.log(click);
 			if(click){
 				$(click).trigger('click');
 				toastr.warning('Soal ini belum dijawab');

@@ -30,6 +30,9 @@ $(document).ready(function(){
   	else if(hash == '#gagal_dihapus'){
   		toastr.error('Data gagal dihapus');
   	}
+  	else if(hash == '#password_kurang'){
+  		toastr.error('Password harus 5 karakter atau lebih');
+  	}
 });
 
 var changeTheme = "dark-bg";
