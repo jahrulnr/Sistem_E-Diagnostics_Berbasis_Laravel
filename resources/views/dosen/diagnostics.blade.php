@@ -19,7 +19,7 @@
 <script src="/vendor/chartjs/dist/chart.min.js"></script>
 
 <div class="container-fluid px-4">
-	<h1 class="my-4">Hasil Diagnostics</h1>
+	<h1 class="my-4">Hasil Diagnostics (Masih dalam Pengerjaan)</h1>
 	<div class="card shadow">
 		<div class="card-body">
 			<!-- <h3>Diagnosis Per Materi</h3> -->
