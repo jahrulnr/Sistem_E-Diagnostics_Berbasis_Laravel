@@ -34,10 +34,15 @@ class DosenController extends Controller {
 			->orderBy('soal.id_materi', 'asc')
 			->get();
 
+		$jumlah_bobot = 0;
+		foreach($soal as $c)
+			$jumlah_bobot += $c->bobot;
+
 		$materi = DB::table('materi')->get();
 
 		return view('dosen.materi', [ 
 			'data'	 => $soal,
+			'jumlah_bobot' => $jumlah_bobot,
 			'materi' => $materi,
 			'i'		 => 1 
 		]);
@@ -48,7 +53,8 @@ class DosenController extends Controller {
 			'id_admin'	   => session('id'),
 			'id_materi'	   => $request->id_materi,
 			'soal'		   => $request->soal,
-			'jawaban_soal' => $request->jawaban_soal
+			'jawaban_soal' => $request->jawaban_soal,
+			'bobot'		   => $request->bobot
 		]);
 
 		if(!$db)
@@ -57,14 +63,20 @@ class DosenController extends Controller {
 	}
 
 	function ubah_materi(Request $request){
-		$db = DB::table('soal')
-			->where('id_soal', $request->id_admin)
-			->where('id_admin', session('id'))
-			->update([
-				'id_materi'	   => $request->id_materi,
-				'soal'		   => $request->soal,
-				'jawaban_soal' => $request->jawaban_soal
-			]);
+		try { 
+			$db = DB::table('soal')
+				->where('id_soal', $request->id_soal)
+				->where('id_admin', session('id'))
+				->update([
+					'id_materi'	   => $request->id_materi,
+					'soal'		   => $request->soal,
+					'jawaban_soal' => $request->jawaban_soal,
+					'bobot'		   => $request->bobot
+				]);
+
+		} catch(\Exception $ex){ 
+		  return ($ex->getMessage()); 
+		}
 
 		if(!$db)
 			return redirect('/dosen/materi#gagal_diubah');
@@ -125,7 +137,7 @@ class DosenController extends Controller {
 						->where('soal.id_materi', $id_materi)
 						->where('mahasiswa.npm', $data->npm);
 					$data->c_jawaban = $c_jawaban->count();
-					$data->nilai = $data->c_jawaban > 0 ? $c_jawaban->first()->nilai_akhir : 0;
+					$data->nilai = $data->c_jawaban > 0 ? $c_jawaban->first()->nilai_akhir : '-';
 				}
 
 				unset($data->password);
@@ -150,14 +162,19 @@ class DosenController extends Controller {
 			->where('mahasiswa.npm', $npm)
 			->get();
 
+		$total_bobot = 0.0;
 		foreach($db as $data){
 			unset($data->password);
+			$total_bobot += $data->bobot;
 			$json[] = $data;
 		}
+
 		if(empty($json))
 			return false;
-		else
+		else{
+			$json['total_bobot'] = $total_bobot;
 			return $json;
+		}
 	}
 
 	function nilai_jawaban(Request $request){
@@ -166,20 +183,29 @@ class DosenController extends Controller {
 			'id_materi' => $request->id_materi
 		];
 
+		$jumlah_bobot = 0.0;
+		for($i = 0; $i < count($request->id_soal)-1; $i++){
+			$jumlah_bobot += (float) $request->soal[($i+1)];
+			DB::table('jawaban')
+				->where('npm', $data['npm'])
+				->where('id_soal', $request->id_soal[$i])
+				->update(['bobot_jawaban' => (float) $request->soal[($i+1)]]);
+		}
+
 		if(
 			DB::table('nilai')
 				->where('npm', $data['npm'])
 				->where('id_materi', $data['id_materi'])
 				->doesntExist()
 		){
-			$data['nilai_akhir'] = (array_sum($request->soal) / $request->soal_total) * 100;
+			$data['nilai_akhir'] =  ($jumlah_bobot / (float) $request->soal_total) * 100.0;
 			DB::table('nilai')
 				->insert($data);
 		}
 		else {
 			DB::table('nilai')
 				->where($data)
-				->update(['nilai_akhir' => (array_sum($request->soal) / $request->soal_total) * 100]);
+				->update(['nilai_akhir' => ($jumlah_bobot / (float) $request->soal_total) * 100.0]);
 		}
 
 		// Server ga bisa nangkap hash dari browser

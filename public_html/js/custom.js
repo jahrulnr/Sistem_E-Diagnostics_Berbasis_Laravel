@@ -24,6 +24,12 @@ $(document).ready(function(){
   	else if(hash == '#gagal_disimpan'){
   		toastr.error('Data gagal disimpan');
   	}
+  	else if(hash == '#berhasil_diubah'){
+  		toastr.success('Data berhasil diubah');
+  	}
+  	else if(hash == '#gagal_diubah'){
+  		toastr.error('Data gagal diubah');
+  	}
   	else if(hash == '#berhasil_dihapus'){
   		toastr.success('Data berhasil dihapus');
   	}

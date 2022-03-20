@@ -17,9 +17,6 @@ Route::post('/mahasiswa/login', 'App\Http\Controllers\MainController@verify');
 // Logout 
 Route::get('/keluar', 'App\Http\Controllers\MainController@logout');
 
-// Global API
-Route::get('/api/kelas/{id_dosen}', 'App\Http\Controllers\MainController@getKelas')->name('getKelas');
-
 // Admin
 Route::get('/admin', 'App\Http\Controllers\AdminController@dashboard'); 
 Route::post('/admin/importExcel', 'App\Http\Controllers\AdminController@importExel');

@@ -30,6 +30,7 @@
 					<th>Judul Materi</th>
 					<th>Soal</th>
 					<th>Jawaban</th>
+					<th>Bobot</th>
 					<th>Aksi</th>
 				</thead>
 				<tbody>
@@ -39,6 +40,7 @@
 						<td>{{ $d->judul_materi }}</td>
 						<td>{{ strlen($d->soal) > 30 ? substr($d->soal, 0, 30)."..." : $d->soal }}</td>
 						<td>{{ strlen($d->jawaban_soal) > 10 ? substr($d->jawaban_soal, 0, 10)."..." : $d->jawaban_soal }}</td>
+						<td>{{ $d->bobot }}</td>
 						<td align="center">
 							<data id="data-{{ $d->id_soal }}" class="d-none">{{ json_encode($d) }}</data>
 							<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#tambah" onclick="info('#data-{{ $d->id_soal}}')">
@@ -87,6 +89,10 @@
         	<label>Jawaban</label>
         	<textarea name="jawaban_soal" class="form-control" rows="2" placeholder="Jawaban" required></textarea>
         </div>
+        <div class="form-input mb-3">
+        	<label>Bobot Soal</label>
+        	<input type="number" min="0" value="{{ (100 - $jumlah_bobot) > 0 ? (100 - $jumlah_bobot) : 0 }}" name="bobot" class="form-control" placeholder="Bobot Soal" required>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
@@ -125,7 +131,7 @@
 
 <script type="text/javascript">
 	var $form = $('form')[0];
-	var $input = $('form').find('select, textarea');
+	var $input = $('form').find('select, textarea, input');
 
 	function info(id){
 		edit(id);
@@ -158,6 +164,7 @@
 		$('select[name="id_materi"]').val(data['id_materi']);
 		$('textarea[name="soal"]').val(data['soal']);
 		$('textarea[name="jawaban_soal"]').val(data['jawaban_soal']);
+		$('input[name="bobot"]').val(data['bobot']);
 		$('form button[type="submit"]').show();
 	}
 
@@ -166,26 +173,6 @@
 	}
 
 	$(document).ready(function(){
-  	var hash = window.location.hash;
-  	if(hash == '#berhasil_disimpan'){
-  		toastr.success('Data berhasil disimpan');
-  	}
-  	else if(hash == '#gagal_disimpan'){
-  		toastr.error('Data gagal disimpan');
-  	}
-  	else if(hash == '#berhasil_diubah'){
-  		toastr.success('Data berhasil diubah');
-  	}
-  	else if(hash == '#gagal_diubah'){
-  		toastr.error('Data gagal diubah');
-  	}
-  	else if(hash == '#berhasil_dihapus'){
-  		toastr.success('Data berhasil dihapus');
-  	}
-  	else if(hash == '#gagal_dihapus'){
-  		toastr.error('Data gagal dihapus');
-  	}
-
 		$('#table_data').DataTable({
 		  "responsive": true,
 		  "autoWidth": false,
@@ -194,8 +181,10 @@
 		  },
 		  "fnDrawCallback": function (oSettings){
 			$('.dataTables_filter').each(function () {
-				if($('#btn_add').length < 1)
-				$(this).append('<button class="btn btn-info btn-sm" id="btn_add" data-bs-toggle="modal" data-bs-target="#tambah" onclick="tambah()">Tambah Materi</button>');
+				if($('#btn_add').length < 1){
+					$(this).append('<button class="btn btn-info btn-sm mb-1 ms-3" id="btn_add" data-bs-toggle="modal" data-bs-target="#tambah" onclick="tambah()">Tambah Materi</button>');
+					$("#table_data_paginate .pagination").prepend("<div class='my-auto me-3'>Total Bobot: {{ $jumlah_bobot }}</div>");
+				}
 			});
 		  }
 		});

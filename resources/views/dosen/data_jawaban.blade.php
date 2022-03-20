@@ -67,8 +67,9 @@
         		<tr>
         			<th>No.</th>
         			<th>Soal</th>
-        			<th>Jawaban Soal</th>
+        			<th>Kunci Jawaban</th>
         			<th>Jawaban Mahasiswa</th>
+        			<th>Bobot Soal</th>
         			<th>Poin</th>
         		</tr>
         	</thead>
@@ -108,25 +109,27 @@
 			<td_table class="text-justify">--SOAL--</td_table>
 			<td_table class="text-justify">--JAWABAN_SOAL--</td_table>
 			<td_table class="text-justify">--JAWABAN_MHS--</td_table>
-			<td_table>
+			<td_table class="text-justify">--BOBOT--</td_table>
+			<td_table bobot="--BOBOT--">
+				<input type="hidden" name="id_soal[]" value="--ID_SOAL--" required>
 				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" value="1" onclick="count(this)" class="form-check-input" required>
+					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="1" onclick="count(this)" class="form-check-input" required>
 					<label class="form-check-label">Sangat Benar</label>
 				</div>
 				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" value="0.75" onclick="count(this)" class="form-check-input" required>
+					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="0.75" onclick="count(this)" class="form-check-input" required>
 					<label class="form-check-label">Benar</label>
 				</div>
 				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" value="0.5" onclick="count(this)" class="form-check-input" required>
+					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="0.5" onclick="count(this)" class="form-check-input" required>
 					<label class="form-check-label">Cukup</label>
 				</div>
 				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" value="0.25" onclick="count(this)" class="form-check-input" required>
+					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="0.25" onclick="count(this)" class="form-check-input" required>
 					<label class="form-check-label">Kurang Cukup</label>
 				</div>
 				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" value="0" onclick="count(this)" class="form-check-input" required>
+					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="0" onclick="count(this)" class="form-check-input" required>
 					<label class="form-check-label">Salah</label>
 				</div>
 			</td_table>
@@ -153,17 +156,6 @@
 			});
 	  }
 	});
-
-	// var table_soal = $('#table-soal').DataTable({
-	// 	"responsive": true,
-	//   "autoWidth": false,
-	//   "language": {
-	// 	  url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/id.json'
-	//   },
-	//   "columnDefs": [
-	//     { className: "col-md-6", targets: [ 1 ] }
-	//   ]
-	// });
 	
 	function update_kelas(id){
 		var kelas = $(id).val();
@@ -202,7 +194,7 @@
      		$.each(json, function(i, v){
      			var aksi_temp = aksi.replaceAll('--NPM--', v.npm);
      			if(v.c_jawaban > 0) aksi_temp = aksi_temp.replace('disabled', '');
-     			var data_temp = [(i+1) + ".", v.npm, v.nama_mhs, v.nilai, aksi_temp];
+     			var data_temp = [(i+1) + ".", v.npm, v.nama_mhs, v.nilai == null ? '-' : Math.round(v.nilai * 100) / 100 || 0, aksi_temp];
      			tb.push(data_temp);
      		});
 
@@ -222,53 +214,27 @@
 		  	if(data !== false){
 			  	var template = $('#div-soal').html();
 			  	var div = "";
-			  	// var div = [];
 
 			  	$('input[name="npm"]').val(data[0].npm);
 			  	$('input[name="id_materi"]').val(data[0].id_materi);
-			  	$('input[name="soal_total"]').val(data.length);
+			  	$('input[name="soal_total"]').val(data.total_bobot);
 			  	$('input[name="nama"]').val(data[0].nama_mhs);
 			  	$('input[name="email"]').val(data[0].email);
 			  	$('input[name="kelas_mhs"]').val(data[0].kelas);
 			  	$('#poin-akhir').html("0");
-			  	$('#poin-total').html(data.length);
+			  	$('#poin-total').html(data.total_bobot);
 			  	$.each(data, function(i, v){
-			  		div += template
-			  			.replaceAll('_table', '')
-			  			.replace('--NO--', (i+1)+ ".")
-			  			.replace('--SOAL--', v.soal)
-			  			.replace('--JAWABAN_SOAL--', v.jawaban_soal)
-			  			.replace('--JAWABAN_MHS--', v.jawaban_mhs)
-			  			.replaceAll('--INDEX--', v.id_soal);
-
-			  		// div.push([
-			  		//  (i+1) +".", 
-			  		//  v.soal,
-			  		//  v.jawaban_soal,
-			  		//  v.jawaban_mhs,
-			  		//  '<div class="form-check">' +
-  		 		// 			'<input type="radio" name="soal['+v.id_soal+']" value="1" onclick="count(this)" class="form-check-input">'+
-  		 		// 			'<label class="form-check-label">Sangat Benar</label>'+
-  		 		// 		'</div>'+
-  		 		// 		'<div class="form-check">'+
-  		 		// 			'<input type="radio" name="soal['+v.id_soal+']" value="0.75" onclick="count(this)" class="form-check-input">'+
-  		 		// 			'<label class="form-check-label">Benar</label>'+
-  		 		// 		'</div>'+
-  		 		// 		'<div class="form-check">'+
-  		 		// 			'<input type="radio" name="soal['+v.id_soal+']" value="0.5" onclick="count(this)" class="form-check-input">'+
-  		 		// 			'<label class="form-check-label">Cukup</label>'+
-  		 		// 		'</div>'+
-  		 		// 		'<div class="form-check">'+
-  		 		// 			'<input type="radio" name="soal['+v.id_soal+']" value="0.25" onclick="count(this)" class="form-check-input">'+
-  		 		// 			'<label class="form-check-label">Kurang Cukup</label>'+
-  		 		// 		'</div>'+
-  		 		// 		'<div class="form-check">'+
-  		 		// 			'<input type="radio" name="soal['+v.id_soal+']" value="0" onclick="count(this)" class="form-check-input">'+
-  		 		// 			'<label class="form-check-label">Salah</label>'+
-  		 		// 		'</div>'
-			  	// 	])
+			  		if(i != "total_bobot")
+				  		div += template
+				  			.replaceAll('_table', '')
+				  			.replace('--NO--', (i+1)+ ".")
+				  			.replace('--ID_SOAL--', v.id_soal)
+				  			.replace('--SOAL--', v.soal)
+				  			.replace('--JAWABAN_SOAL--', v.jawaban_soal)
+				  			.replaceAll('--BOBOT--', v.bobot)
+				  			.replace('--JAWABAN_MHS--', v.jawaban_mhs)
+				  			.replaceAll('--INDEX--', v.id_soal);
 			  	});
-					// table_draw(table_soal, div);
 			  	$('#list-soal').html(div);
 			  	$('#view-jawaban').modal('show');
 			  }
@@ -285,16 +251,10 @@
 
 	function count(data){
 		var nilai_temp = 0.0;
-		var total = $('#table-soal .form-check-input').length / 2;
 		$('#table-soal .form-check-input:checked').each(function(i, v){
-			if($(this).val() == '1')
-				nilai_temp++;
-			else if($(this).val() == '0.75')
-				nilai_temp += 0.75;
-			else if($(this).val() == '0.5')
-				nilai_temp += 0.5;
-			else if($(this).val() == '0.25')
-				nilai_temp += 0.25;
+			var bobot = $(v).parents('td').attr('bobot') * $(v).attr('bobot-jawaban');
+			$(v).val(bobot);
+			nilai_temp += bobot;
 		});
   	$('#poin-akhir').html(nilai_temp);
 	};
