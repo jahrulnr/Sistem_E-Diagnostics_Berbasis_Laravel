@@ -69,7 +69,7 @@
         			<th>Soal</th>
         			<th>Kunci Jawaban</th>
         			<th>Jawaban Mahasiswa</th>
-        			<th>Bobot Soal</th>
+        			<th>Bobot</th>
         			<th>Poin</th>
         		</tr>
         	</thead>
@@ -109,7 +109,7 @@
 			<td_table class="text-justify">--SOAL--</td_table>
 			<td_table class="text-justify">--JAWABAN_SOAL--</td_table>
 			<td_table class="text-justify">--JAWABAN_MHS--</td_table>
-			<td_table class="text-justify">--BOBOT--</td_table>
+			<td_table class="text-center">--BOBOT--</td_table>
 			<td_table bobot="--BOBOT--">
 				<input type="hidden" name="id_soal[]" value="--ID_SOAL--" required>
 				<div class="form-check">

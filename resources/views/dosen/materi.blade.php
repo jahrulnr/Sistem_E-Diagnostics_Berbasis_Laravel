@@ -29,7 +29,7 @@
 					<th>No.</th>
 					<th>Judul Materi</th>
 					<th>Soal</th>
-					<th>Jawaban</th>
+					<th>Kunci Jawaban</th>
 					<th>Bobot</th>
 					<th>Aksi</th>
 				</thead>
