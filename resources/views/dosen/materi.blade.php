@@ -150,6 +150,10 @@
 			$(v).removeAttr('disabled');
 		});
 		$('form button[type="submit"]').show();
+		if({{ $jumlah_bobot }} < 100)
+			$("#tambah").modal('show');
+		else
+			toastr.error("Bobot melebihi batas (Maks. 100).<br/>Silakan kurangi bobot soal terlebih dahulu.");
 	}
 
 	function edit(id){
@@ -182,7 +186,7 @@
 		  "fnDrawCallback": function (oSettings){
 			$('.dataTables_filter').each(function () {
 				if($('#btn_add').length < 1){
-					$(this).append('<button class="btn btn-info btn-sm mb-1 ms-3" id="btn_add" data-bs-toggle="modal" data-bs-target="#tambah" onclick="tambah()">Tambah Materi</button>');
+					$(this).append('<button class="btn btn-info btn-sm mb-1 ms-3" id="btn_add" onclick="tambah()">Tambah Materi</button>');
 					$("#table_data_paginate .pagination").prepend("<div class='my-auto me-3'>Total Bobot: {{ $jumlah_bobot }}</div>");
 				}
 			});

@@ -184,12 +184,12 @@ class DosenController extends Controller {
 		];
 
 		$jumlah_bobot = 0.0;
-		for($i = 0; $i < count($request->id_soal)-1; $i++){
-			$jumlah_bobot += (float) $request->soal[($i+1)];
+		foreach($request->id_soal as $id => $val){
+			$jumlah_bobot += (float) $val;
 			DB::table('jawaban')
 				->where('npm', $data['npm'])
-				->where('id_soal', $request->id_soal[$i])
-				->update(['bobot_jawaban' => (float) $request->soal[($i+1)]]);
+				->where('id_soal', $id)
+				->update(['bobot_jawaban' => (float) $val]);
 		}
 
 		if(

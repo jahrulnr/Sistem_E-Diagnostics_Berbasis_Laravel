@@ -170,29 +170,6 @@
 	}
 
 	$(document).ready(function(){
-  	var hash = window.location.hash;
-  	if(hash == '#berhasil_disimpan'){
-  		toastr.success('Data berhasil disimpan');
-  	}
-  	else if(hash == '#email_telah_digunakan'){
-  		toastr.error('Email telah digunakan, gunakan email lain');
-  	}
-  	else if(hash == '#gagal_disimpan'){
-  		toastr.error('Data gagal disimpan');
-  	}
-  	else if(hash == '#berhasil_diubah'){
-  		toastr.success('Data berhasil diubah');
-  	}
-  	else if(hash == '#gagal_diubah'){
-  		toastr.error('Data gagal diubah');
-  	}
-  	else if(hash == '#berhasil_dihapus'){
-  		toastr.success('Data berhasil dihapus');
-  	}
-  	else if(hash == '#gagal_dihapus'){
-  		toastr.error('Data gagal dihapus');
-  	}
-
   	$('select[name="hak_akses"]').change(function(){
 			if($('form').attr('action').substr(-4) != "ubah")
 	  		if($(this).val() == 'admin'){
@@ -214,7 +191,7 @@
 		  "fnDrawCallback": function (oSettings){
 			$('.dataTables_filter').each(function () {
 				if($('#btn_add').length < 1)
-				$(this).append('<button class="btn btn-primary btn-sm" id="btn_add" data-bs-toggle="modal" data-bs-target="#tambah" onclick="tambah()">Tambah</button>');
+				$(this).append('<button class="btn btn-primary btn-sm  mb-1 ms-3" id="btn_add" data-bs-toggle="modal" data-bs-target="#tambah" onclick="tambah()">Tambah</button>');
 			});
 		  }
 		});

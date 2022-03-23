@@ -111,27 +111,7 @@
 			<td_table class="text-justify">--JAWABAN_MHS--</td_table>
 			<td_table class="text-center">--BOBOT--</td_table>
 			<td_table bobot="--BOBOT--">
-				<input type="hidden" name="id_soal[]" value="--ID_SOAL--" required>
-				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="1" onclick="count(this)" class="form-check-input" required>
-					<label class="form-check-label">Sangat Benar</label>
-				</div>
-				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="0.75" onclick="count(this)" class="form-check-input" required>
-					<label class="form-check-label">Benar</label>
-				</div>
-				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="0.5" onclick="count(this)" class="form-check-input" required>
-					<label class="form-check-label">Cukup</label>
-				</div>
-				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="0.25" onclick="count(this)" class="form-check-input" required>
-					<label class="form-check-label">Kurang Cukup</label>
-				</div>
-				<div class="form-check">
-					<input type="radio" name="soal[--INDEX--]" bobot-jawaban="0" onclick="count(this)" class="form-check-input" required>
-					<label class="form-check-label">Salah</label>
-				</div>
+				<input type="number" class="form-control form-control-sm bobot-input" style="min-width: 50px;" min="0" max="--BOBOT--" name="id_soal[--ID_SOAL--]" placeholder="--BOBOT--" value="--BOBOT_JAWABAN--" onchange="count(this)" required>
 			</td_table>
 		</tr_table>
 	</div>
@@ -214,6 +194,7 @@
 		  	if(data !== false){
 			  	var template = $('#div-soal').html();
 			  	var div = "";
+			  	var point_akhir = 0.0;
 
 			  	$('input[name="npm"]').val(data[0].npm);
 			  	$('input[name="id_materi"]').val(data[0].id_materi);
@@ -221,10 +202,9 @@
 			  	$('input[name="nama"]').val(data[0].nama_mhs);
 			  	$('input[name="email"]').val(data[0].email);
 			  	$('input[name="kelas_mhs"]').val(data[0].kelas);
-			  	$('#poin-akhir').html("0");
 			  	$('#poin-total').html(data.total_bobot);
 			  	$.each(data, function(i, v){
-			  		if(i != "total_bobot")
+			  		if(i != "total_bobot"){
 				  		div += template
 				  			.replaceAll('_table', '')
 				  			.replace('--NO--', (i+1)+ ".")
@@ -233,8 +213,12 @@
 				  			.replace('--JAWABAN_SOAL--', v.jawaban_soal)
 				  			.replaceAll('--BOBOT--', v.bobot)
 				  			.replace('--JAWABAN_MHS--', v.jawaban_mhs)
-				  			.replaceAll('--INDEX--', v.id_soal);
+				  			.replaceAll('--INDEX--', v.id_soal)
+				  			.replace('--BOBOT_JAWABAN--', v.bobot_jawaban);
+			  			point_akhir += v.bobot_jawaban || 0;
+			  		}
 			  	});
+		  		$('#poin-akhir').html(point_akhir);
 			  	$('#list-soal').html(div);
 			  	$('#view-jawaban').modal('show');
 			  }
@@ -251,10 +235,14 @@
 
 	function count(data){
 		var nilai_temp = 0.0;
-		$('#table-soal .form-check-input:checked').each(function(i, v){
-			var bobot = $(v).parents('td').attr('bobot') * $(v).attr('bobot-jawaban');
-			$(v).val(bobot);
-			nilai_temp += bobot;
+		$('#table-soal .bobot-input').each(function(i, v){
+			var bobot = $(v).parents('td').attr('bobot');
+			var nilai_bobot = $(v).val() * 1.0 || 0;
+			if(nilai_bobot > bobot){
+				nilai_bobot = bobot;
+				$(v).val(bobot);
+			}
+			nilai_temp += nilai_bobot * 1.0;
 		});
   	$('#poin-akhir').html(nilai_temp);
 	};
