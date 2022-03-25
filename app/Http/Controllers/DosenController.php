@@ -258,20 +258,34 @@ class DosenController extends Controller {
 				'materi.*',
 				DB::raw("AVG(if(materi.id_materi=nilai.id_materi,nilai_akhir,null)) as rata_rata")
 			])
-			->join('nilai', 'materi.id_materi', 'nilai.id_materi')
+			->leftJoin('nilai', 'materi.id_materi', 'nilai.id_materi')
 			->groupBy('judul_materi')
 			->orderBy('pertemuan', 'asc')
 			->get();
 		$data['seluruhKelas'] = DB::table('kelas')
 			->select([
 				'kelas.*',
-				DB::raw("AVG(if(mahasiswa.npm=nilai.npm,nilai_akhir,null)) as rata_rata")
+				// 'mahasiswa.*',
+				DB::raw("AVG(if(mahasiswa.npm=nilai.npm,nilai_akhir,0)) as rata_rata")
 			])
-			->join('mahasiswa', 'kelas.id_kelas', 'mahasiswa.id_kelas')
-			->join('nilai', 'mahasiswa.npm', 'nilai.npm')
+			->leftJoin('mahasiswa', 'kelas.id_kelas', 'mahasiswa.id_kelas')
+			->leftJoin('nilai', 'mahasiswa.npm', 'nilai.npm')
 			->groupBy('kelas.kelas')
 			->orderBy('kelas.kelas', 'asc')
 			->get();
+		$data['seluruhSoal'] = DB::table('soal')
+			->select([
+				'soal.*',
+				'materi.*',
+				// 'mahasiswa.*',
+				DB::raw("(AVG(if(soal.id_soal=jawaban.id_soal,jawaban.bobot_jawaban,0))/soal.bobot*100) as rata_rata")
+			])
+			->leftJoin('jawaban', 'soal.id_soal', 'jawaban.id_soal')
+			->leftJoin('materi', 'soal.id_materi', 'materi.id_materi')
+			->groupBy('soal.id_soal')
+			->orderBy('soal.id_soal', 'asc')
+			->get();
+			// return $data['seluruhSoal'];
 		$data['rata2_semua_materi'] = DB::table('nilai')
 			->select([
 				DB::raw("sum(nilai_akhir) as total"),
@@ -298,6 +312,7 @@ class DosenController extends Controller {
 			->join('nilai', 'mahasiswa.npm', 'nilai.npm')
 			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
 			->where('id_materi', $materi)
+			->where('kelas.kelas', $kelas)
 			->get();
 
 		return $data;

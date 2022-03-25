@@ -183,14 +183,18 @@
   	],
 	  initComplete: function (settings, json){
 			$('.dataTables_filter')
-				.append(' <span class="d-none d-md-inline">|</span> <button class="btn btn-info btn-sm mb-1" id="btn_add" onclick="tambah()">Tambah Materi</button>');
+				.append(' <span class="d-none d-md-inline">|</span> <button class="btn btn-primary btn-sm mb-1" id="btn_add" onclick="tambah()">Tambah Materi</button>');
 			$('#table_data_length')
 				.append('<div class="mb-1 ms-1 d-md-inline d-block"><span class="d-none d-md-inline">|</span> Materi: <select class="form-select form-select-sm w-auto d-inline" style="max-width: 40%;" id="data_materi">'+
 					$('select[name="id_materi"]').html() +
 					'</select></div>');
 
-			if((window.location.hash).search('materi') > 0)
-				$('#data_materi').val((window.location.hash).substr(8, (window.location.hash).search('&')-8));
+			var hash = window.location.hash;
+			if(hash.search('materi') > 0)
+				if(hash.search('&') > 0)
+					$('#data_materi').val(hash.substr(8, (window.location.hash).search('&')-8));
+				else
+					$('#data_materi').val(hash.substr(8));
 			if($('#data_materi').val() != null) update_table();
 			$('#data_materi').change(function(){
 				update_table();

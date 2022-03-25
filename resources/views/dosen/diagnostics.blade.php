@@ -17,6 +17,8 @@
 <script src="/vendor/datatables/js/responsive.bootstrap5.min.js"></script>
 <!-- ChartJS -->
 <script src="/vendor/chartjs/dist/chart.min.js"></script>
+<!-- Palette -->
+<script src="/vendor/palette/palette.js"></script>
 
 <div class="container-fluid px-4">
 	<h1 class="my-4">Hasil Diagnostics</h1>
@@ -31,13 +33,13 @@
 			    	<button class="nav-link" id="tabPerMahasiswa-tab" data-bs-toggle="tab" data-bs-target="#tabPerMahasiswa" type="button" role="tab" aria-controls="tabPerMahasiswa" aria-selected="false">Diagnosis per Mahasiswa</button>
 			  	</li>
 			  	<li class="nav-item" role="presentation">
-			    	<button class="nav-link" id="tabPerSoal-tab" data-bs-toggle="tab" data-bs-target="#tabPerSoal" type="button" role="tab" aria-controls="tabPerSoal" aria-selected="false">Diagnosis per Soal</button>
-			  	</li>
-			  	<li class="nav-item" role="presentation">
 			    	<button class="nav-link" id="tabSeluruhMateri-tab" data-bs-toggle="tab" data-bs-target="#tabSeluruhMateri" type="button" role="tab" aria-controls="tabSeluruhMateri" aria-selected="false">Diagnosis Seluruh Materi</button>
 			  	</li>
 			  	<li class="nav-item" role="presentation">
 			    	<button class="nav-link" id="tabSeluruhMahasiswa-tab" data-bs-toggle="tab" data-bs-target="#tabSeluruhMahasiswa" type="button" role="tab" aria-controls="tabSeluruhMahasiswa" aria-selected="false">Diagnosis Seluruh Mahasiswa</button>
+			  	</li>
+			  	<li class="nav-item" role="presentation">
+			    	<button class="nav-link" id="tabSeluruhSoal-tab" data-bs-toggle="tab" data-bs-target="#tabSeluruhSoal" type="button" role="tab" aria-controls="tabSeluruhSoal" aria-selected="false">Diagnosis Seluruh Soal</button>
 			  	</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
@@ -142,12 +144,16 @@
 				<!-- tabSeluruhMateri ------------------------------------------------------>
 			  	<div class="tab-pane fade" id="tabSeluruhMateri" role="tabpanel" aria-labelledby="tabSeluruhMateri-tab">
 					<div class="row">
-						<div class="col-12 mb-3" style="height: 400px;">
+						<div class="col-12 mb-3" style="height: 300px;">
 							<canvas id="canvasSeluruhMateri" class="w-100"></canvas>
 						</div>
 						<div class="col-12">
 							<script type="text/javascript">
-								var chart_data = { SeluruhMateri: [], SeluruhKelas: [] };
+								var chart_data = { 
+									SeluruhMateri: [], 
+									SeluruhKelas: [], 
+									SeluruhSoal: []
+								};
 							</script>
 							<table class="table table-bordered" id="tableSeluruhMateri">
 								<thead>
@@ -183,11 +189,11 @@
 						</div>
 					</div>
 			  	</div>
-			  	
+
 				<!-- tabSeluruhMahasiswa ------------------------------------------------------>
 			  	<div class="tab-pane fade" id="tabSeluruhMahasiswa" role="tabpanel" aria-labelledby="tabSeluruhMahasiswa-tab">
 					<div class="row">
-						<div class="col-12 mb-3" style="height: 400px;">
+						<div class="col-12 mb-3" style="height: 200px;">
 							<canvas id="canvasSeluruhMahasiswa" class="w-100"></canvas>
 						</div>
 						<div class="col-12">
@@ -225,6 +231,56 @@
 						</div>
 					</div>
 			  	</div>
+
+				<!-- tabSeluruhSoal ------------------------------------------------------>
+			  	<div class="tab-pane fade" id="tabSeluruhSoal" role="tabpanel" aria-labelledby="tabSeluruhSoal-tab">
+					<div class="row">
+						<div class="col-12 mb-3" style="height: 200px;">
+							<canvas id="canvasSeluruhSoal" class="w-100"></canvas>
+						</div>
+						<div class="col-12">
+							<table class="table table-bordered" id="tableSeluruhSoal">
+								<thead>
+									<tr> 
+										<th>No. Soal</th>
+										<th>Materi</th>
+										<th>Soal</th>
+										<th>Rata-Rata Hasil Tes</th>
+										<th>Hasil Diagnosis</th>
+									</tr>
+								</thead>
+								<tbody><?php $i = 1; ?>
+								@foreach($seluruhSoal as $s)
+									<tr>
+										<td align="center">{{ $i++ }}.</td>
+										<td>
+											<a href="/dosen/materi#materi={{ $s->id_materi }}">
+												{{ $s->judul_materi }}
+											</a>
+										</td>
+										<td>{{ strlen($s->soal) > 60 ? substr($s->soal, 0, 60)."..." : $s->soal }}</td>
+										<td align="center">{{ round($s->rata_rata, 2) }}</td>
+										<td>
+											<script type="text/javascript">
+												chart_data.SeluruhSoal.push({{ $s->rata_rata == null ? "0" : $s->rata_rata }})
+											</script>
+										@if($s->rata_rata == null)
+											-
+										@elseif($s->rata_rata > $rata2_semua_materi)
+											Mudah dipahami
+										@elseif($s->rata_rata == $rata2_semua_materi)
+											Cukup dipahami
+										@else
+											Kurang dipahami
+										@endif
+										</td>
+									</tr>
+								@endforeach
+								</tbody>
+							</table>
+						</div>
+					</div>
+			  	</div>
 			</div>
 		</div>
 	</div>
@@ -248,6 +304,7 @@
 	var tablePerMahasiswa = $('#tablePerMahasiswa');
 	var tableSeluruhMateri = $('#tableSeluruhMateri');
 	var tableSeluruhMahasiswa = $('#tableSeluruhMahasiswa');
+	var tableSeluruhSoal = $('#tableSeluruhSoal');
 
 	$(document).ready(function(){
 		$.each($('body').find('select, input'), function(i, v){
@@ -406,7 +463,24 @@
 		tableSeluruhMateri = tableSeluruhMateri.DataTable(dataTable_opt_temp);
 
 		// Seluruh Mahasiswa --------------------------------------------------------------
-		tableSeluruhMahasiswa = tableSeluruhMahasiswa.DataTable(dataTable_opt);
+		var dataTable_opt_temp = dataTable_opt;
+		dataTable_opt_temp.fnDrawCallback = function(){
+			if($('#tableSeluruhMahasiswa_paginate .pagination table').length < 1){
+				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rata2_semua_materi }});
+				$('#tableSeluruhMahasiswa_paginate .pagination').prepend(rata_rata);
+			}
+		}
+		tableSeluruhMahasiswa = tableSeluruhMahasiswa.DataTable(dataTable_opt_temp);
+
+		// Seluruh Soal --------------------------------------------------------------
+		var dataTable_opt_temp = dataTable_opt;
+		dataTable_opt_temp.fnDrawCallback = function(){
+			if($('#tableSeluruhSoal_paginate .pagination table').length < 1){
+				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rata2_semua_materi }});
+				$('#tableSeluruhSoal_paginate .pagination').prepend(rata_rata);
+			}
+		}
+		tableSeluruhSoal = tableSeluruhSoal.DataTable(dataTable_opt_temp);
 
 		function table_draw(table, data){
 			table.clear();
@@ -416,148 +490,55 @@
 		// Action Chart
 		const canvasSeluruhMateri = $('#canvasSeluruhMateri');
 		const canvasSeluruhMahasiswa = $('#canvasSeluruhMahasiswa');
-		new Chart(canvasSeluruhMateri, {
-		    type: 'bar',
-		    data: {
-		        labels: [
-		        	@foreach($materi as $m)
-		        	'{{ $m->judul_materi }}',
-		        	@endforeach
-		        ],
-		        datasets: [{
-		            label: 'Nilai Rata-Rata',
-		            data: chart_data.SeluruhMateri,
-		            backgroundColor: [
-		                'rgba(255, 99, 132, 0.2)',
-		                'rgba(54, 162, 235, 0.2)',
-		                'rgba(255, 206, 86, 0.2)',
-		                'rgba(75, 192, 192, 0.2)',
-		                'rgba(153, 102, 255, 0.2)',
-		                'rgba(255, 159, 64, 0.2)',
-		                'rgba(255, 99, 132, 0.2)',
-		                'rgba(54, 162, 235, 0.2)',
-		                'rgba(255, 206, 86, 0.2)',
-		                'rgba(75, 192, 192, 0.2)',
-		                'rgba(153, 102, 255, 0.2)',
-		                'rgba(255, 159, 64, 0.2)',
-		                'rgba(255, 99, 132, 0.2)',
-		                'rgba(54, 162, 235, 0.2)',
-		                'rgba(255, 206, 86, 0.2)',
-		                'rgba(75, 192, 192, 0.2)',
-		                'rgba(153, 102, 255, 0.2)',
-		                'rgba(255, 159, 64, 0.2)'
-		            ],
-		            borderColor: [
-		                'rgba(255, 99, 132, 1)',
-		                'rgba(54, 162, 235, 1)',
-		                'rgba(255, 206, 86, 1)',
-		                'rgba(75, 192, 192, 1)',
-		                'rgba(153, 102, 255, 1)',
-		                'rgba(255, 159, 64, 1)',
-		                'rgba(255, 99, 132, 1)',
-		                'rgba(54, 162, 235, 1)',
-		                'rgba(255, 206, 86, 1)',
-		                'rgba(75, 192, 192, 1)',
-		                'rgba(153, 102, 255, 1)',
-		                'rgba(255, 159, 64, 1)',
-		                'rgba(255, 99, 132, 1)',
-		                'rgba(54, 162, 235, 1)',
-		                'rgba(255, 206, 86, 1)',
-		                'rgba(75, 192, 192, 1)',
-		                'rgba(153, 102, 255, 1)',
-		                'rgba(255, 159, 64, 1)'
-		            ],
-		            borderWidth: 1
-		        }]
-		    },
-		    options: {
-		    	responsive: true,
-			    maintainAspectRatio: false,
-		        scales: {
-			        y: {
-			            beginAtZero: true,
-		                max: 100,
-		                min: 0
-			        }
-		        },
-		        plugins: {
-				    legend: {
-				        display: false
-				    }
-				}
-		    }
-		});
-		new Chart(canvasSeluruhMahasiswa, {
-		    type: 'bar',
-		    data: {
-		        labels: [
-		        @foreach($kelas as $k)
-		        	'Kelas {{ $k->kelas }}',
-		        @endforeach
-		        ],
-		        datasets: [{
-		            label: 'Nilai Rata-Rata',
-		            data: chart_data.SeluruhKelas,
-		            backgroundColor: [
-		                'rgba(255, 99, 132, 0.2)',
-		                'rgba(54, 162, 235, 0.2)',
-		                'rgba(255, 206, 86, 0.2)',
-		                'rgba(75, 192, 192, 0.2)',
-		                'rgba(153, 102, 255, 0.2)',
-		                'rgba(255, 159, 64, 0.2)',
-		                'rgba(255, 99, 132, 0.2)',
-		                'rgba(54, 162, 235, 0.2)',
-		                'rgba(255, 206, 86, 0.2)',
-		                'rgba(75, 192, 192, 0.2)',
-		                'rgba(153, 102, 255, 0.2)',
-		                'rgba(255, 159, 64, 0.2)',
-		                'rgba(255, 99, 132, 0.2)',
-		                'rgba(54, 162, 235, 0.2)',
-		                'rgba(255, 206, 86, 0.2)',
-		                'rgba(75, 192, 192, 0.2)',
-		                'rgba(153, 102, 255, 0.2)',
-		                'rgba(255, 159, 64, 0.2)'
-		            ],
-		            borderColor: [
-		                'rgba(255, 99, 132, 1)',
-		                'rgba(54, 162, 235, 1)',
-		                'rgba(255, 206, 86, 1)',
-		                'rgba(75, 192, 192, 1)',
-		                'rgba(153, 102, 255, 1)',
-		                'rgba(255, 159, 64, 1)',
-		                'rgba(255, 99, 132, 1)',
-		                'rgba(54, 162, 235, 1)',
-		                'rgba(255, 206, 86, 1)',
-		                'rgba(75, 192, 192, 1)',
-		                'rgba(153, 102, 255, 1)',
-		                'rgba(255, 159, 64, 1)',
-		                'rgba(255, 99, 132, 1)',
-		                'rgba(54, 162, 235, 1)',
-		                'rgba(255, 206, 86, 1)',
-		                'rgba(75, 192, 192, 1)',
-		                'rgba(153, 102, 255, 1)',
-		                'rgba(255, 159, 64, 1)'
-		            ],
-		            borderWidth: 1
-		        }]
-		    },
-		    options: {
-		    	responsive: true,
-			    maintainAspectRatio: false,
-		        scales: {
-			        y: {
-			            beginAtZero: true,
-		                max: 100,
-		                min: 0
-			        }
-		        },
-		        plugins: {
-				    legend: {
-				        display: false
-				    }
-				}
-		    }
-		});
+		const canvasSeluruhSoal = $('#canvasSeluruhSoal');
+		createChart(canvasSeluruhMateri, [
+        	@foreach($materi as $m)
+        	'{{ $m->judul_materi }}',
+        	@endforeach
+        ], chart_data.SeluruhMateri);
+		createChart(canvasSeluruhMahasiswa, [
+        	@foreach($kelas as $k)
+        	'Kelas {{ $k->kelas }}',
+        	@endforeach
+        ], chart_data.SeluruhKelas);
+		createChart(canvasSeluruhSoal, [<?php $i=1;?>
+        	@foreach($seluruhSoal as $s)
+        	'Soal {{ $i++ }}',
+        	@endforeach
+        ], chart_data.SeluruhSoal);
+
+		function createChart(id, label_data, data){
+			new Chart(id, {
+			    type: 'bar',
+			    data: {
+			        labels: label_data,
+			        datasets: [{
+			            label: 'Nilai Rata-Rata',
+			            data: data,
+			            backgroundColor: palette('tol', data.length).map(function(hex) {
+					        return '#' + hex;
+					    }),
+			            borderWidth: 1
+			        }]
+			    },
+			    options: {
+			    	responsive: true,
+				    maintainAspectRatio: false,
+			        scales: {
+				        y: {
+				            beginAtZero: true,
+			                max: 100,
+			                min: 0
+				        }
+			        },
+			        plugins: {
+					    legend: {
+					        display: false
+					    }
+					}
+			    }
+			});
+		}
 	});
 </script>
 
