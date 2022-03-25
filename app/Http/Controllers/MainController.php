@@ -73,7 +73,7 @@ class MainController extends Controller {
             'id_kelas'     => null
         );
         session($session);
-        return redirect('/');
+        return "<script>window.location.href='/' + window.location.hash;</script>";
 	}
 
 }

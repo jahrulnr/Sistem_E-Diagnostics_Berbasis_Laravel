@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
  
-class DosenController extends Controller {
+class DosenController extends Controller { 
 
 	public function __construct(){
 	    $this->middleware(function ($request, $next) {
@@ -28,9 +28,19 @@ class DosenController extends Controller {
 	}
 
 	function materi(){
+		$materi = DB::table('materi')->get();
+
+		return view('dosen.materi', [ 
+			'materi' => $materi,
+			'i'		 => 1 
+		]);
+	}
+
+	function data_materi($id_materi){
 		$soal = DB::table('soal')
 			->where('id_admin', session('id'))
 			->join('materi', 'materi.id_materi', '=', 'soal.id_materi')
+			->where('soal.id_materi', $id_materi)
 			->orderBy('soal.id_materi', 'asc')
 			->get();
 
@@ -38,14 +48,10 @@ class DosenController extends Controller {
 		foreach($soal as $c)
 			$jumlah_bobot += $c->bobot;
 
-		$materi = DB::table('materi')->get();
-
-		return view('dosen.materi', [ 
+		return (object) [
 			'data'	 => $soal,
-			'jumlah_bobot' => $jumlah_bobot,
-			'materi' => $materi,
-			'i'		 => 1 
-		]);
+			'jumlah_bobot' => $jumlah_bobot
+		];
 	}
 
 	function tambah_materi(Request $request){
@@ -59,7 +65,7 @@ class DosenController extends Controller {
 
 		if(!$db)
 			return redirect('/dosen/materi#gagal_disimpan');
-		return redirect('/dosen/materi#berhasil_disimpan');
+		return '<script>window.location.href = "'.url()->previous().'" + window.location.hash + "&berhasil_disimpan";</script>';// redirect('/dosen/materi#berhasil_disimpan');
 	}
 
 	function ubah_materi(Request $request){
@@ -133,7 +139,11 @@ class DosenController extends Controller {
 					$c_jawaban = DB::table('soal')
 						->join('jawaban', 'soal.id_soal', 'jawaban.id_soal')
 						->join('mahasiswa', 'jawaban.npm', 'mahasiswa.npm')
-						->leftJoin('nilai', 'soal.id_materi', 'nilai.id_materi')
+						->leftJoin('nilai', function($join){
+							$join->on('soal.id_materi', 'nilai.id_materi');
+							$join->on('mahasiswa.npm', 'nilai.npm');
+						})
+						// ->join('nilai', 'soal.id_materi', 'nilai.id_materi')
 						->where('soal.id_materi', $id_materi)
 						->where('mahasiswa.npm', $data->npm);
 					$data->c_jawaban = $c_jawaban->count();
@@ -237,7 +247,72 @@ class DosenController extends Controller {
 	}
 
 	function diagnostics(){
-		return view('dosen.diagnostics');
+		$data['materi'] = DB::table('materi')
+			->orderBy('pertemuan', 'asc')->get();
+		$data['kelas'] = DB::table('kelas')
+			->orderBy('kelas', 'asc')
+			->groupBy('kelas')
+			->get();
+		$data['seluruhMateri'] = DB::table('materi')
+			->select([
+				'materi.*',
+				DB::raw("AVG(if(materi.id_materi=nilai.id_materi,nilai_akhir,null)) as rata_rata")
+			])
+			->join('nilai', 'materi.id_materi', 'nilai.id_materi')
+			->groupBy('judul_materi')
+			->orderBy('pertemuan', 'asc')
+			->get();
+		$data['seluruhKelas'] = DB::table('kelas')
+			->select([
+				'kelas.*',
+				DB::raw("AVG(if(mahasiswa.npm=nilai.npm,nilai_akhir,null)) as rata_rata")
+			])
+			->join('mahasiswa', 'kelas.id_kelas', 'mahasiswa.id_kelas')
+			->join('nilai', 'mahasiswa.npm', 'nilai.npm')
+			->groupBy('kelas.kelas')
+			->orderBy('kelas.kelas', 'asc')
+			->get();
+		$data['rata2_semua_materi'] = DB::table('nilai')
+			->select([
+				DB::raw("sum(nilai_akhir) as total"),
+				DB::raw("count(nilai_akhir) as jumlah")
+			])
+			->first();
+		$data['rata2_semua_materi'] = $data['rata2_semua_materi']->total/$data['rata2_semua_materi']->jumlah;
+
+		return view('dosen.diagnostics', $data);
+	}
+
+	function diagnostics_kelas($kelas){
+		$data = DB::table('mahasiswa')
+			->select(['mahasiswa.npm', 'mahasiswa.nama_mhs'])
+			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
+			->where('kelas.kelas', $kelas)
+			->get();
+		return $data;
+	}
+
+	function diagnostics_permateri($materi, $kelas){
+		$data = DB::table('mahasiswa')
+			->select(['mahasiswa.npm', 'mahasiswa.nama_mhs', 'nilai.*'])
+			->join('nilai', 'mahasiswa.npm', 'nilai.npm')
+			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
+			->where('id_materi', $materi)
+			->get();
+
+		return $data;
+	}
+
+	function diagnostics_permahasiswa($npm){
+		$data = DB::table('materi')
+			->select(['materi.*', 'nilai.*'])
+			->join('nilai', 'materi.id_materi', 'nilai.id_materi')
+			->join('mahasiswa', 'mahasiswa.npm', 'nilai.npm')
+			->where('mahasiswa.npm', $npm)
+			->orderBy('pertemuan', 'asc')
+			->get();
+
+		return $data;
 	}
 
 	function profil(){

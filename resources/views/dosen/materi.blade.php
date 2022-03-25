@@ -27,36 +27,27 @@
 			<table class="table table-bordered" id="table_data">
 				<thead>
 					<th>No.</th>
-					<th>Judul Materi</th>
 					<th>Soal</th>
 					<th>Kunci Jawaban</th>
 					<th>Bobot</th>
 					<th>Aksi</th>
 				</thead>
-				<tbody>
-				@foreach($data as $d)
-					<tr>
-						<td align="center">{{ $i++ }}.</td>
-						<td>{{ $d->judul_materi }}</td>
-						<td>{{ strlen($d->soal) > 30 ? substr($d->soal, 0, 30)."..." : $d->soal }}</td>
-						<td>{{ strlen($d->jawaban_soal) > 10 ? substr($d->jawaban_soal, 0, 10)."..." : $d->jawaban_soal }}</td>
-						<td>{{ $d->bobot }}</td>
-						<td align="center">
-							<data id="data-{{ $d->id_soal }}" class="d-none">{{ json_encode($d) }}</data>
-							<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#tambah" onclick="info('#data-{{ $d->id_soal}}')">
-								<span class="fas fa-info px-1"></span>
-							</button>
-							<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambah" onclick="edit('#data-{{ $d->id_soal}}')">
-								<span class="fas fa-pencil-alt"></span>
-							</button>
-							<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus" onclick="hapus('{{ $d->id_soal}}')">
-								<span class="fas fa-trash"></span>
-							</button>
-						</td>
-					</tr>
-      	@endforeach
-				</tbody>
+				<tbody></tbody>
 			</table>
+			<table_data class="d-none">
+				<div class="table_aksi">
+					<data id="data---ID-SOAL--" class="d-none">--DATA-JSON--</data>
+					<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#tambah" onclick="info('#data---ID-SOAL--')">
+						<span class="fas fa-info px-1"></span>
+					</button>
+					<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambah" onclick="edit('#data---ID-SOAL--')">
+						<span class="fas fa-pencil-alt"></span>
+					</button>
+					<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus" onclick="hapus('--ID-SOAL--')">
+						<span class="fas fa-trash"></span>
+					</button>
+				</div>
+			</table_data>
 		</div>
 	</div>
 </div>
@@ -75,7 +66,7 @@
         <div class="form-input mb-3">
         	<label>Judul Materi</label>
         	<select type="text" name="id_materi" class="form-select" required>
-        		<option disabled selected>-- Pilih Judul Materi</option>
+        		<option disabled selected>-- Pilih Materi</option>
         		@foreach($materi as $m)
         			<option value="{{ $m->id_materi }}">{{ $m->judul_materi }}</option>
         		@endforeach
@@ -91,7 +82,7 @@
         </div>
         <div class="form-input mb-3">
         	<label>Bobot Soal</label>
-        	<input type="number" min="0" value="{{ (100 - $jumlah_bobot) > 0 ? (100 - $jumlah_bobot) : 0 }}" name="bobot" class="form-control" placeholder="Bobot Soal" required>
+        	<input type="number" min="0" value="" name="bobot" class="form-control" placeholder="Bobot Soal" required>
         </div>
       </div>
       <div class="modal-footer">
@@ -143,22 +134,24 @@
 	}
 
 	function tambah(){
-		$('form').attr('action', '/dosen/materi/tambah');
+		$('form').attr('action', '/dosen/materi/tambah#materi=' + $('#data_materi').val());
 		$('#tambah_header').html("Tambah Soal Materi");
 		$form.reset();
 		$.each($input, function(i, v){
 			$(v).removeAttr('disabled');
 		});
 		$('form button[type="submit"]').show();
-		if({{ $jumlah_bobot }} < 100)
+		if($('#jumlah_bobot').html()*1.0 < 100 || $('#jumlah_bobot').html() == null){
 			$("#tambah").modal('show');
+			$("#tambah").find('select').val($('#data_materi').val());
+		}
 		else
 			toastr.error("Bobot melebihi batas (Maks. 100).<br/>Silakan kurangi bobot soal terlebih dahulu.");
 	}
 
 	function edit(id){
 		var data = JSON.parse($(id).html());
-		$('form').attr('action', '/dosen/materi/ubah');
+		$('form').attr('action', '/dosen/materi/ubah#materi=' + $('#data_materi').val());
 		$('#tambah_header').html("Ubah Soal Materi");
 		$form.reset();
 		$.each($input, function(i, v){
@@ -173,26 +166,75 @@
 	}
 
 	function hapus(id){
-		$('#hapus_data').attr('href', '/dosen/materi/hapus/' + id);
+		$('#hapus_data').attr('href', '/dosen/materi/hapus/' + id + '#materi=' + $('#data_materi').val());
 	}
 
-	$(document).ready(function(){
-		$('#table_data').DataTable({
-		  "responsive": true,
-		  "autoWidth": false,
-		  "language": {
-			  url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/id.json'
-		  },
-		  "fnDrawCallback": function (oSettings){
-			$('.dataTables_filter').each(function () {
-				if($('#btn_add').length < 1){
-					$(this).append('<button class="btn btn-info btn-sm mb-1 ms-3" id="btn_add" onclick="tambah()">Tambah Materi</button>');
-					$("#table_data_paginate .pagination").prepend("<div class='my-auto me-3'>Total Bobot: {{ $jumlah_bobot }}</div>");
-				}
+	var table;
+	var table_opt = {
+	  "responsive": true,
+	  "autoWidth": false,
+	  "language": {
+		  url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/id.json'
+	  },
+	  columnDefs: [
+	  	{targets: 0,className: 'text-center'},
+	  	{targets: 3,className: 'text-center'},
+	  	{targets: 4,className: 'text-center'}
+  	],
+	  initComplete: function (settings, json){
+			$('.dataTables_filter')
+				.append(' <span class="d-none d-md-inline">|</span> <button class="btn btn-info btn-sm mb-1" id="btn_add" onclick="tambah()">Tambah Materi</button>');
+			$('#table_data_length')
+				.append('<div class="mb-1 ms-1 d-md-inline d-block"><span class="d-none d-md-inline">|</span> Materi: <select class="form-select form-select-sm w-auto d-inline" style="max-width: 40%;" id="data_materi">'+
+					$('select[name="id_materi"]').html() +
+					'</select></div>');
+
+			if((window.location.hash).search('materi') > 0)
+				$('#data_materi').val((window.location.hash).substr(8, (window.location.hash).search('&')-8));
+			if($('#data_materi').val() != null) update_table();
+			$('#data_materi').change(function(){
+				update_table();
 			});
-		  }
-		});
-	});
+	  }
+	};
+
+	table = $('#table_data').DataTable(table_opt);
+
+	function update_table(){
+		var id_materi = $('#data_materi').val();
+		var tmp_row = $('.table_aksi').html()
+			.replaceAll('tr_data', 'tr').replaceAll('td_data', 'td');
+		var tb_data = [];
+		$.ajax({
+			url: '/dosen/materi/' + id_materi,
+			type: "GET",
+			success: function(msg){
+				// $('#total-bobot').html(msg.jumlah_bobot);
+				if(msg.data == null)
+					tb_data = [];
+				else {
+					$.each(msg.data, function(i, v){
+						var data_temp = [
+							(i+1) + ".",
+							v.soal.length > 40 ? v.soal.substr(0, 40) + "..." : v.soal,
+							v.jawaban_soal.length > 40 ? v.jawaban_soal.substr(0, 40) + "..." : v.jawaban_soal,
+							v.bobot,
+							tmp_row.replace("--DATA-JSON--", JSON.stringify(v))
+								.replaceAll("--ID-SOAL--", v.id_soal)
+						];
+						tb_data.push(data_temp);
+					});
+				}
+				table.clear();
+				table.rows.add(tb_data);
+				table.draw();
+				$("#table_data_paginate .pagination").prepend("<div class='my-auto me-3'>Total Bobot: <span id='jumlah_bobot'>"+ msg.jumlah_bobot +"</span></div>");
+			}
+		})
+		.fail(function(jqXHR, textStatus) {
+		  alert( "Jaringan Error, Coba lagi nanti. (" + textStatus + ")");
+		});;
+	}
 </script>
 
 @endsection

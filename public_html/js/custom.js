@@ -18,6 +18,7 @@ $(document).ready(function(){
 	});
 
   	var hash = window.location.hash;
+  	if(hash.search('&') > 0) hash = '#' + hash.split('&')[1];
   	if(hash == '#berhasil_disimpan'){
   		toastr.success('Data berhasil disimpan');
   	}

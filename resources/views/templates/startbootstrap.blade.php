@@ -149,7 +149,7 @@
     function timerIncrement() {
         idleTime = idleTime + 1;
         if (idleTime > idleMax) { 
-            window.location="/keluar";
+            window.location="/keluar#expired";
         }
     }       
 </script>

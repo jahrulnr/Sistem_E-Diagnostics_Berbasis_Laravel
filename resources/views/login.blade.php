@@ -6,6 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
+
+        <!-- Refresh token laravel -->
+        <meta http-equiv="refresh" content="1800">
+
         <title>Login | E-Diagnostics</title>
         
         <!-- style -->
@@ -45,6 +49,9 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
+                                        <div class="card card-body bg-danger d-none text-white mb-3" id="expired">
+                                            Sistem keluar secara otomatis karena tidak ada aktivitas selama 25 menit.
+                                        </div>
                                         <!-- Admin/Dosen Login -->
                                         <form method="POST" action="/login" id="inputEmail">
                                             @csrf
@@ -109,6 +116,8 @@
             $(document).ready(function(){
                 if(window.location.hash == '#login_gagal')
                     toastr.error('User/Password tidak ditemukan');
+                if(window.location.hash == '#expired')
+                    $('#expired').removeClass('d-none');
 
                 $('#cp_type').click(function(){
                     var $pass = $('input[name="password"]');

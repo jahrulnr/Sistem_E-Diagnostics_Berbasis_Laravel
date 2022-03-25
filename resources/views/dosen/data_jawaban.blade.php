@@ -176,6 +176,7 @@
      			if(v.c_jawaban > 0) aksi_temp = aksi_temp.replace('disabled', '');
      			var data_temp = [(i+1) + ".", v.npm, v.nama_mhs, v.nilai == null ? '-' : Math.round(v.nilai * 100) / 100 || 0, aksi_temp];
      			tb.push(data_temp);
+     			console.log(v);
      		});
 
  				table_draw(table_mhs, tb);

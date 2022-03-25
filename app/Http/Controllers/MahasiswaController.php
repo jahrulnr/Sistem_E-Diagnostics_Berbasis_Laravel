@@ -30,8 +30,16 @@ class MahasiswaController extends Controller {
 
 	function materi(){
 		$db = DB::table('materi')
+			->select(['materi.*', 'jawaban.id_jawaban'])
+			->leftJoin('soal', 'materi.id_materi', 'soal.id_materi')
+			->leftJoin('jawaban', function($join){
+				$join->on('soal.id_soal', 'jawaban.id_soal');
+				$join->where('jawaban.npm', session('id'));
+			})
+			->groupBy('judul_materi')
 			->orderBy('pertemuan', 'asc')
 			->get();
+		// return $db;
 
 		return view('mahasiswa.materi', ['data' => $db]);
 	}
@@ -52,7 +60,10 @@ class MahasiswaController extends Controller {
 		// Data soal dan jawaban
 		$data['soal'] = DB::table('soal')
 			->select(['soal.*', 'jawaban.jawaban_mhs'])
-			->leftJoin('jawaban', 'soal.id_soal', 'jawaban.id_soal')
+			->leftJoin('jawaban', function($join){
+				$join->on('soal.id_soal', 'jawaban.id_soal');
+				$join->where('jawaban.npm', session('id'));
+			})
 			->where('id_admin', $data['dosen']->id_admin)
 			->where('id_materi', $id_materi);
 		$data['soal_count'] = $data['soal']->count();

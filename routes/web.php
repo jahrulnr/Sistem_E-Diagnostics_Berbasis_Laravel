@@ -43,6 +43,7 @@ Route::get('/dosen', 'App\Http\Controllers\DosenController@dashboard');
 
 // Materi
 Route::get('/dosen/materi', 'App\Http\Controllers\DosenController@materi'); 
+Route::get('/dosen/materi/{id_materi}', 'App\Http\Controllers\DosenController@data_materi')->where('id_materi', '[0-9]+'); 
 Route::post('/dosen/materi/tambah', 'App\Http\Controllers\DosenController@tambah_materi'); 
 Route::post('/dosen/materi/ubah', 'App\Http\Controllers\DosenController@ubah_materi'); 
 Route::get('/dosen/materi/hapus/{id}', 'App\Http\Controllers\DosenController@hapus_materi'); 
@@ -60,8 +61,11 @@ Route::post('/dosen/mahasiswa/tambah', 'App\Http\Controllers\DosenController@tam
 Route::post('/dosen/mahasiswa/ubah', 'App\Http\Controllers\DosenController@ubah_mahasiswa'); 
 Route::get('/dosen/mahasiswa/hapus/{id}', 'App\Http\Controllers\DosenController@hapus_mahasiswa'); 
 
-// -- Diagnosis -- belum siap
+// -- Diagnosis --
 Route::get('/dosen/diagnostics', 'App\Http\Controllers\DosenController@diagnostics');
+Route::get('/api/diagnostics/kelas/{kelas}', 'App\Http\Controllers\DosenController@diagnostics_kelas');
+Route::get('/api/diagnostics/permateri/{materi}/{kelas}', 'App\Http\Controllers\DosenController@diagnostics_permateri');
+Route::get('/api/diagnostics/permahasiswa/{npm}', 'App\Http\Controllers\DosenController@diagnostics_permahasiswa');
 
 // -- Profil
 Route::get('/dosen/profil', 'App\Http\Controllers\DosenController@profil');

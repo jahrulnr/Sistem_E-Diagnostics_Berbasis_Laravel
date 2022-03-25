@@ -14,8 +14,12 @@
 						<span style="font-size: 4rem;font-weight: bolder;">{{ $materi->pertemuan }}</span>
 					</div>
 					<div class="col-8 my-auto">
-							Materi<hr class="m-0" />
-							{{ $materi->judul_materi }}
+						Materi
+						@if($materi->id_jawaban != null)
+						<span class="fas fa-check text-success"></span>
+						@endif
+						<hr class="m-0" />
+						{{ $materi->judul_materi }}
 					</div>
 				</div>
 			</div>
