@@ -64,7 +64,7 @@ class DosenController extends Controller {
 		]);
 
 		if(!$db)
-			return redirect('/dosen/materi#gagal_disimpan');
+			return '<script>window.location.href = "'.url()->previous().'" + window.location.hash + "&gagal_disimpan";</script>';//return redirect('/dosen/materi#gagal_disimpan');
 		return '<script>window.location.href = "'.url()->previous().'" + window.location.hash + "&berhasil_disimpan";</script>';// redirect('/dosen/materi#berhasil_disimpan');
 	}
 
@@ -85,8 +85,10 @@ class DosenController extends Controller {
 		}
 
 		if(!$db)
-			return redirect('/dosen/materi#gagal_diubah');
-		return redirect('/dosen/materi#berhasil_diubah');
+		// 	return redirect('/dosen/materi#gagal_diubah');
+		// return redirect('/dosen/materi#berhasil_diubah');
+			return '<script>window.location.href = "'.url()->previous().'" + window.location.hash + "&gagal_diubah";</script>';
+		return '<script>window.location.href = "'.url()->previous().'" + window.location.hash + "&berhasil_diubah";</script>';
 	}
 
 	function hapus_materi($id){
@@ -96,8 +98,10 @@ class DosenController extends Controller {
 			->delete();
 
 		if(!$db)
-			return redirect('/dosen/materi#gagal_dihapus');
-		return redirect('/dosen/materi#berhasil_dihapus');
+		// 	return redirect('/dosen/materi#gagal_dihapus');
+		// return redirect('/dosen/materi#berhasil_dihapus');
+			return '<script>window.location.href = "'.url()->previous().'" + window.location.hash + "&gagal_dihapus";</script>';
+		return '<script>window.location.href = "'.url()->previous().'" + window.location.hash + "&berhasil_dihapus";</script>';
 	}
 
 	function materi_penilaian(){
