@@ -250,6 +250,7 @@ class DosenController extends Controller {
 		$data['materi'] = DB::table('materi')
 			->orderBy('pertemuan', 'asc')->get();
 		$data['kelas'] = DB::table('kelas')
+			->where('id_admin', session('id'))
 			->orderBy('kelas', 'asc')
 			->groupBy('kelas')
 			->get();
@@ -259,6 +260,8 @@ class DosenController extends Controller {
 				DB::raw("AVG(if(materi.id_materi=nilai.id_materi,nilai_akhir,null)) as rata_rata")
 			])
 			->leftJoin('nilai', 'materi.id_materi', 'nilai.id_materi')
+			->leftJoin('soal', 'materi.id_materi', 'soal.id_materi')
+			->where('soal.id_admin', session('id'))
 			->groupBy('judul_materi')
 			->orderBy('pertemuan', 'asc')
 			->get();
@@ -270,6 +273,7 @@ class DosenController extends Controller {
 			])
 			->leftJoin('mahasiswa', 'kelas.id_kelas', 'mahasiswa.id_kelas')
 			->leftJoin('nilai', 'mahasiswa.npm', 'nilai.npm')
+			->where('kelas.id_admin', session('id'))
 			->groupBy('kelas.kelas')
 			->orderBy('kelas.kelas', 'asc')
 			->get();
@@ -282,6 +286,7 @@ class DosenController extends Controller {
 			])
 			->leftJoin('jawaban', 'soal.id_soal', 'jawaban.id_soal')
 			->leftJoin('materi', 'soal.id_materi', 'materi.id_materi')
+			->where('soal.id_admin', session('id'))
 			->groupBy('soal.id_soal')
 			->orderBy('soal.id_soal', 'asc')
 			->get();
@@ -291,8 +296,16 @@ class DosenController extends Controller {
 				DB::raw("sum(nilai_akhir) as total"),
 				DB::raw("count(nilai_akhir) as jumlah")
 			])
-			->first();
-		$data['rata2_semua_materi'] = $data['rata2_semua_materi']->total/$data['rata2_semua_materi']->jumlah;
+			->join('mahasiswa', 'nilai.npm', 'mahasiswa.npm')
+			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
+			->where('kelas.id_admin', session('id'))
+			->first(); 
+			// return $data['rata2_semua_materi'];
+
+		$data['rata2_semua_materi'] = 
+			$data['rata2_semua_materi']->jumlah > 0 ||
+			$data['rata2_semua_materi']->total > 0
+			? $data['rata2_semua_materi']->total/$data['rata2_semua_materi']->jumlah : 0;
 
 		return view('dosen.diagnostics', $data);
 	}
@@ -302,6 +315,7 @@ class DosenController extends Controller {
 			->select(['mahasiswa.npm', 'mahasiswa.nama_mhs'])
 			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
 			->where('kelas.kelas', $kelas)
+			->where('kelas.id_admin', session('id'))
 			->get();
 		return $data;
 	}
@@ -313,6 +327,7 @@ class DosenController extends Controller {
 			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
 			->where('id_materi', $materi)
 			->where('kelas.kelas', $kelas)
+			->where('kelas.id_admin', session('id'))
 			->get();
 
 		return $data;
@@ -323,7 +338,9 @@ class DosenController extends Controller {
 			->select(['materi.*', 'nilai.*'])
 			->join('nilai', 'materi.id_materi', 'nilai.id_materi')
 			->join('mahasiswa', 'mahasiswa.npm', 'nilai.npm')
+			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
 			->where('mahasiswa.npm', $npm)
+			->where('kelas.id_admin', session('id'))
 			->orderBy('pertemuan', 'asc')
 			->get();
 

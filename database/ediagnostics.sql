@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 17, 2022 at 02:51 PM
--- Server version: 10.4.21-MariaDB
--- PHP Version: 8.0.12
+-- Host: localhost
+-- Generation Time: Mar 25, 2022 at 07:14 PM
+-- Server version: 10.3.34-MariaDB-log-cll-lve
+-- PHP Version: 8.0.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ediagnostics`
+-- Database: `jahruln1_ediagnostics`
 --
 
 -- --------------------------------------------------------
@@ -42,8 +42,7 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id_admin`, `email`, `nama_dsn`, `noHP`, `password`, `hak_akses`) VALUES
 (1, 'jahrulnr@gmail.com', 'Jahrulnrr', '082218594993', '$2a$12$royGgfCsGcm/KvDy9rcBjejcKh/2ARrFcwJLz9Wd389QbeZqlNovS', 'admin'),
-(10, 'dosen@gmail.com', 'Contoh nama dosen', '088221859499', '$2y$10$NLCBH0JSN2SJTKmTuyztC.qWu694RfSga9l/WsDBkYbUIhujWL/QC', 'dosen'),
-(11, 'dosen@gmail.com1', 'Contoh nama 2', '088221859499', '$2y$10$k6IbcUVFgnCw3VJApL7CWeSAhsXEu9lwMQwgHaM8vwxorh/Ka.zZ6', 'dosen');
+(10, 'dosen@gmail.com', 'Dosen', '082218594993', '$2y$10$NLCBH0JSN2SJTKmTuyztC.qWu694RfSga9l/WsDBkYbUIhujWL/QC', 'dosen');
 
 -- --------------------------------------------------------
 
@@ -55,20 +54,9 @@ CREATE TABLE `jawaban` (
   `id_jawaban` int(10) NOT NULL,
   `npm` varchar(9) NOT NULL,
   `id_soal` int(10) NOT NULL,
-  `jawaban_mhs` text NOT NULL
+  `jawaban_mhs` text NOT NULL,
+  `bobot_jawaban` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `jawaban`
---
-
-INSERT INTO `jawaban` (`id_jawaban`, `npm`, `id_soal`, `jawaban_mhs`) VALUES
-(1, '173510428', 1, 'redirect(url()->previous() . \'#berhasil_disimpan\')'),
-(2, '173510428', 2, 'if(!empty($data))\r\n			$db = DB::table(\'jawaban\')\r\n				->insert($data);'),
-(3, '173510428', 3, '$data = [\r\n				\'npm\'	  	  => session(\'id\'),\r\n				\'id_soal\' 	  => $id,\r\n				\'jawaban_mhs\' => $jawaban\r\n			];'),
-(4, '173510428', 4, 'DB::table(\'jawaban\')\r\n				->where(\'npm\', session(\'id\'))\r\n				->where(\'id_soal\', $id)\r\n				->exists()'),
-(5, '173510428', 5, 'if($soal->jawaban_mhs != null){\r\n				$data[\'jawaban\'] = true;\r\n				break;\r\n			}'),
-(6, '173510428', 6, '$data[\'soal\'] = DB::table(\'soal\')\r\n			->select([\'soal.*\', \'jawaban.jawaban_mhs\'])\r\n			->leftJoin(\'jawaban\', \'soal.id_soal\', \'jawaban.id_soal\')\r\n			->where(\'id_admin\', $data[\'dosen\']->id_admin)\r\n			->where(\'id_materi\', $id_materi);');
 
 -- --------------------------------------------------------
 
@@ -87,10 +75,12 @@ CREATE TABLE `kelas` (
 --
 
 INSERT INTO `kelas` (`id_kelas`, `id_admin`, `kelas`) VALUES
-(1, 10, 'A'),
-(2, 10, 'B'),
-(3, 10, 'C'),
-(4, 11, 'D');
+(1, 10, 'Z'),
+(5, 10, 'X'),
+(6, 12, 'C'),
+(7, 12, 'D'),
+(8, 12, 'E'),
+(9, 12, 'F');
 
 -- --------------------------------------------------------
 
@@ -105,20 +95,6 @@ CREATE TABLE `mahasiswa` (
   `id_kelas` int(10) DEFAULT NULL,
   `password` char(60) NOT NULL DEFAULT '$2a$12$M7F8mhRwCfsuCudFOJ9vnuOaC2Cew93qTjneDW7sqFMPbnRI.sAH2'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `mahasiswa`
---
-
-INSERT INTO `mahasiswa` (`npm`, `email`, `nama_mhs`, `id_kelas`, `password`) VALUES
-('173510001', 'mhs@contoh.co', 'Contoh Nama', 1, '$2y$10$UsOu10AAxI/ZllxZLOKCo.uMeSAcIOgE50SH02o5bmil1eUhfSoHC'),
-('173510002', 'mhs@contoh.co', 'Contoh Nama', 2, '$2y$10$UsOu10AAxI/ZllxZLOKCo.uMeSAcIOgE50SH02o5bmil1eUhfSoHC'),
-('173510003', 'mhs@contoh.co', 'Contoh Nama', 2, '$2y$10$UsOu10AAxI/ZllxZLOKCo.uMeSAcIOgE50SH02o5bmil1eUhfSoHC'),
-('173510004', 'mhs@contoh.co', 'Contoh Nama', 3, '$2y$10$UsOu10AAxI/ZllxZLOKCo.uMeSAcIOgE50SH02o5bmil1eUhfSoHC'),
-('173510005', 'mhs@contoh.co', 'Contoh Nama', 3, '$2y$10$UsOu10AAxI/ZllxZLOKCo.uMeSAcIOgE50SH02o5bmil1eUhfSoHC'),
-('173510006', 'mhs@contoh.co', 'Contoh Nama', 4, '$2y$10$UsOu10AAxI/ZllxZLOKCo.uMeSAcIOgE50SH02o5bmil1eUhfSoHC'),
-('173510007', 'mhs@contoh.co', 'Contoh Nama', 4, '$2y$10$UsOu10AAxI/ZllxZLOKCo.uMeSAcIOgE50SH02o5bmil1eUhfSoHC'),
-('173510428', 'mhs@contoh.com', 'Contoh Nama', 1, '$2y$10$UsOu10AAxI/ZllxZLOKCo.uMeSAcIOgE50SH02o5bmil1eUhfSoHC');
 
 -- --------------------------------------------------------
 
@@ -137,11 +113,20 @@ CREATE TABLE `materi` (
 --
 
 INSERT INTO `materi` (`id_materi`, `judul_materi`, `pertemuan`) VALUES
-(2, 'Logika dan Algoritma Pemrograman', 1),
-(3, 'Pengenalan Pascal', 2),
-(4, 'Input dan Output Pemrograman Pascal', 3),
-(5, 'Kondisi atau Percabangan', 5),
-(6, 'Kondisi Bersarang', 6);
+(2, 'Pengantar Algoritma dan Pemrograman', 1),
+(3, 'Dasar-dasar Algoritma', 2),
+(4, 'Identifier,Tipe data, Operator dan Ekspresi', 3),
+(5, 'Fungsi Input dan output', 4),
+(6, 'Struktur Runtunan', 5),
+(7, 'Konstruksi Pemilihan/Seleksi', 6),
+(8, 'Konstruksi Pemilihan/Seleksi (Lanjutan)', 7),
+(9, 'Konstruksi pengulangan', 9),
+(10, 'Konstruksi pengulangan (Lanjutan)', 10),
+(11, 'Prosedur dan Fungsi', 11),
+(12, 'Prosedur dan Fungsi', 12),
+(13, 'Array/larik', 13),
+(14, 'Array/larik (Lanjutan)', 14),
+(15, 'Pemrosesan Arsip (File)', 15);
 
 -- --------------------------------------------------------
 
@@ -156,13 +141,6 @@ CREATE TABLE `nilai` (
   `nilai_akhir` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `nilai`
---
-
-INSERT INTO `nilai` (`id_nilai`, `npm`, `id_materi`, `nilai_akhir`) VALUES
-(1, '173510428', 2, 58.2501);
-
 -- --------------------------------------------------------
 
 --
@@ -174,20 +152,27 @@ CREATE TABLE `soal` (
   `id_materi` int(10) NOT NULL,
   `id_admin` int(10) NOT NULL,
   `soal` text NOT NULL,
-  `jawaban_soal` text NOT NULL
+  `jawaban_soal` text NOT NULL,
+  `bobot` float NOT NULL DEFAULT 10
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `soal`
 --
 
-INSERT INTO `soal` (`id_soal`, `id_materi`, `id_admin`, `soal`, `jawaban_soal`) VALUES
-(1, 2, 10, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\r\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\r\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
-(2, 2, 10, 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
-(3, 2, 10, 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
-(4, 2, 10, 'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
-(5, 2, 10, 'cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
-(6, 2, 10, 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
+INSERT INTO `soal` (`id_soal`, `id_materi`, `id_admin`, `soal`, `jawaban_soal`, `bobot`) VALUES
+(1, 2, 10, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\r\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\r\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 0),
+(2, 2, 10, 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 20),
+(3, 2, 10, 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\r\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 15),
+(4, 2, 10, 'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\r\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 10),
+(5, 2, 10, 'cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\r\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 10),
+(6, 2, 10, 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 20),
+(9, 2, 10, 'Jelaskan contoh algoritma yang ada di sekitar kita', 'contoh jawaban', 25),
+(10, 3, 10, 'soal 1', 'asd', 100),
+(11, 4, 10, 'qwerty', 'qwert', 50),
+(12, 4, 10, 'ytrewq', 'asd', 50),
+(13, 5, 10, 'zxcv', 'asdf', 40),
+(14, 5, 10, 'trvdasa', 'qwdcb', 60);
 
 --
 -- Indexes for dumped tables
@@ -251,37 +236,37 @@ ALTER TABLE `soal`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id_admin` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_admin` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `jawaban`
 --
 ALTER TABLE `jawaban`
-  MODIFY `id_jawaban` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_jawaban` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
-  MODIFY `id_kelas` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_kelas` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `materi`
 --
 ALTER TABLE `materi`
-  MODIFY `id_materi` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_materi` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `nilai`
 --
 ALTER TABLE `nilai`
-  MODIFY `id_nilai` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_nilai` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `soal`
 --
 ALTER TABLE `soal`
-  MODIFY `id_soal` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_soal` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
