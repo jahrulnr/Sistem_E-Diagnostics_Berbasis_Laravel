@@ -307,8 +307,7 @@ class DosenController extends Controller {
 			// return $data['rata2_semua_materi'];
 
 		$data['rata2_semua_materi'] = 
-			$data['rata2_semua_materi']->jumlah > 0 ||
-			$data['rata2_semua_materi']->total > 0
+			$data['rata2_semua_materi']->jumlah > 0
 			? $data['rata2_semua_materi']->total/$data['rata2_semua_materi']->jumlah : 0;
 
 		return view('dosen.diagnostics', $data);
