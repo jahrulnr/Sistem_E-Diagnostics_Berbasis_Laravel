@@ -5,11 +5,20 @@ require_once 'apiAndroid.php';
 
 // Test Controller for Beta Testing
 Route::any('/test', 'App\Http\Controllers\TestController@test');
+Route::any('/mailView/{token}', 'App\Http\Controllers\TestController@mailView');
 
 // Login
 Route::get('/', 'App\Http\Controllers\MainController@index');
 Route::post('/login', 'App\Http\Controllers\MainController@verify');
 Route::post('/mahasiswa/login', 'App\Http\Controllers\MainController@verify');
+
+// Reset Password
+// ----- form reset x
+Route::get('/reset', 'App\Http\Controllers\MainController@reset_form');
+// ----- cek akun x
+Route::post('/reset/akun', 'App\Http\Controllers\MainController@api_cek_akun'); 
+// ----- email konfirmasi x
+Route::get('/reset/token/{token}', 'App\Http\Controllers\MainController@reset_verify'); 
 
 // Logout 
 Route::get('/keluar', 'App\Http\Controllers\MainController@logout');

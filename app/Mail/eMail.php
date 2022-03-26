@@ -38,6 +38,6 @@ class eMail extends Mailable
     {
         return $this
             ->subject($this->subject)
-            ->view('mail.test');
+            ->view('mail.reset_pass');
     }
 }

@@ -14,16 +14,43 @@ class TestController extends Controller {
 	}
 
 	function test(Request $req){
-		$subject = "Test email";
+
+		$subject = "Reset Password";
 		$msg = [
-			'title' => "Just Test",
-			'body'	=> "Yang ini dari host biasa"
+			'title' => "Reset Password",
+			'body'	=> asset("reset/token/bd63204313950003c6251e38ad00108d")
 		];
 
 		// send email
 		\Mail::to('jahrulnr@gmail.com')->send(new \App\Mail\eMail($subject, $msg));
 
 		return $msg;
+	}
+
+	function testToken($npm, $email){
+
+	}
+
+	function mailView($mail, Request $request){
+
+		// test link : http://localhost:8000/mailView/bd63204313950003c6251e38ad00108d
+		$data = DB::table('mahasiswa')
+			->select([
+				DB::raw("md5(concat(npm, '@', email)) as token"),
+				'npm',
+				'email',
+				'nama_mhs'
+			])
+			->having('token', $mail)
+			->first();
+
+		$subject = "Reset Password";
+		$msg = [
+			'title' => "Reset Password",
+			'body'	=> asset("reset/token/" . $data->token)
+		];
+
+		return view('mail.reset_pass',[ 'msg' => $msg ]);
 	}
 }
 
