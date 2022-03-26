@@ -15,6 +15,10 @@ return [
 
     'default' => env('MAIL_MAILER', 'smtp'),
 
+    // custom driver
+    // 'driver' => 'smtp',
+    // 'driver' => env('MAIL_DRIVER', 'mail'),
+
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
@@ -43,6 +47,15 @@ return [
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'auth_mode' => null,
+
+            //custom stream
+            'stream' => [
+                'ssl' => [
+                    'allow_self_signed' => true,
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ],
         ],
 
         'ses' => [

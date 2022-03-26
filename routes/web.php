@@ -3,11 +3,8 @@
 use Illuminate\Support\Facades\Route;
 require_once 'apiAndroid.php';
 
-Route::get('/welcome', function () {
-    return view('welcome');
-}); 
-
-Route::get('/ping', function(){});
+// Test Controller for Beta Testing
+Route::any('/test', 'App\Http\Controllers\TestController@test');
 
 // Login
 Route::get('/', 'App\Http\Controllers\MainController@index');
