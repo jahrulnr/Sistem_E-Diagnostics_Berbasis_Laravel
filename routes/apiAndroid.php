@@ -1,7 +1,17 @@
 <?php
 
-	Route::post('api/login', 'App\Http\Controllers\ApiAndroid@login');
-	Route::get('api/materi', 'App\Http\Controllers\ApiAndroid@materi');
-	
+	// ex: bd63204313950003c6251e38ad00108d
+
+	Route::any('/android/login', 'App\Http\Controllers\ApiAndroid@login');
+	Route::any('/android/materi', 'App\Http\Controllers\ApiAndroid@materi');
+	Route::any('/android/materi/{id_materi}/soal/{token}', 'App\Http\Controllers\ApiAndroid@soal');
+	Route::any('/android/materi2/{token}', 'App\Http\Controllers\ApiAndroid@materi2');
+	Route::any('/android/simpan/jawaban/{token}', 'App\Http\Controllers\ApiAndroid@simpan_jawaban');
+	Route::any('/android/profil/{token}', 'App\Http\Controllers\ApiAndroid@profil');
+	Route::any('/android/simpan/profil/{token}', 'App\Http\Controllers\ApiAndroid@simpan_profil');
+
+	// test Post
+	Route::any('/android/test', 'App\Http\Controllers\ApiAndroid@test');
+
 	// Global API
-	Route::get('/api/kelas/{id_dosen}', 'App\Http\Controllers\MainController@getKelas')->name('getKelas');
+	Route::any('/api/kelas/{id_dosen}', 'App\Http\Controllers\MainController@getKelas')->name('getKelas');
