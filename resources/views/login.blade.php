@@ -89,6 +89,20 @@
                                         <!-- Mahasiswa Login -->
                                         <form method="POST" action="/mahasiswa/login" id="inputNPM" style="display: none;">
                                             @csrf
+                                            <div class="card mb-3 bg-primary text-white">
+                                                <div class="row g-0">
+                                                    <div class="col-2">
+                                                        <img src="/assets/img/app-icon.png" class="h-100 w-100 rounded-start" />
+                                                    </div>
+                                                    <div class="col-10 my-auto">
+                                                        <div class="card-body p-2">
+                                                            <a class="card-text text-white" href="/files/E-Diagnostics.apk">
+                                                                Download aplikasi untuk akses lebih mudah!
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-floating mb-3">
                                                 <input class="form-control" id="npm" type="text" placeholder="173500000" name="npm" />
                                                 <label for="npm">NPM</label>
