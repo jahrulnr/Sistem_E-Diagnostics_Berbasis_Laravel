@@ -20,7 +20,7 @@
 	        </a>
 	    </div>
 	    <div class="col-xl-3 col-md-6">
-	        <a href="/mahasiswa/diagnosis" class="card bg-success text-white mb-4 pt-2 text-center shadow">
+	        <a href="/mahasiswa/hasil_tes" class="card bg-success text-white mb-4 pt-2 text-center shadow">
 	        	<div class="card-header"><span class="fas fa-chart-bar fa-4x"></span></div>
 	            <div class="card-body">Hasil Tes</div>
 	        </a>

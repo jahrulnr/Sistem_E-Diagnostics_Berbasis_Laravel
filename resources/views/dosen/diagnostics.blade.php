@@ -15,10 +15,6 @@
 <script src="/vendor/datatables/js/dataTables.bootstrap5.min.js"></script>
 <script src="/vendor/datatables/js/dataTables.responsive.min.js"></script>
 <script src="/vendor/datatables/js/responsive.bootstrap5.min.js"></script>
-<!-- ChartJS -->
-<script src="/vendor/chartjs/dist/chart.min.js"></script>
-<!-- Palette -->
-<script src="/vendor/palette/palette.js"></script>
 
 <div class="container-fluid px-4">
 	<h1 class="my-4">Hasil Diagnostics</h1>
@@ -172,7 +168,7 @@
 										<td align="center">{{ $m->rata_rata }}</td>
 										<td>
 											<script type="text/javascript">
-												chart_data.SeluruhMateri.push({{ $m->rata_rata }})
+												chart_data.SeluruhMateri.push({{ $m->rata_rata == null ? "0" : $m->rata_rata  }})
 											</script>
 										@if($m->rata_rata > $rata2_semua_materi)
 											Mudah dipahami
@@ -214,7 +210,7 @@
 										<td align="center">{{ $k->rata_rata }}</td>
 										<td>
 											<script type="text/javascript">
-												chart_data.SeluruhKelas.push({{ $k->rata_rata }})
+												chart_data.SeluruhKelas.push({{ $k->rata_rata == null ? "0" : $k->rata_rata  }})
 											</script>
 										@if($k->rata_rata > $rata2_semua_materi)
 											Mudah dipahami
@@ -299,6 +295,9 @@
 	</div>
 </div>
 
+<!-- ChartJS -->
+<script src="/vendor/chartjs/dist/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script>
 <script type="text/javascript">
 	var tablePerMateri = $('#tablePerMateri');
 	var tablePerMahasiswa = $('#tablePerMahasiswa');
@@ -487,6 +486,7 @@
 		    table.rows.add(data);
 		    table.draw();
 		}
+
 		// Action Chart
 		const canvasSeluruhMateri = $('#canvasSeluruhMateri');
 		const canvasSeluruhMahasiswa = $('#canvasSeluruhMahasiswa');
@@ -508,6 +508,8 @@
         ], chart_data.SeluruhSoal);
 
 		function createChart(id, label_data, data){
+			var data_temp = data.length;
+
 			new Chart(id, {
 			    type: 'bar',
 			    data: {
@@ -515,9 +517,9 @@
 			        datasets: [{
 			            label: 'Nilai Rata-Rata',
 			            data: data,
-			            backgroundColor: palette('tol', data.length).map(function(hex) {
-					        return '#' + hex;
-					    }),
+			      //       backgroundColor: palette('tol', data.length).map(function(hex) {
+					    //     return '#' + hex;
+					    // }),
 			            borderWidth: 1
 			        }]
 			    },
@@ -534,9 +536,15 @@
 			        plugins: {
 					    legend: {
 					        display: false
-					    }
+					    },
+				        autocolors: {
+				        	mode: 'data'
+				        }
 					}
-			    }
+			    },
+			    plugins: [
+			    	window['chartjs-plugin-autocolors']
+			    ]
 			});
 		}
 	});

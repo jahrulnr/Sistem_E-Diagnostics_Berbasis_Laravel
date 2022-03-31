@@ -4,11 +4,11 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
+        <meta name="description" content="E-Diagnostics pada Mata Kuliah Algoritma dan Pemrograman" />
+        <meta name="author" content="Jahrulnr" />
 
-        <!-- Refresh token laravel -->
-        <meta http-equiv="refresh" content="1800">
+        <!-- Refresh token laravel every 25 minutes -->
+        <meta http-equiv="refresh" content="1500">
 
         <title>Login | E-Diagnostics</title>
         
@@ -49,9 +49,21 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
+                                        <!-- AutoLogout -->
                                         <div class="card card-body bg-danger d-none text-white mb-3" id="expired">
                                             Sistem keluar secara otomatis karena tidak ada aktivitas selama 25 menit.
                                         </div>
+
+                                        <!-- Reset Pass -->
+                                        <div class="card card-body bg-info d-none text-white mb-3" id="konfirmasi_reset">
+                                            Silakan cek email yang terpaut pada akun anda.
+                                        </div>
+
+                                        <!-- AutoLogout -->
+                                        <div class="card card-body bg-success d-none text-white mb-3" id="reset_sukses">
+                                            Password berhasil diubah. Silakan login.
+                                        </div>
+
                                         <!-- Admin/Dosen Login -->
                                         <form method="POST" action="/login" id="inputEmail">
                                             @csrf
@@ -64,12 +76,12 @@
                                                     <input class="form-control" id="password" type="password" placeholder="Password" name="password" required />
                                                     <label for="password">Password</label>
                                                 </div>
-                                                <a href="#" class="input-group-text" id="cp_type">
+                                                <a href="#" class="input-group-text cp_type">
                                                     <span class="fas fa-eye-slash"></span>
                                                 </a>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="password.html">Lupa Password?</a>
+                                                <a class="small reset_form" href="#">Lupa Password?</a>
                                                 <button type="submit" class="btn btn-primary">Login</button>
                                             </div>
                                         </form>
@@ -86,21 +98,39 @@
                                                     <input class="form-control" id="password" type="password" placeholder="Password" name="password" required />
                                                     <label for="password">Password</label>
                                                 </div>
-                                                <a href="#" class="input-group-text" id="cp_type">
+                                                <a href="#" class="input-group-text cp_type">
                                                     <span class="fas fa-eye-slash"></span>
                                                 </a>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="password.html">Lupa Password?</a>
+                                                <a class="small reset_form" href="#">Lupa Password?</a>
                                                 <button type="submit" class="btn btn-primary">Login</button>
                                             </div>
                                         </form>
+
+                                        <!-- Reset Pass -->
+                                        <form method="POST" action="/reset" id="reset_form" style="display: none;">
+                                            @csrf
+                                            <div class="form-floating">
+                                                <input class="form-control" type="text" placeholder="nama@contoh.com" name="user" required />
+                                                <label for="email">Email/NPM</label>
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-end mt-4 mb-0">
+                                                <button type="submit" class="btn btn-primary">Kirim</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="card-footer text-center bg-dark text-white py-3">
-                                        <div class="small" id="login_mhs">
+                                    <div class="card-footer text-center bg-dark text-white py-3 btnLogin">
+                                        <div class="small" id="login_switch">
                                             <span>Bukan Admin?</span>
                                             <a href="#">
                                                 Login sebagai Mahasiswa
+                                            </a>
+                                        </div>
+                                        <div class="small" id="login_fReset" style="display:none">
+                                            <span>Login?</span>
+                                            <a href="#">
+                                                Kembali ke halaman Login
                                             </a>
                                         </div>
                                     </div>
@@ -118,8 +148,14 @@
                     toastr.error('User/Password tidak ditemukan');
                 if(window.location.hash == '#expired')
                     $('#expired').removeClass('d-none');
+                if(window.location.hash == '#reset_confirm')
+                    $('#konfirmasi_reset').removeClass('d-none');
+                if(window.location.hash == '#reset_success')
+                    $('#reset_sukses').removeClass('d-none');
+                if(window.location.hash == '#account_not_found')
+                    toastr.error('Email/NPM tidak ditemukan');
 
-                $('#cp_type').click(function(){
+                $('.cp_type').click(function(){
                     var $pass = $('input[name="password"]');
                     if($pass.attr('type') == 'password'){
                         $pass.attr('type', 'text');
@@ -131,19 +167,35 @@
                     }
                 });
 
-                $('#login_mhs').click(function(){
-                    var $this = $(this);
-                    $('#inputEmail').toggle();
-                    $('#inputNPM').toggle();
+                $('#login_switch a, #login_fReset a').click(function(){
+                    var $this = $('#login_switch');
 
-                    if($('#inputEmail').css('display') == 'none'){
-                        $this.find('span').html($this.find('span').html().replace('Admin?', 'Mahasiwa?'));
-                        $this.find('a').html($this.find('a').html().replace('Mahasiswa', 'Admin'));
-                    }
-                    else {
+                    if($('#reset_form').css('display') != 'none' || $('#inputNPM').css('display') != 'none'){
+                        $('#inputEmail').show();
+                        $('#inputNPM, #reset_form, #login_fReset').hide();
                         $this.find('span').html($this.find('span').html().replace('Mahasiwa?', 'Admin?'));
                         $this.find('a').html($this.find('a').html().replace('Admin', 'Mahasiswa'));
                     }
+                    else if($('#inputEmail').css('display') != 'none'){
+                        $('#inputNPM').show();
+                        $('#inputEmail, #reset_form, #login_fReset').hide();
+                        $this.find('span').html($this.find('span').html().replace('Admin?', 'Mahasiwa?'));
+                        $this.find('a').html($this.find('a').html().replace('Mahasiswa', 'Admin'));
+                    }
+
+                    if($('#login_fReset a').css('display') != 'none')
+                        $('#login_switch').show();
+
+                });
+
+                $('.reset_form').click(function(){
+                    var $this = $(this);
+                    $('#reset_form, #login_fReset').show();
+                    $('#inputEmail, #inputNPM, #login_switch').hide();
+
+                    $this.find('span').html($this.find('span').html().replace('Admin?', 'Mahasiwa?'));
+                    $this.find('a').html($this.find('a').html().replace('Mahasiswa', 'Admin'));
+                    
                 });
             });
         </script>

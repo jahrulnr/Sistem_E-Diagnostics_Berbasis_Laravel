@@ -32,7 +32,7 @@
     <div>
         <h1>{{ $msg['title'] }}</h1>
         <p>
-            Halo --Nama--!<br/>            
+            Halo {{ $msg['name'] }}!<br/>            
             Kamu sedang melakukan reset Password.<br/>
             Silakan klik tombol di bawah untuk melanjutkan.
         </p>

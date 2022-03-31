@@ -21,6 +21,7 @@ class ApiAndroid extends Controller {
         if($status != null && Hash::check($data->post('password'), $status->password)){
         	return (object) [
         		'_token' => md5($data->post('npm') . "@" . $status->email),
+        		'nama'	 => $status->nama_mhs,
         		'status' => 'success'
         	];
         }else{
@@ -116,8 +117,37 @@ class ApiAndroid extends Controller {
 		return (Object) [
 			"status" => $save ? "success" : "fail"
 		];
+	}
 
-		
+	function hasil_tes($token){
+		$data = DB::table('mahasiswa')
+			->select([
+				'npm'
+			])->where(DB::raw("md5(concat(npm, '@', email))"), $token);
+
+		if($data->doesntExist())
+			return null;
+
+		$npm = $data->first()->npm;
+		$hasil = DB::table('materi')
+			->leftJoin('nilai', function($join) use($npm){
+				$join->on('nilai.id_materi', 'materi.id_materi');
+				$join->where('npm', $npm);
+			})
+			->get();
+
+		$nilai = DB::table('nilai')
+			->select([
+				DB::raw("SUM(nilai_akhir) as total"),
+				DB::raw("AVG(nilai_akhir) as rata_rata")
+			])
+			->where('npm', $npm)
+			->first();
+
+		return view("android.hasilTes", [
+			'hasil' => $hasil,
+			'nilai' => $nilai
+		]);
 	}
 
 	function profil($token){
@@ -164,7 +194,8 @@ class ApiAndroid extends Controller {
 			$output['email'] = "fail";
 			$execute = false;
 		}
-		else if(!empty($request->password) && strlen($request->password) < 5){
+		else if(!empty($request->password) && strlen($request->password) < 5
+				|| $npm == '173510428'){
 			$output['password'] = "fail";
 			$execute = false;
 		}

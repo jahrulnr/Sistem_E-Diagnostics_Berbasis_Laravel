@@ -5,6 +5,7 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="E-Diagnostics pada Mata Kuliah Algoritma dan Pemrograman" />
         <meta name="author" content="Jahrulnr" />
 
         <title>Sistem E-Diagnostics</title>
@@ -67,8 +68,8 @@
                                 Keluar
                             </a>
 
-                            <div class="sb-sidenav-menu-heading">Help</div>
-                            <a class="nav-link" href="/help">
+                            <!-- <div class="sb-sidenav-menu-heading"></div> -->
+                            <a class="nav-link" href="/about">
                                 <div class="sb-nav-link-icon"><i class="fas fa-info-circle"></i></div>
                                 Tentang
                             </a>

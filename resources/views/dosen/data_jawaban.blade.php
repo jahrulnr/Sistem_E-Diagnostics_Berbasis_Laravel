@@ -176,7 +176,7 @@
      			if(v.c_jawaban > 0) aksi_temp = aksi_temp.replace('disabled', '');
      			var data_temp = [(i+1) + ".", v.npm, v.nama_mhs, v.nilai == null ? '-' : Math.round(v.nilai * 100) / 100 || 0, aksi_temp];
      			tb.push(data_temp);
-     			console.log(v);
+     			// console.log(v);
      		});
 
  				table_draw(table_mhs, tb);
@@ -204,11 +204,12 @@
 			  	$('input[name="email"]').val(data[0].email);
 			  	$('input[name="kelas_mhs"]').val(data[0].kelas);
 			  	$('#poin-total').html(data.total_bobot);
+			  	var j = 1;
 			  	$.each(data, function(i, v){
 			  		if(i != "total_bobot"){
 				  		div += template
 				  			.replaceAll('_table', '')
-				  			.replace('--NO--', (i+1)+ ".")
+				  			.replace('--NO--', (j++) + ".")
 				  			.replace('--ID_SOAL--', v.id_soal)
 				  			.replace('--SOAL--', v.soal)
 				  			.replace('--JAWABAN_SOAL--', v.jawaban_soal)
