@@ -263,10 +263,13 @@ class DosenController extends Controller {
 				'materi.*',
 				DB::raw("AVG(if(materi.id_materi=nilai.id_materi,nilai_akhir,null)) as rata_rata")
 			])
-			->leftJoin('nilai', 'materi.id_materi', 'nilai.id_materi')
 			->leftJoin('soal', function($join){
 				$join->on('materi.id_materi', 'soal.id_materi');
-				$join->on('soal.id_admin', DB::raw(session('id')));
+				// $join->on('soal.id_admin', DB::raw("'".session('id')."'"));
+				$join->where('soal.id_admin', session('id'));
+			})
+			->leftJoin('nilai', function($join){
+				$join->on('soal.id_materi', 'nilai.id_materi');
 			})
 			->groupBy('judul_materi')
 			->orderBy('pertemuan', 'asc')
