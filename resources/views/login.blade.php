@@ -154,6 +154,15 @@
                     $('#reset_sukses').removeClass('d-none');
                 if(window.location.hash == '#account_not_found')
                     toastr.error('Email/NPM tidak ditemukan');
+                if(window.location.hash == '#reset'){
+                    var $this = $('#login_switch');
+                    $('#reset_form, #login_fReset').show();
+                    $('#inputEmail, #inputNPM, #login_switch').hide();
+
+                    $this.find('span').html($this.find('span').html().replace('Admin?', 'Mahasiwa?'));
+                    $this.find('a').html($this.find('a').html().replace('Mahasiswa', 'Admin'));
+                    
+                }
 
                 $('.cp_type').click(function(){
                     var $pass = $('input[name="password"]');
@@ -189,7 +198,7 @@
                 });
 
                 $('.reset_form').click(function(){
-                    var $this = $(this);
+                    var $this = $('#login_switch');
                     $('#reset_form, #login_fReset').show();
                     $('#inputEmail, #inputNPM, #login_switch').hide();
 
