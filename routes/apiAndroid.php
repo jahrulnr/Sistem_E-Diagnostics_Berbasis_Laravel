@@ -4,6 +4,7 @@
 
 	Route::any('/android/login', 'App\Http\Controllers\ApiAndroid@login');
 	Route::any('/android/materi', 'App\Http\Controllers\ApiAndroid@materi');
+	Route::any('android/download/materi/{token}', 'App\Http\Controllers\ApiAndroid@download_materi');
 	Route::any('/android/materi/{id_materi}/soal/{token}', 'App\Http\Controllers\ApiAndroid@soal');
 	Route::any('/android/materi2/{token}', 'App\Http\Controllers\ApiAndroid@materi2');
 	Route::any('/android/simpan/jawaban/{token}', 'App\Http\Controllers\ApiAndroid@simpan_jawaban');

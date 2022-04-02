@@ -16,3 +16,5 @@ yarn-error.log
 /.vscode
 sftp-config.json
 public_html/files/app-debug.apk
+public_html/files/app-debug.apk
+public_html/files/E-Diagnostics.apk

@@ -54,6 +54,21 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
+                            @if(session('is_mahasiswa'))
+                            <a class="nav-link" href="/mahasiswa/profil">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                                Profil
+                            </a>
+                            @elseif(session('is_dosen'))
+                            <a class="nav-link" href="/dosen/profil">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                                Profil
+                            </a>
+                            @endif
+                            <a class="nav-link" href="/about">
+                                <div class="sb-nav-link-icon"><i class="fas fa-info-circle"></i></div>
+                                Panduan
+                            </a>
 
                             <div class="sb-sidenav-menu-heading">Menu</div>
                             @if(session('is_admin'))
@@ -68,11 +83,6 @@
                                 Keluar
                             </a>
 
-                            <!-- <div class="sb-sidenav-menu-heading"></div> -->
-                            <a class="nav-link" href="/about">
-                                <div class="sb-nav-link-icon"><i class="fas fa-info-circle"></i></div>
-                                Tentang
-                            </a>
 
                         </div>
                     </div>

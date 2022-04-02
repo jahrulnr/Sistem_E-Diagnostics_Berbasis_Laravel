@@ -43,7 +43,7 @@
                                                     <i>E-Diagnostics</i>
                                                 </h3>
                                                 <h5 class="text-center font-weight-light">
-                                                    Pemrograman dan Algoritma
+                                                    Algoritma dan Pemrograman
                                                 </h5>
                                             </div>
                                         </div>

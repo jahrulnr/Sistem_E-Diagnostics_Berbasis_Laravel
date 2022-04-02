@@ -39,9 +39,23 @@ class MahasiswaController extends Controller {
 			->groupBy('judul_materi')
 			->orderBy('pertemuan', 'asc')
 			->get();
-		// return $db;
 
-		return view('mahasiswa.materi', ['data' => $db]);
+		$id_dosen = DB::table('kelas')
+			->select('id_admin')
+			->where('kelas.id_kelas', session('id_kelas'))
+			->first();
+
+		if($id_dosen != null)
+			foreach($db as $m){
+				$files[$m->id_materi] = glob(public_path("files/materi/{$m->id_materi}_".$id_dosen->id_admin." - *"));
+				sort($files[$m->id_materi]);
+			}
+		else $files = [];
+
+		return view('mahasiswa.materi', [
+			'data' => $db,
+			'files' => $files
+		]);
 	}
 
 	function form_tes($id_materi){

@@ -144,10 +144,12 @@
 							<canvas id="canvasSeluruhMateri" class="w-100"></canvas>
 						</div>
 						<div class="col-12">
+							<div class="border-bottom border-gray mb-3"></div>
 							<script type="text/javascript">
 								var chart_data = { 
 									SeluruhMateri: [], 
 									SeluruhKelas: [], 
+									SeluruhMahasiswa: [], 
 									SeluruhSoal: []
 								};
 							</script>
@@ -165,14 +167,22 @@
 									<tr>
 										<td align="center">{{ $i++ }}.</td>
 										<td>{{ $m->judul_materi }}</td>
-										<td align="center">{{ $m->rata_rata }}</td>
+										<td align="center">
+											@if($m->rata_rata != null)
+												{{ round($m->rata_rata, 2) }}
+											@else
+												-
+											@endif
+										</td>
 										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhMateri.push({{ $m->rata_rata == null ? "0" : $m->rata_rata  }})
 											</script>
-										@if($m->rata_rata > $rata2_semua_materi)
+										@if($m->rata_rata == null)
+											-
+										@elseif($m->rata_rata > $rs_materi)
 											Mudah dipahami
-										@elseif($m->rata_rata == $rata2_semua_materi)
+										@elseif($m->rata_rata == $rs_materi)
 											Cukup dipahami
 										@else
 											Kurang dipahami
@@ -190,10 +200,11 @@
 			  	<div class="tab-pane fade" id="tabSeluruhMahasiswa" role="tabpanel" aria-labelledby="tabSeluruhMahasiswa-tab">
 					<div class="row">
 						<div class="col-12 mb-3" style="height: 200px;">
-							<canvas id="canvasSeluruhMahasiswa" class="w-100"></canvas>
+							<canvas id="canvasSeluruhKelas" class="w-100"></canvas>
 						</div>
-						<div class="col-12">
-							<table class="table table-bordered" id="tableSeluruhMahasiswa">
+						<div class="col-12 mb-3">
+							<div class="border-bottom border-gray mb-3"></div>
+							<table class="table table-bordered" id="tableSeluruhKelas">
 								<thead>
 									<tr> 
 										<th>No.</th>
@@ -207,14 +218,68 @@
 									<tr>
 										<td align="center">{{ $i++ }}.</td>
 										<td>{{ $k->kelas }}</td>
-										<td align="center">{{ $k->rata_rata }}</td>
+										<td align="center">
+											@if($k->rata_rata != null)
+												{{ round($k->rata_rata, 2) }}
+											@else
+												-
+											@endif
+										</td>
 										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhKelas.push({{ $k->rata_rata == null ? "0" : $k->rata_rata  }})
 											</script>
-										@if($k->rata_rata > $rata2_semua_materi)
+										@if($k->rata_rata == null)
+											-
+										@elseif($k->rata_rata > $rs_materi)
 											Mudah dipahami
-										@elseif($k->rata_rata == $rata2_semua_materi)
+										@elseif($k->rata_rata == $rs_materi)
+											Cukup dipahami
+										@else
+											Kurang dipahami
+										@endif
+										</td>
+									</tr>
+								@endforeach
+								</tbody>
+							</table>
+						</div>
+						<div class="col-12">
+							<div class="border-bottom border-gray mb-3"></div>
+							<table class="table table-bordered" id="tableSeluruhMahasiswa">
+								<thead>
+									<tr> 
+										<th>No.</th>
+										<th>NPM</th>
+										<th>Nama</th>
+										<th>Kelas</th>
+										<th>Rata-Rata Hasil Tes</th>
+										<th>Hasil Diagnosis</th>
+									</tr>
+								</thead>
+								<tbody><?php $i = 1; ?>
+								@foreach($seluruhMahasiswa as $sm)
+									<tr>
+										<td align="center">{{ $i++ }}.</td>
+										<td>{{ $sm->npm }}</td>
+										<td>{{ $sm->nama_mhs }}</td>
+										<td>{{ $sm->kelas }}</td>
+										<td align="center">
+											@if($sm->rata_rata != null)
+												{{ round($sm->rata_rata, 2) }}
+											@else
+												-
+											@endif
+										</td>
+										<td>
+											<script type="text/javascript">
+												chart_data.SeluruhMahasiswa.push({{ $sm->rata_rata == null ? "0" : $sm->rata_rata  }})
+											</script>
+										@if($sm->rata_rata == null)
+											-
+										@elseif($sm->rata_rata > $rs_materi)
+											Mudah dipahami
+										@elseif($sm->rata_rata == $rs_materi)
 											Cukup dipahami
 										@else
 											Kurang dipahami
@@ -235,6 +300,7 @@
 							<canvas id="canvasSeluruhSoal" class="w-100"></canvas>
 						</div>
 						<div class="col-12">
+							<div class="border-bottom border-gray mb-3"></div>
 							<table class="table table-bordered" id="tableSeluruhSoal">
 								<thead>
 									<tr> 
@@ -255,16 +321,22 @@
 											</a>
 										</td>
 										<td>{{ strlen($s->soal) > 60 ? substr($s->soal, 0, 60)."..." : $s->soal }}</td>
-										<td align="center">{{ round($s->rata_rata, 2) }}</td>
+										<td align="center">
+											@if($s->rata_rata != null)
+												{{ round($s->rata_rata, 2) }}
+											@else
+												-
+											@endif
+										</td>
 										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhSoal.push({{ $s->rata_rata == null ? "0" : $s->rata_rata }})
 											</script>
 										@if($s->rata_rata == null)
 											-
-										@elseif($s->rata_rata > $rata2_semua_materi)
+										@elseif($s->rata_rata > $rs_materi)
 											Mudah dipahami
-										@elseif($s->rata_rata == $rata2_semua_materi)
+										@elseif($s->rata_rata == $rs_materi)
 											Cukup dipahami
 										@else
 											Kurang dipahami
@@ -302,6 +374,7 @@
 	var tablePerMateri = $('#tablePerMateri');
 	var tablePerMahasiswa = $('#tablePerMahasiswa');
 	var tableSeluruhMateri = $('#tableSeluruhMateri');
+	var tableSeluruhKelas = $('#tableSeluruhKelas');
 	var tableSeluruhMahasiswa = $('#tableSeluruhMahasiswa');
 	var tableSeluruhSoal = $('#tableSeluruhSoal');
 
@@ -354,7 +427,7 @@
 							rata_rata /= msg.length;
 							$.each(msg, function(i, v){
 								var diagnosis;
-								if( v.nilai_akhir < rata_rata )
+								if( v.nilai_akhir > rata_rata )
 									diagnosis = "Mudah Dipahami";
 								else if(v.nilai_akhir == rata_rata)
 									diagnosis = "Cukup Dipahami";
@@ -423,7 +496,7 @@
 					rata_rata /= msg.length;
 					$.each(msg, function(i, v){
 						var diagnosis;
-						if( v.nilai_akhir < rata_rata )
+						if( v.nilai_akhir > rata_rata )
 							diagnosis = "Mudah Dipahami";
 						else if(v.nilai_akhir == rata_rata)
 							diagnosis = "Cukup Dipahami";
@@ -455,17 +528,27 @@
 		var dataTable_opt_temp = dataTable_opt;
 		dataTable_opt_temp.fnDrawCallback = function(){
 			if($('#tableSeluruhMateri_paginate .pagination table').length < 1){
-				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rata2_semua_materi }});
+				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rs_materi }});
 				$('#tableSeluruhMateri_paginate .pagination').prepend(rata_rata);
 			}
 		}
 		tableSeluruhMateri = tableSeluruhMateri.DataTable(dataTable_opt_temp);
 
+		// Seluruh Kelas --------------------------------------------------------------
+		var dataTable_opt_temp = dataTable_opt;
+		dataTable_opt_temp.fnDrawCallback = function(){
+			if($('#tableSeluruhKelas_paginate .pagination table').length < 1){
+				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rs_materi }});
+				$('#tableSeluruhKelas_paginate .pagination').prepend(rata_rata);
+			}
+		}
+		tableSeluruhKelas = tableSeluruhKelas.DataTable(dataTable_opt_temp);
+
 		// Seluruh Mahasiswa --------------------------------------------------------------
 		var dataTable_opt_temp = dataTable_opt;
 		dataTable_opt_temp.fnDrawCallback = function(){
 			if($('#tableSeluruhMahasiswa_paginate .pagination table').length < 1){
-				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rata2_semua_materi }});
+				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rs_materi }});
 				$('#tableSeluruhMahasiswa_paginate .pagination').prepend(rata_rata);
 			}
 		}
@@ -475,7 +558,7 @@
 		var dataTable_opt_temp = dataTable_opt;
 		dataTable_opt_temp.fnDrawCallback = function(){
 			if($('#tableSeluruhSoal_paginate .pagination table').length < 1){
-				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rata2_semua_materi }});
+				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rs_materi }});
 				$('#tableSeluruhSoal_paginate .pagination').prepend(rata_rata);
 			}
 		}
@@ -489,14 +572,14 @@
 
 		// Action Chart
 		const canvasSeluruhMateri = $('#canvasSeluruhMateri');
-		const canvasSeluruhMahasiswa = $('#canvasSeluruhMahasiswa');
+		const canvasSeluruhKelas = $('#canvasSeluruhKelas');
 		const canvasSeluruhSoal = $('#canvasSeluruhSoal');
 		createChart(canvasSeluruhMateri, [
         	@foreach($materi as $m)
         	'{{ $m->judul_materi }}',
         	@endforeach
         ], chart_data.SeluruhMateri);
-		createChart(canvasSeluruhMahasiswa, [
+		createChart(canvasSeluruhKelas, [
         	@foreach($kelas as $k)
         	'Kelas {{ $k->kelas }}',
         	@endforeach
@@ -538,7 +621,7 @@
 					        display: false
 					    },
 				        autocolors: {
-				        	mode: 'data'
+				        	mode: 'datasets'
 				        }
 					}
 			    },

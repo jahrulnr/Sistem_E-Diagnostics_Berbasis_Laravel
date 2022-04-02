@@ -52,11 +52,11 @@
 		<div class="col-12 col-md-4 mt-md-3-custom">
 			<table class="table table-bordered">
 				<tr>
-					<th>Total nilai</th>
+					<th>Total Nilai</th>
 					<td class="text-center">{{ round($nilai->total, 2) }}</td>
 				</tr>
 				<tr>
-					<th>Rata-Rata</th>
+					<th>Rata-Rata Nilai</th>
 					<td class="text-center">{{ round($nilai->rata_rata, 2) }}</td>
 				</tr>
 			</table>

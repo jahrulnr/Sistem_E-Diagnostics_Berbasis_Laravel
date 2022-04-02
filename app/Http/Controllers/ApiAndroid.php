@@ -39,6 +39,43 @@ class ApiAndroid extends Controller {
 		return $materi;
 	}
 
+	function download_materi($token){
+		$data = DB::table('mahasiswa')
+			->select([
+				'id_kelas'
+			])->where(DB::raw("md5(concat(npm, '@', email))"), $token);
+
+		if($data->doesntExist()){
+			return (object) [
+				'status' => "fail"
+			];
+		}
+
+		$materi = DB::table('materi')
+			->groupBy('judul_materi')
+			->orderBy('pertemuan', 'asc')
+			->get();
+
+		$id_kelas = $data->first()->id_kelas;
+		$id_dosen = DB::table('kelas')
+			->select('id_admin')
+			->where('kelas.id_kelas', $id_kelas)
+			->first();
+
+		if($id_dosen != null)
+			foreach($materi as $m){
+				$files[$m->id_materi] = glob(public_path("files/materi/{$m->id_materi}_".$id_dosen->id_admin." - *"));
+				sort($files[$m->id_materi]);
+			}
+		else $files = [];
+
+		// return (object) $files;
+		return view('android.download_materi', [
+			'materi' => $materi,
+			'files'  => $files
+		]);
+	}
+
 	function materi2($token){
 		$data = DB::table('mahasiswa')
 			->select([

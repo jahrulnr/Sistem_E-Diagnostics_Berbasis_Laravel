@@ -29,11 +29,40 @@ class DosenController extends Controller {
 
 	function materi(){
 		$materi = DB::table('materi')->get();
+		foreach($materi as $m){
+			$files[$m->id_materi] = glob(public_path("files/materi/{$m->id_materi}_".session("id")." - *"));
+			sort($files[$m->id_materi]);
+		}
 
 		return view('dosen.materi', [ 
 			'materi' => $materi,
+			'files' => $files,
 			'i'		 => 1 
 		]);
+	}
+
+	function upload_materi($id_materi, Request $data){
+        $data->validate([
+            'file' => 'required|mimes:pdf,doc,docx,rar,zip,7z,tar,gz,txt,jpeg,jpg,png,gif,xlsx,xlsm,xlsb|max:2048',
+        ]);
+
+        $file = $data->file;
+        $fileName = $id_materi ."_". session("id") ." - ". $file->getClientOriginalName();  
+        $file->move(public_path("files/materi"), $fileName);
+        return (object) [
+        	'status' => "success",
+        	'nama'	 => substr($fileName, strpos($fileName, "- ")+2),
+        	'nama_f' => $fileName
+        ];
+	}
+
+	function hapus_materi($nama_f){
+		if(is_file(public_path("files/materi/" . $nama_f))){
+			unlink(public_path("files/materi/" . $nama_f));
+			return '<script>window.location.href = "'.url()->previous().'" + "#berhasil_dihapus";</script>';
+		}else{
+			return '<script>window.location.href = "'.url()->previous().'" + "#gagal_dihapus";</script>';
+		}
 	}
 
 	function data_materi($id_materi){
@@ -54,7 +83,7 @@ class DosenController extends Controller {
 		];
 	}
 
-	function tambah_materi(Request $request){
+	function tambah_soal(Request $request){
 		$db = DB::table('soal')->insert([
 			'id_admin'	   => session('id'),
 			'id_materi'	   => $request->id_materi,
@@ -68,7 +97,7 @@ class DosenController extends Controller {
 		return '<script>window.location.href = "'.url()->previous().'" + window.location.hash + "&berhasil_disimpan";</script>';// redirect('/dosen/materi#berhasil_disimpan');
 	}
 
-	function ubah_materi(Request $request){
+	function ubah_soal(Request $request){
 		try { 
 			$db = DB::table('soal')
 				->where('id_soal', $request->id_soal)
@@ -91,7 +120,7 @@ class DosenController extends Controller {
 		return '<script>window.location.href = "'.url()->previous().'" + window.location.hash + "&berhasil_diubah";</script>';
 	}
 
-	function hapus_materi($id){
+	function hapus_soal($id){
 		$db = DB::table('soal')
 			->where('id_soal', $id)
 			->where('id_admin', session('id'))
@@ -258,6 +287,21 @@ class DosenController extends Controller {
 			->orderBy('kelas', 'asc')
 			->groupBy('kelas')
 			->get();
+		$data['rs_materi'] = DB::table('nilai')
+			->select([
+				DB::raw("sum(nilai_akhir) as total"),
+				DB::raw("count(nilai_akhir) as jumlah")
+			])
+			->join('mahasiswa', 'nilai.npm', 'mahasiswa.npm')
+			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
+			->where('kelas.id_admin', session('id'))
+			->first();
+
+		$data['rs_materi'] = 
+			$data['rs_materi']->jumlah > 0
+			? $data['rs_materi']->total/$data['rs_materi']->jumlah : 0;
+
+		// Diagnnostics
 		$data['seluruhMateri'] = DB::table('materi')
 			->select([
 				'materi.*',
@@ -265,7 +309,6 @@ class DosenController extends Controller {
 			])
 			->leftJoin('soal', function($join){
 				$join->on('materi.id_materi', 'soal.id_materi');
-				// $join->on('soal.id_admin', DB::raw("'".session('id')."'"));
 				$join->where('soal.id_admin', session('id'));
 			})
 			->leftJoin('nilai', function($join){
@@ -277,7 +320,6 @@ class DosenController extends Controller {
 		$data['seluruhKelas'] = DB::table('kelas')
 			->select([
 				'kelas.*',
-				// 'mahasiswa.*',
 				DB::raw("AVG(if(mahasiswa.npm=nilai.npm,nilai_akhir,0)) as rata_rata")
 			])
 			->leftJoin('mahasiswa', 'kelas.id_kelas', 'mahasiswa.id_kelas')
@@ -286,11 +328,24 @@ class DosenController extends Controller {
 			->groupBy('kelas.kelas')
 			->orderBy('kelas.kelas', 'asc')
 			->get();
+		$data['seluruhMahasiswa'] = DB::table('mahasiswa')
+			->select([
+				'mahasiswa.npm',
+				'mahasiswa.nama_mhs',
+				'kelas.kelas',
+				DB::raw("AVG(if(mahasiswa.npm=nilai.npm,nilai_akhir,0)) as rata_rata")
+			])
+			->leftJoin('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
+			->leftJoin('nilai', 'mahasiswa.npm', 'nilai.npm')
+			->where('kelas.id_admin', session('id'))
+			->groupBy('mahasiswa.npm')
+			->orderBy('mahasiswa.nama_mhs', 'asc')
+			->get();
+		// return $data['seluruhMahasiswa'];
 		$data['seluruhSoal'] = DB::table('soal')
 			->select([
 				'soal.*',
 				'materi.*',
-				// 'mahasiswa.*',
 				DB::raw("(AVG(if(soal.id_soal=jawaban.id_soal,jawaban.bobot_jawaban,0))/soal.bobot*100) as rata_rata")
 			])
 			->leftJoin('jawaban', 'soal.id_soal', 'jawaban.id_soal')
@@ -299,21 +354,6 @@ class DosenController extends Controller {
 			->groupBy('soal.id_soal')
 			->orderBy('soal.id_soal', 'asc')
 			->get();
-			// return $data['seluruhSoal'];
-		$data['rata2_semua_materi'] = DB::table('nilai')
-			->select([
-				DB::raw("sum(nilai_akhir) as total"),
-				DB::raw("count(nilai_akhir) as jumlah")
-			])
-			->join('mahasiswa', 'nilai.npm', 'mahasiswa.npm')
-			->join('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
-			->where('kelas.id_admin', session('id'))
-			->first(); 
-			// return $data['rata2_semua_materi'];
-
-		$data['rata2_semua_materi'] = 
-			$data['rata2_semua_materi']->jumlah > 0
-			? $data['rata2_semua_materi']->total/$data['rata2_semua_materi']->jumlah : 0;
 
 		return view('dosen.diagnostics', $data);
 	}

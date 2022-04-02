@@ -7,7 +7,7 @@
         <meta name="description" content="E-Diagnostics pada Mata Kuliah Algoritma dan Pemrograman" />
         <meta name="author" content="Jahrulnr" />
 
-        <title>Tentang | E-Diagnostics</title>
+        <title>Panduan | E-Diagnostics</title>
         
         <!-- style -->
         <link href="/css/styles.css" rel="stylesheet" />
@@ -40,7 +40,7 @@
                                                     <i>E-Diagnostics</i>
                                                 </h3>
                                                 <h5 class="text-center font-weight-light">
-                                                    Pemrograman dan Algoritma
+                                                    Algoritma dan Pemrograman
                                                 </h5>
                                             </div>
                                         </div>

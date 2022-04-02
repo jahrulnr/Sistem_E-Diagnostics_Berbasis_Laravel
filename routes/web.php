@@ -50,9 +50,11 @@ Route::get('/dosen', 'App\Http\Controllers\DosenController@dashboard');
 // Materi
 Route::get('/dosen/materi', 'App\Http\Controllers\DosenController@materi'); 
 Route::get('/dosen/materi/{id_materi}', 'App\Http\Controllers\DosenController@data_materi')->where('id_materi', '[0-9]+'); 
-Route::post('/dosen/materi/tambah', 'App\Http\Controllers\DosenController@tambah_materi'); 
-Route::post('/dosen/materi/ubah', 'App\Http\Controllers\DosenController@ubah_materi'); 
-Route::get('/dosen/materi/hapus/{id}', 'App\Http\Controllers\DosenController@hapus_materi'); 
+Route::post('/dosen/materi/berkas/upload/{id_materi}', 'App\Http\Controllers\DosenController@upload_materi');
+Route::get('/dosen/materi/berkas/hapus/{nama}', 'App\Http\Controllers\DosenController@hapus_materi');
+Route::post('/dosen/soal/tambah', 'App\Http\Controllers\DosenController@tambah_soal'); 
+Route::post('/dosen/soal/ubah', 'App\Http\Controllers\DosenController@ubah_soal'); 
+Route::get('/dosen/soal/hapus/{id}', 'App\Http\Controllers\DosenController@hapus_soal'); 
 
 // -- Penilaian Materi
 Route::get('/dosen/materi/penilaian', 'App\Http\Controllers\DosenController@materi_penilaian');

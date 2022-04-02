@@ -61,6 +61,7 @@
 				  	<li class="nav-item" role="presentation">
 				    	<button class="nav-link" id="dataSoal-{{ $i }}-tab" data-bs-toggle="tab" data-bs-target="#dataSoal-{{ $i }}" type="button" role="tab" aria-controls="dataSoal-{{ $i }}" aria-selected="true">
 				    		<span>Soal</span> {{ $i }}
+				    		<span class="fas fa-check text-success isi" style="display:none"></span>
 				    	</button>
 				  	</li>
 				  	@endfor
@@ -75,7 +76,7 @@
 				  	@foreach($soal as $data)
 				  	<div class="tab-pane fade" id="dataSoal-{{ $i }}" role="tabpanel" aria-labelledby="dataSoal-{{ $i }}-tab">
 				  		<div class="form-input">
-				  			<label>{{ $data->soal }}<hr class="mt-0 mb-3">Jawab</label>
+				  			<label style="white-space: pre-wrap">{{ $data->soal }}<hr class="my-3">Jawab (Bobot: {{ $data->bobot }})</label>
 				  			<textarea class="form-control area-jawaban" rows="5" name="jawaban[{{ $data->id_soal }}]" placeholder="Jawab ..." button-parent="#dataSoal-{{ $i++ }}-tab"></textarea>
 				  		</div>
 				  	</div>
@@ -87,10 +88,28 @@
 				  			<div class="mt-1">
 				  				&nbsp;&nbsp;Mohon cek kembali form yang telah dijawab sebelum menyelesaikan tes.
 					  			<div class="mt-3 w-100 text-center">
-						  			<button type="submit" class="btn btn-primary">Kirim Jawaban</button>
+						  			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#send_confirm">Kirim Jawaban</button>
 					  			</div>
 				  			</div>
 				  		</div>
+				  		<!-- Modal -->
+						<div class="modal fade" id="send_confirm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog modal-sm">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Jawaban</h5>
+						        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						      </div>
+						      <div class="modal-body">
+						        Yakin untuk mengirim jawaban?
+						      </div>
+						      <div class="modal-footer">
+						        <button type="submit" class="btn btn-primary">Konfirmasi</button>
+						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
 				  	</div>
 				  </form>
 				</div>
@@ -127,24 +146,18 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		$('button[data-bs-toggle="tab"]').click(function(){
+			$('.area-jawaban').each(function(i, v){
+				if($(this).val().length > 0){
+					var parent = $(this).attr('button-parent');
+					$(parent + " .isi").show();
+				}
+			});
+		});
+
 		if($('#form_soal .nav-item .nav-link.active').length == 0){
 			$($('#form_soal .nav-item .nav-link')[0]).trigger('click');
 		}
-
-		$("#tab-soal-content").submit(function(e) {
-			var click = false;
-			$('.area-jawaban').each(function(i, v){
-				if($(this).val().length == 0){
-					e.preventDefault();
-					click = $(this).attr('button-parent');
-					return false;
-				}
-			});
-			if(click){
-				$(click).trigger('click');
-				toastr.warning('Soal ini belum dijawab');
-			}
-		});
 	});
 </script>
 @endsection
