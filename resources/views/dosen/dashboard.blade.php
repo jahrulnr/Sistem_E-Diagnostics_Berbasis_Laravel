@@ -10,13 +10,13 @@
 	    <div class="col-xl-3 col-md-6">
 	        <a href="/dosen/materi" class="card bg-success text-white mb-4 pt-2 text-center shadow">
 	        	<div class="card-header"><span class="fas fa-book fa-4x"></span></div>
-	            <div class="card-body">Kelola Materi</div>
+	            <div class="card-body">Kelola Materi dan Soal</div>
 	        </a>
 	    </div>
 	    <div class="col-xl-3 col-md-6">
 	        <a href="/dosen/materi/penilaian" class="card bg-danger text-white mb-4 pt-2 text-center shadow">
 	        	<div class="card-header"><span class="fas fa-clipboard-check fa-4x"></span></div>
-	            <div class="card-body">Nilai Tes</div>
+	            <div class="card-body">Jawaban Mahasiswa</div>
 	        </a>
 	    </div>
 	    <div class="col-xl-3 col-md-6">

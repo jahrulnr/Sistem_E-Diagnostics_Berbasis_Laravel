@@ -8,7 +8,10 @@ Route::any('/test', 'App\Http\Controllers\TestController@test');
 Route::any('/mailView/{token}', 'App\Http\Controllers\TestController@mailView');
 
 // kontak
-Route::get('/about', 'App\Http\Controllers\MainController@about');
+Route::get('/about', function(){
+	return redirect('/panduan');
+});
+Route::get('/panduan', 'App\Http\Controllers\MainController@about');
 
 // Login
 Route::get('/', 'App\Http\Controllers\MainController@index');
