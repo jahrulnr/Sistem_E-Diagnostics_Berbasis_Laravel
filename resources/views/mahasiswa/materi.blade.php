@@ -41,7 +41,7 @@
 		      						@for($f = 0; $f < count($files[$m->id_materi]); $f++)
 		        					<div class="col-12 d-flex justify-content-between mb-1">
 		        						<label>{{ substr(basename($files[$m->id_materi][$f]), strpos(basename($files[$m->id_materi][$f]), "- ")+2) }}</label>
-		        						<a href="/files/materi/{{ basename($files[$m->id_materi][$f]) }}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unduh">
+		        						<a href="/files/materi/{{ basename($files[$m->id_materi][$f]) }}" class="btn btn-primary btn-sm my-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unduh">
 		        							<span class="fas fa-download"></span> 
 		        						</a>
 		        					</div>

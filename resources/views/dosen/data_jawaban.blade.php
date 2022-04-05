@@ -174,9 +174,9 @@
      		$.each(json, function(i, v){
      			var aksi_temp = aksi.replaceAll('--NPM--', v.npm);
      			if(v.c_jawaban > 0) aksi_temp = aksi_temp.replace('disabled', '');
-     			var data_temp = [(i+1) + ".", v.npm, v.nama_mhs, v.nilai == null ? '-' : Math.round(v.nilai * 100) / 100 || 0, aksi_temp];
+     			var data_temp = [(i+1) + ".", v.npm, v.nama_mhs, (v.nilai == null || v.nilai == '-') ? '-' : Math.round(v.nilai * 100) / 100 || 0, aksi_temp];
      			tb.push(data_temp);
-     			// console.log(v);
+     			console.log(v);
      		});
 
  				table_draw(table_mhs, tb);

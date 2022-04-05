@@ -92,7 +92,7 @@
       					@for($f = 0; $f < count($files[$m->id_materi]); $f++)
         					<div class="col-12 d-flex justify-content-between mb-1">
         						<label>{{ substr(basename($files[$m->id_materi][$f]), strpos(basename($files[$m->id_materi][$f]), "- ")+2) }}</label>
-        						<div class="btn-group" role="group">
+        						<div class="btn-group my-auto" role="group">
 	        						<a href="/files/materi/{{ basename($files[$m->id_materi][$f]) }}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unduh">
 	        							<span class="fas fa-download"></span> 
 	        						</a>
@@ -126,7 +126,7 @@
       	<div class="d-none" id="temp_fmateri">
 					<div class="col-12 d-flex justify-content-between mb-1">
 						<label>--FILE--</label>
-						<div class="btn-group" role="group">
+						<div class="btn-group my-auto" role="group">
   						<a href="--LINK--" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unduh">
   							<span class="fas fa-download"></span> 
   						</a>
@@ -170,7 +170,7 @@
         	<textarea name="soal" class="form-control" rows="5" placeholder="Soal" required></textarea>
         </div>
         <div class="form-input mb-3">
-        	<label>Jawaban</label>
+        	<label>Kunci Jawaban</label>
         	<textarea name="jawaban_soal" class="form-control" rows="2" placeholder="Jawaban" required></textarea>
         </div>
         <div class="form-input mb-3">

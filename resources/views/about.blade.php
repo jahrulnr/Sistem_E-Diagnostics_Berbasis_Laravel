@@ -82,7 +82,7 @@
                         </h6>
                         <div id="panduan-" class="accordion-collapse collapse show" aria-labelledby="panduan" data-bs-parent="#tentang-aplikasi">
                           <div class="accordion-body">
-                            Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                            <iframe src="/files/Panduan Penggunaan Aplikasi E-Diagnostics.pdf" width="100%" style="height: 100vh"></iframe>
                           </div>
                         </div>
                       </div>

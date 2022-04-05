@@ -64,6 +64,10 @@
                                             Password berhasil diubah. Silakan login.
                                         </div>
 
+                                        <div class="d-flex justify-content-end mb-1">
+                                            <a href="/about">Panduan Aplikasi</a>
+                                        </div>
+
                                         <!-- Admin/Dosen Login -->
                                         <form method="POST" action="/login" id="inputEmail">
                                             @csrf
