@@ -59,16 +59,20 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
                                 Profil
                             </a>
+                            <a class="nav-link" href="/about">
+                                <div class="sb-nav-link-icon"><i class="fas fa-info-circle"></i></div>
+                                Panduan
+                            </a>
                             @elseif(session('is_dosen'))
                             <a class="nav-link" href="/dosen/profil">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
                                 Profil
                             </a>
-                            @endif
                             <a class="nav-link" href="/about">
                                 <div class="sb-nav-link-icon"><i class="fas fa-info-circle"></i></div>
                                 Panduan
                             </a>
+                            @endif
 
                             <div class="sb-sidenav-menu-heading">Menu</div>
                             @if(session('is_admin'))

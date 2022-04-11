@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Hash;
  
 class DosenController extends Controller { 
 
+	private $d_pemahaman = [
+		0, 30, 60, 100
+	];
+
 	public function __construct(){
 	    $this->middleware(function ($request, $next) {
 	        if(session('is_dosen')){
@@ -320,7 +324,7 @@ class DosenController extends Controller {
 		$data['seluruhKelas'] = DB::table('kelas')
 			->select([
 				'kelas.*',
-				DB::raw("AVG(if(mahasiswa.npm=nilai.npm,nilai_akhir,0)) as rata_rata")
+				DB::raw("AVG(if(mahasiswa.npm=nilai.npm,nilai_akhir,null)) as rata_rata")
 			])
 			->leftJoin('mahasiswa', 'kelas.id_kelas', 'mahasiswa.id_kelas')
 			->leftJoin('nilai', 'mahasiswa.npm', 'nilai.npm')
@@ -355,6 +359,8 @@ class DosenController extends Controller {
 			->orderBy('soal.id_soal', 'asc')
 			->get();
 
+		$data['pemahaman'] = $this->d_pemahaman;
+
 		return view('dosen.diagnostics', $data);
 	}
 
@@ -381,8 +387,10 @@ class DosenController extends Controller {
 		return $data;
 	}
 
-	function diagnostics_permahasiswa($npm){
-		$data = DB::table('materi')
+	function diagnostics_permahasiswa($kelas, $npm){
+
+		$data = (object) [];
+		$data->materi = DB::table('materi')
 			->select(['materi.*', 'nilai.*'])
 			->join('nilai', 'materi.id_materi', 'nilai.id_materi')
 			->join('mahasiswa', 'mahasiswa.npm', 'nilai.npm')
@@ -390,6 +398,18 @@ class DosenController extends Controller {
 			->where('mahasiswa.npm', $npm)
 			->where('kelas.id_admin', session('id'))
 			->orderBy('pertemuan', 'asc')
+			->get();
+
+		$data->rata_rata_kelas = DB::table('kelas')
+			->select([
+				DB::raw("AVG(nilai_akhir) as rata_rata")
+			])
+			->join('mahasiswa', 'kelas.id_kelas', 'mahasiswa.id_kelas')
+			->join('nilai', 'mahasiswa.npm', 'nilai.npm')
+			->join('materi', 'nilai.id_materi', 'materi.id_materi')
+			->where('kelas.kelas', $kelas)
+			->groupBy('materi.id_materi')
+			->orderBy('materi.pertemuan', 'asc')
 			->get();
 
 		return $data;

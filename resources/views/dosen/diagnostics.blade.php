@@ -17,7 +17,54 @@
 <script src="/vendor/datatables/js/responsive.bootstrap5.min.js"></script>
 
 <div class="container-fluid px-4">
-	<h1 class="my-4">Hasil Diagnostics</h1>
+	<div class="d-flex justify-content-between my-4">
+		<h1>Hasil Diagnostics</h1>
+		<button class="btn btn-primary btn-sm mt-auto" data-bs-toggle="modal" data-bs-target="#rumus_diagnosis">
+			Kategori Diagnosis
+		</button>
+		<div class="modal fade" id="rumus_diagnosis" tabindex="-1" aria-hidden="true">
+		  <div class="modal-dialog modal-md">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title me-3">Kategori Persentase<br/>Tingkat Pemahaman Mahasiswa</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		        <table class="table table-bordered mb-1">
+		        	<tr>
+		        		<th>Persentase</th>
+		        		<th>Kategori</th>
+		        	</tr>
+		        	<tr>
+		        		<td>0%-30%</td>
+		        		<td>Kurang Dipahami</td>
+		        	</tr>
+		        	<tr>
+		        		<td>&gt; 30%-60%</td>
+		        		<td>Cukup Dipahami</td>
+		        	</tr>
+		        	<tr>
+		        		<td>&gt; 60%-100%</td>
+		        		<td>Mudah Dipahami</td>
+		        	</tr>
+		        </table>
+		        <table class="table table-borderless mb-0">
+		        	<tr>
+		        		<td class="p-0">Referensi: </td>
+		        		<td class="py-0 ps-1 pe-0 text-justify">
+		        			<a href="http://ejournal.uin-suska.ac.id/index.php/JNSI/article/view/9911" target="_blank">Identifikasi Miskonsepsi dan Tingkat Pemahaman Mahasiswa Tadris Fisika pada Materi Listrik Dinamis Menggunakan 3-Tier Diagnostic Test (Hal. 131)</a>
+		        		</td>
+		        	</tr>
+		        </table>
+	        	
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</div>
 	<div class="card shadow">
 		<div class="card-body">
 			<!-- <h3>Diagnosis Per Materi</h3> -->
@@ -42,10 +89,6 @@
 				<!-- tabPerMateri ------------------------------------------------------>
 			  	<div class="tab-pane fade show active" id="tabPerMateri" role="tabpanel" aria-labelledby="tabPerMateri-tab">
 			  		<table class="table table-borderless table-header w-auto">
-						<tr>
-							<td>Nama Dosen</td>
-							<td>: {{ session('nama') }}</td>
-						</tr>
 						<tr>
 							<td>Materi</td>
 							<td>: 
@@ -81,6 +124,7 @@
 								<th>NPM</th>
 								<th>Nama Mahasiswa</th>
 								<th>Hasil Tes</th>
+								<th>Rata-rata Kelas</th>
 								<th>Hasil Diagnosis</th>
 							</tr>
 						</thead>
@@ -105,7 +149,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td>Mahasiswa</td>
+							<td>NPM/Nama Mahasiswa</td>
 							<td>: 
 								<select class="form-select form-select-sm w-auto d-inline" name="npm">
 									<option selected disabled>-- Pilih Mahasiswa</option>
@@ -113,10 +157,14 @@
 							</td>
 						</tr>
 						<tr>
+							<td>Rata-rata Nilai</td>
+							<td id="td_rata2_permhs">: -</td>
+						</tr>
+						<tr class="d-none">
 							<td>NPM</td>
 							<td class="td_npm">: </td>
 						</tr>
-						<tr>
+						<tr class="d-none">
 							<td>Nama Mahasiswa</td>
 							<td class="td_namaMhs">: </td>
 						</tr>
@@ -128,6 +176,7 @@
 								<th>Pertemuan</th>
 								<th>Materi</th>
 								<th>Hasil Tes</th>
+								<th>Rata-rata Kelas</th>
 								<th>Hasil Diagnosis</th>
 							</tr>
 						</thead>
@@ -159,10 +208,22 @@
 										<th>No.</th>
 										<th>Materi</th>
 										<th>Rata-Rata Hasil Tes</th>
+										<th>Rata-rata Seluruh Materi</th>
 										<th>Hasil Diagnosis</th>
 									</tr>
 								</thead>
-								<tbody><?php $i = 1; ?>
+								<tbody>
+								<?php 
+									$i = 1; $rata_rata = $r = 0;
+									foreach($seluruhMateri as $m){
+										if($m->rata_rata != null){
+											$rata_rata += $m->rata_rata;
+											$r++;
+										}
+									}
+									$rata_rata /= $r;
+									$rata_rata = round($rata_rata, 2);
+								?>
 								@foreach($seluruhMateri as $m)
 									<tr>
 										<td align="center">{{ $i++ }}.</td>
@@ -175,14 +236,17 @@
 											@endif
 										</td>
 										<td>
+											{{ $rata_rata }}
+										</td>
+										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhMateri.push({{ $m->rata_rata == null ? "0" : $m->rata_rata  }})
 											</script>
 										@if($m->rata_rata == null)
 											-
-										@elseif($m->rata_rata > $rs_materi)
+										@elseif($m->rata_rata > $pemahaman[2])
 											Mudah dipahami
-										@elseif($m->rata_rata == $rs_materi)
+										@elseif($m->rata_rata > $pemahaman[1])
 											Cukup dipahami
 										@else
 											Kurang dipahami
@@ -210,10 +274,22 @@
 										<th>No.</th>
 										<th>Kelas</th>
 										<th>Rata-Rata Hasil Tes</th>
+										<th>Rata-Rata Seluruh Kelas</th>
 										<th>Hasil Diagnosis</th>
 									</tr>
 								</thead>
-								<tbody><?php $i = 1; ?>
+								<tbody>
+								<?php 
+									$i = 1; $rata_rata = $r = 0;
+									foreach($seluruhKelas as $k){
+										if($k->rata_rata != null){
+											$rata_rata += $k->rata_rata;
+											$r++;
+										}
+									}
+									$rata_rata /= $r;
+									$rata_rata = round($rata_rata, 2);
+								?>
 								@foreach($seluruhKelas as $k)
 									<tr>
 										<td align="center">{{ $i++ }}.</td>
@@ -226,14 +302,17 @@
 											@endif
 										</td>
 										<td>
+											{{ $rata_rata }}
+										</td>
+										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhKelas.push({{ $k->rata_rata == null ? "0" : $k->rata_rata  }})
 											</script>
 										@if($k->rata_rata == null)
 											-
-										@elseif($k->rata_rata > $rs_materi)
+										@elseif($k->rata_rata > $pemahaman[2])
 											Mudah dipahami
-										@elseif($k->rata_rata == $rs_materi)
+										@elseif($k->rata_rata > $pemahaman[1])
 											Cukup dipahami
 										@else
 											Kurang dipahami
@@ -254,6 +333,7 @@
 										<th>Nama</th>
 										<th>Kelas</th>
 										<th>Rata-Rata Hasil Tes</th>
+										<th>Rata-Rata Seluruh Mhs.</th>
 										<th>Hasil Diagnosis</th>
 									</tr>
 								</thead>
@@ -272,14 +352,17 @@
 											@endif
 										</td>
 										<td>
+											{{ $rata_rata }}
+										</td>
+										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhMahasiswa.push({{ $sm->rata_rata == null ? "0" : $sm->rata_rata  }})
 											</script>
 										@if($sm->rata_rata == null)
 											-
-										@elseif($sm->rata_rata > $rs_materi)
+										@elseif($sm->rata_rata > $pemahaman[2])
 											Mudah dipahami
-										@elseif($sm->rata_rata == $rs_materi)
+										@elseif($sm->rata_rata > $pemahaman[1])
 											Cukup dipahami
 										@else
 											Kurang dipahami
@@ -308,6 +391,7 @@
 										<th>Materi</th>
 										<th>Soal</th>
 										<th>Rata-Rata Hasil Tes</th>
+										<th>Rata-Rata Seluruh Soal</th>
 										<th>Hasil Diagnosis</th>
 									</tr>
 								</thead>
@@ -329,14 +413,17 @@
 											@endif
 										</td>
 										<td>
+											{{ $rata_rata }}
+										</td>
+										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhSoal.push({{ $s->rata_rata == null ? "0" : $s->rata_rata }})
 											</script>
 										@if($s->rata_rata == null)
 											-
-										@elseif($s->rata_rata > $rs_materi)
+										@elseif($s->rata_rata > $pemahaman[2])
 											Mudah dipahami
-										@elseif($s->rata_rata == $rs_materi)
+										@elseif($s->rata_rata > $pemahaman[1])
 											Cukup dipahami
 										@else
 											Kurang dipahami
@@ -358,8 +445,8 @@
 			<li class="paginate_button page-item me-3 my-auto">
 				<table class="table table-bordered m-0">
 					<tr>
-						<td class="py-1">Rata-Rata Nilai</td>
-						<td class="py-1">--RATA_RATA--</td>
+						<td class="py-1 text-start">Rata-Rata</td>
+						<td class="py-1 text-start">--RATA_RATA--</td>
 					</tr>
 				</table>
 			</li>
@@ -427,27 +514,16 @@
 							rata_rata /= msg.length;
 							$.each(msg, function(i, v){
 								var diagnosis;
-								if( v.nilai_akhir > rata_rata )
+								if( v.nilai_akhir > {{ $pemahaman[2] }} )
 									diagnosis = "Mudah Dipahami";
-								else if(v.nilai_akhir == rata_rata)
+								else if(v.nilai_akhir > {{ $pemahaman[1] }})
 									diagnosis = "Cukup Dipahami";
 								else 
 									diagnosis = "Kurang Dipahami";
-								data_temp = [(i+1) + ".", v.npm, v.nama_mhs, v.nilai_akhir, diagnosis];
+								data_temp = [(i+1) + ".", v.npm, v.nama_mhs, v.nilai_akhir, rata_rata, diagnosis];
 								tb.push(data_temp);
 							});
 							table_draw(tablePerMateri, tb);
-							
-							// renew table
-							tablePerMateri.destroy();
-							var dataTable_opt_temp = dataTable_opt;
-							dataTable_opt_temp.initComplete = function(){
-								if($('#tablePerMateri_paginate .pagination .table').length < 1){
-									rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', rata_rata);
-									$('#tablePerMateri_paginate .pagination').prepend(rata_rata);
-								}
-							}
-							tablePerMateri = $('#tablePerMateri').DataTable(dataTable_opt_temp);
 						}
 					}
 				})
@@ -468,7 +544,7 @@
 				success: function(msg){
 					if(msg == false) return;
 					$.each(msg, function(i, v){
-						data_temp += '<option value="'+v.npm+'">'+v.npm+' - '+v.nama_mhs+'</option>';
+						data_temp += '<option value="'+v.npm+'">'+v.npm+'/'+v.nama_mhs+'</option>';
 					});
 					mhs.html(data_temp);
 				}
@@ -482,41 +558,32 @@
 			var tb = [];
 			var rata_rata = 0.0;
 			var data_temp;
-			var data = $('#tabPerMahasiswa [name="npm"] option:selected').html().split(' - ');
-			$('#tabPerMahasiswa .td_npm').html(": " + data[0]);
-			$('#tabPerMahasiswa .td_namaMhs').html(": " + data[1]);
+			var data = $('#tabPerMahasiswa [name="npm"] option:selected').html().split('/');
+			// $('#tabPerMahasiswa .td_npm').html(": " + data[0]);
+			// $('#tabPerMahasiswa .td_namaMhs').html(": " + data[1]);
 			$.ajax({
-				url: "/api/diagnostics/permahasiswa/" + data[0],
+				url: "/api/diagnostics/permahasiswa/" + $('#tabPerMahasiswa [name="kelas"]').val() +"/"+ data[0],
 				type: "GET",
 				success: function(msg){
 					if(msg == false) return;
-					$.each(msg, function(i, v){
+					$.each(msg.materi, function(i, v){
 						rata_rata += v.nilai_akhir;
 					});
-					rata_rata /= msg.length;
-					$.each(msg, function(i, v){
+					rata_rata /= msg.materi.length;
+					$.each(msg.materi, function(i, v){
+						var rata_kelas = msg.rata_rata_kelas[i].rata_rata;
 						var diagnosis;
-						if( v.nilai_akhir > rata_rata )
+						if( v.nilai_akhir > {{ $pemahaman[2] }} )
 							diagnosis = "Mudah Dipahami";
-						else if(v.nilai_akhir == rata_rata)
+						else if(v.nilai_akhir > {{ $pemahaman[1] }})
 							diagnosis = "Cukup Dipahami";
 						else 
 							diagnosis = "Kurang Dipahami";
-						data_temp = [v.pertemuan, v.judul_materi, v.nilai_akhir, diagnosis];
+						data_temp = [v.pertemuan, v.judul_materi, v.nilai_akhir, msg.rata_rata_kelas[i].rata_rata, diagnosis];
 						tb.push(data_temp);
 					});
+					$('#td_rata2_permhs').html(": " + rata_rata);
 					table_draw(tablePerMahasiswa, tb);
-
-					// renew table
-					tablePerMateri.destroy();
-					var dataTable_opt_temp = dataTable_opt;
-					dataTable_opt_temp.initComplete = function(){
-						if($('#tablePerMahasiswa_paginate .pagination table').length < 1){
-							rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', rata_rata);
-							$('#tablePerMahasiswa_paginate .pagination').prepend(rata_rata);
-						}
-					}
-					tablePerMahasiswa = $('#tablePerMahasiswa').DataTable(dataTable_opt_temp);
 				}
 			})
 			.fail(function(jqXHR, textStatus) {
@@ -526,42 +593,18 @@
 
 		// Seluruh Materi --------------------------------------------------------------
 		var dataTable_opt_temp = dataTable_opt;
-		dataTable_opt_temp.fnDrawCallback = function(){
-			if($('#tableSeluruhMateri_paginate .pagination table').length < 1){
-				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rs_materi }});
-				$('#tableSeluruhMateri_paginate .pagination').prepend(rata_rata);
-			}
-		}
 		tableSeluruhMateri = tableSeluruhMateri.DataTable(dataTable_opt_temp);
 
 		// Seluruh Kelas --------------------------------------------------------------
 		var dataTable_opt_temp = dataTable_opt;
-		dataTable_opt_temp.fnDrawCallback = function(){
-			if($('#tableSeluruhKelas_paginate .pagination table').length < 1){
-				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rs_materi }});
-				$('#tableSeluruhKelas_paginate .pagination').prepend(rata_rata);
-			}
-		}
 		tableSeluruhKelas = tableSeluruhKelas.DataTable(dataTable_opt_temp);
 
 		// Seluruh Mahasiswa --------------------------------------------------------------
 		var dataTable_opt_temp = dataTable_opt;
-		dataTable_opt_temp.fnDrawCallback = function(){
-			if($('#tableSeluruhMahasiswa_paginate .pagination table').length < 1){
-				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rs_materi }});
-				$('#tableSeluruhMahasiswa_paginate .pagination').prepend(rata_rata);
-			}
-		}
 		tableSeluruhMahasiswa = tableSeluruhMahasiswa.DataTable(dataTable_opt_temp);
 
 		// Seluruh Soal --------------------------------------------------------------
 		var dataTable_opt_temp = dataTable_opt;
-		dataTable_opt_temp.fnDrawCallback = function(){
-			if($('#tableSeluruhSoal_paginate .pagination table').length < 1){
-				rata_rata = $('.template .rata-rata').html().replace('--RATA_RATA--', {{ $rs_materi }});
-				$('#tableSeluruhSoal_paginate .pagination').prepend(rata_rata);
-			}
-		}
 		tableSeluruhSoal = tableSeluruhSoal.DataTable(dataTable_opt_temp);
 
 		function table_draw(table, data){
@@ -600,9 +643,6 @@
 			        datasets: [{
 			            label: 'Nilai Rata-Rata',
 			            data: data,
-			      //       backgroundColor: palette('tol', data.length).map(function(hex) {
-					    //     return '#' + hex;
-					    // }),
 			            borderWidth: 1
 			        }]
 			    },
