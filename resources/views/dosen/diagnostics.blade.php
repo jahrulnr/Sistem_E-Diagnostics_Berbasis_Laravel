@@ -26,25 +26,25 @@
 		  <div class="modal-dialog modal-md">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title me-3">Kategori Persentase<br/>Tingkat Pemahaman Mahasiswa</h5>
+		        <h5 class="modal-title me-3">Kategori Tingkat Pemahaman Mahasiswa</h5>
 		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		      </div>
 		      <div class="modal-body">
 		        <table class="table table-bordered mb-1">
 		        	<tr>
-		        		<th>Persentase</th>
+		        		<th>Nilai</th>
 		        		<th>Kategori</th>
 		        	</tr>
 		        	<tr>
-		        		<td>0%-30%</td>
+		        		<td>0-30</td>
 		        		<td>Kurang Dipahami</td>
 		        	</tr>
 		        	<tr>
-		        		<td>&gt; 30%-60%</td>
+		        		<td>&gt; 30-60</td>
 		        		<td>Cukup Dipahami</td>
 		        	</tr>
 		        	<tr>
-		        		<td>&gt; 60%-100%</td>
+		        		<td>&gt; 60-100</td>
 		        		<td>Mudah Dipahami</td>
 		        	</tr>
 		        </table>
