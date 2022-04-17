@@ -108,7 +108,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="npm" type="text" placeholder="173500000" name="npm" />
+                                                <input class="form-control" id="npm" type="text" placeholder="173500000" name="npm" required />
                                                 <label for="npm">NPM</label>
                                             </div>
                                             <div class="input-group mb-3">

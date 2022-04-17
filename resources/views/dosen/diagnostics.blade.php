@@ -221,7 +221,8 @@
 											$r++;
 										}
 									}
-									$rata_rata /= $r;
+									if ($r > 0)
+										$rata_rata /= $r;
 									$rata_rata = round($rata_rata, 2);
 								?>
 								@foreach($seluruhMateri as $m)
@@ -287,7 +288,8 @@
 											$r++;
 										}
 									}
-									$rata_rata /= $r;
+									if ($r > 0)
+										$rata_rata /= $r;
 									$rata_rata = round($rata_rata, 2);
 								?>
 								@foreach($seluruhKelas as $k)
