@@ -105,10 +105,10 @@
 	</div>
 	<div id="div-soal">
 		<tr_table>
-			<td_table>--NO--</td_table>
-			<td_table class="text-justify">--SOAL--</td_table>
-			<td_table class="text-justify">--JAWABAN_SOAL--</td_table>
-			<td_table class="text-justify">--JAWABAN_MHS--</td_table>
+			<td_table style="width:1px">--NO--</td_table>
+			<td_table class="text-justify" style="white-space: pre-wrap;">--SOAL--</td_table>
+			<td_table class="text-justify" style="white-space: pre-wrap;">--JAWABAN_SOAL--</td_table>
+			<td_table class="text-justify" style="white-space: pre-wrap;">--JAWABAN_MHS--</td_table>
 			<td_table class="text-center">--BOBOT--</td_table>
 			<td_table bobot="--BOBOT--">
 				<input type="number" class="form-control form-control-sm bobot-input" style="min-width: 50px;" min="0" max="--BOBOT--" name="id_soal[--ID_SOAL--]" placeholder="--BOBOT--" value="--BOBOT_JAWABAN--" onchange="count(this)" required>

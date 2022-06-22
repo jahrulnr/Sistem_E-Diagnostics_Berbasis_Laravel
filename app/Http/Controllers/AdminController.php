@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\DataImport;
+use App\Imports\DataImport; 
 use App\Imports\MahasiswaImport;
 
 class AdminController extends Controller {
@@ -34,7 +34,7 @@ class AdminController extends Controller {
 		if(function_exists('shell_exec')){
 			if(function_exists('sys_getloadavg')){
 				$exec_loads = sys_getloadavg();
-				$exec_cores = trim(shell_exec("grep -P '^processor' /proc/cpuinfo|wc -l"));
+				$exec_cores = trim(shell_exec("grep '^processor' /proc/cpuinfo|wc -l"));
 				$cpu = round($exec_loads[1]/($exec_cores + 1)*100, 0) . '%';
 			}
 
