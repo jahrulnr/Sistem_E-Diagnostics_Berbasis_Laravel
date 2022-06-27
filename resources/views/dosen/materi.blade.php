@@ -139,7 +139,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        <!-- <button type="submit" class="btn btn-primary">Simpan</button> -->
       </div>
     </div>
   </div>
@@ -394,7 +394,7 @@
 		        	if(data.status == "success"){
 		            var temp = $("#temp_fmateri").html();
 		            temp = temp.replace("--FILE--", data.nama)
-		            .replace("--LINK--", "{{ public_path("files/materi/") }}" + data.nama_f)
+		            .replace("--LINK--", "{{ asset("files/materi") }}/" + data.nama_f)
 		            .replace("--HAPUS--", "/dosen/materi/berkas/hapus/" + data.nama_f);
 								$("#progress-" + that.id).hide();
 

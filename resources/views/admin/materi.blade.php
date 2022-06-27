@@ -133,25 +133,25 @@
 	}
 
 	$(document).ready(function(){
-  	var hash = window.location.hash;
-  	if(hash == '#berhasil_disimpan'){
-  		toastr.success('Data berhasil disimpan');
-  	}
-  	else if(hash == '#gagal_disimpan'){
-  		toastr.error('Data gagal disimpan');
-  	}
-  	else if(hash == '#berhasil_diubah'){
-  		toastr.success('Data berhasil diubah');
-  	}
-  	else if(hash == '#gagal_diubah'){
-  		toastr.error('Data gagal diubah');
-  	}
-  	else if(hash == '#berhasil_dihapus'){
-  		toastr.success('Data berhasil dihapus');
-  	}
-  	else if(hash == '#gagal_dihapus'){
-  		toastr.error('Data gagal dihapus');
-  	}
+  	// var hash = window.location.hash;
+  	// if(hash == '#berhasil_disimpan'){
+  	// 	toastr.success('Data berhasil disimpan');
+  	// }
+  	// else if(hash == '#gagal_disimpan'){
+  	// 	toastr.error('Data gagal disimpan');
+  	// }
+  	// else if(hash == '#berhasil_diubah'){
+  	// 	toastr.success('Data berhasil diubah');
+  	// }
+  	// else if(hash == '#gagal_diubah'){
+  	// 	toastr.error('Data gagal diubah');
+  	// }
+  	// else if(hash == '#berhasil_dihapus'){
+  	// 	toastr.success('Data berhasil dihapus');
+  	// }
+  	// else if(hash == '#gagal_dihapus'){
+  	// 	toastr.error('Data gagal dihapus');
+  	// }
 
 		$('#table_data').DataTable({
 		  "responsive": true,
