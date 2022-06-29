@@ -71,7 +71,7 @@
       <div class="modal-body">
         @csrf
         <div class="form-input mb-3">
-        	<label>NPM</label>
+        	<label for="npm">NPM</label>
         	<input type="text" name="npm" class="form-control" placeholder="173500000" required>
         </div>
         <div class="form-input mb-3">
@@ -79,8 +79,10 @@
         	<input type="text" name="nama_mhs" class="form-control" placeholder="Nama" required>
         </div>
         <div class="form-input mb-3">
-        	<label>Email</label>
-        	<input type="text" name="email" class="form-control" placeholder="user@contoh.com" required>
+        	<label>Email UIR 
+        		<sup><font color="red">*Wajib @<?=customConfig::student_host_mail?></font></sup>
+        	</label>
+        	<input type="text" name="email" class="form-control" placeholder="user@<?=customConfig::student_host_mail?>" required>
         </div>
         <div class="form-input mb-3">
         	<label>Kelas</label>
@@ -138,6 +140,7 @@
 		$('form').attr('action', '/admin/mahasiswa/tambah');
 		$('#tambah_header').html("Tambah Akun Mahasiswa");
 		$form.reset();
+		$('label[for="npm"]').html('NPM <sup class="text-danger">*Format: xx3510xxx</sup>');
 		$('input[name="npm"]').removeAttr('readonly');
 		$('label[for="password"]').html('Password <sup>(Default: 123456)</sup>');
 		$('input[name="password"]').attr('required', 'required');
@@ -149,6 +152,7 @@
 		$('#tambah_header').html("Ubah Akun Mahasiswa");
 		$form.reset();
 		var data = JSON.parse($(id).html());
+		$('label[for="npm"]').html('NPM');
 		$('label[for="password"]').html('Password <sup class="text-danger">*Optional</sup>');
 		$('input[name="npm"]').attr('readonly', 'readonly');
 		$('input[name="npm"]').val(data['npm']);
@@ -170,23 +174,11 @@
 
 	$(document).ready(function(){
   	var hash = window.location.hash;
-  	if(hash == '#berhasil_disimpan'){
-  		toastr.success('Data berhasil disimpan');
+  	if(hash == "#npm_tidak_valid"){
+  		toastr.error("NPM tidak valid");
   	}
-  	else if(hash == '#gagal_disimpan'){
-  		toastr.error('Data gagal disimpan');
-  	}
-  	else if(hash == '#berhasil_diubah'){
-  		toastr.success('Data berhasil diubah');
-  	}
-  	else if(hash == '#gagal_diubah'){
-  		toastr.error('Data gagal diubah');
-  	}
-  	else if(hash == '#berhasil_dihapus'){
-  		toastr.success('Data berhasil dihapus');
-  	}
-  	else if(hash == '#gagal_dihapus'){
-  		toastr.error('Data gagal dihapus');
+  	else if(hash == "#email_tidak_valid"){
+  		toastr.error("Email tidak valid");
   	}
 
   	$('[name="kelas"]').on("input", function(){

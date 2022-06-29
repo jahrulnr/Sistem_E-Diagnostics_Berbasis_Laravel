@@ -192,6 +192,7 @@ return [
     */
 
     'aliases' => [
+        'customConfig' => App\Helpers\customConfig::class,
 
         'App' => Illuminate\Support\Facades\App::class,
         'Arr' => Illuminate\Support\Arr::class,

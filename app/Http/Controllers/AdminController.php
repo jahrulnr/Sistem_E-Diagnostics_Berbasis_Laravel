@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\DataImport; 
 use App\Imports\MahasiswaImport;
+use App\Helpers\customConfig;
 
 class AdminController extends Controller {
 
@@ -56,6 +57,7 @@ class AdminController extends Controller {
 
 	function importExel(Request $data){
 
+		$student_email = "student.uir.ac.id";
 		$file = $data->excel->move('../temp', gmdate("d-m-Y H.i.s", time()+3600*7) . ".xlsx");
 		$data = Excel::toCollection(new DataImport, $file);
 
@@ -96,6 +98,8 @@ class AdminController extends Controller {
 				}
 
 				if($v[6] != null &&
+					customConfig::npm_validation($v[6]) !== false &&
+					customConfig::studentmail_validation($v[8]) &&
 					DB::table('mahasiswa')
 						->where('npm', $v[6])
 						->doesntExist()
@@ -256,11 +260,17 @@ class AdminController extends Controller {
 
 	function tambah_mahasiswa(Request $request){
 		$db = false;
-		if(DB::table('mahasiswa')->where('npm', $request->npm)->doesntExist())
+		$npm_valid = customConfig::npm_validation($request->npm);
+
+		if(!customConfig::studentmail_validation($request->email))
+			return redirect('/admin/mahasiswa#email_tidak_valid');
+		elseif($npm_valid === false)
+			return redirect('/admin/mahasiswa#npm_tidak_valid');
+		elseif(DB::table('mahasiswa')->where('npm', $request->npm)->doesntExist())
 			$db = DB::table('mahasiswa')->insert([
-				'npm'	=> $request->npm,
+				'npm'	=> $npm_valid,
 				'nama_mhs'	=> $request->nama_mhs,
-				'email'		=> $request->email,
+				'email'		=> strtolower($request->email),
 				'password'	=> bcrypt($request->password),
 				'id_kelas'	=> $request->kelas
 			]);
@@ -273,15 +283,19 @@ class AdminController extends Controller {
 	function ubah_mahasiswa(Request $request){
 		$data = [
 				'nama_mhs'	=> $request->nama_mhs,
-				'email'		=> $request->email,
+				'email'		=> strtolower($request->email),
 				'id_kelas'	=> $request->kelas
 			];
 		if(!empty($request->password))
 			$data['password'] = bcrypt($request->password);
 
-		$db = DB::table('mahasiswa')
-			->where('npm', $request->npm)
-			->update($data);
+		$db = false;
+		if(!customConfig::studentmail_validation($request->email))
+			return redirect('/admin/mahasiswa#email_tidak_valid');
+		else
+			$db = DB::table('mahasiswa')
+				->where('npm', $request->npm)
+				->update($data);
 
 		if(!$db)
 			return redirect('/admin/mahasiswa#gagal_diubah');
