@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\customConfig;
  
 class DosenController extends Controller { 
 
@@ -388,7 +389,6 @@ class DosenController extends Controller {
 	}
 
 	function diagnostics_permahasiswa($kelas, $npm){
-
 		$data = (object) [];
 		$data->materi = DB::table('materi')
 			->select(['materi.*', 'nilai.*'])
@@ -413,6 +413,36 @@ class DosenController extends Controller {
 			->get();
 
 		return $data;
+	}
+
+	function diagnostics_seluruhMateri($kelas){
+		$q_kelas = "";
+
+		// Im very confuse to find sql logic
+		// Finally, I using mysqli native for raw DB request
+		// So, I need escape string for block injection from url request
+		$connSQL = mysqli_connect(env('DB_HOST').":".env('DB_PORT'), env('DB_USERNAME'), env('DB_PASSWORD'));
+		$kelas = mysqli_real_escape_string($connSQL, $kelas);
+		$connSQL->close();
+
+		if($kelas != 'all')
+			$q_kelas = "and kelas.kelas='$kelas'";
+		$data = DB::table('materi')
+			->select([
+				'materi.*',
+				DB::raw("AVG(if(materi.id_materi=nilai.id_materi $q_kelas,nilai_akhir,null)) as rata_rata")
+			])
+			->leftJoin('soal', function($join){
+				$join->on('materi.id_materi', 'soal.id_materi');
+				$join->where('soal.id_admin', session('id'));
+			})
+			->leftJoin('nilai', 'soal.id_materi', 'nilai.id_materi')
+			->leftJoin('mahasiswa', 'nilai.npm', 'mahasiswa.npm')
+			->leftJoin('kelas', 'mahasiswa.id_kelas', 'kelas.id_kelas')
+			->groupBy('judul_materi')
+			->orderBy('pertemuan', 'asc');
+
+		return $data->get();
 	}
 
 	function profil(){

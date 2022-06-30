@@ -77,6 +77,7 @@ Route::get('/dosen/diagnostics', 'App\Http\Controllers\DosenController@diagnosti
 Route::get('/api/diagnostics/kelas/{kelas}', 'App\Http\Controllers\DosenController@diagnostics_kelas');
 Route::get('/api/diagnostics/permateri/{materi}/{kelas}', 'App\Http\Controllers\DosenController@diagnostics_permateri');
 Route::get('/api/diagnostics/permahasiswa/{kelas}/{npm}', 'App\Http\Controllers\DosenController@diagnostics_permahasiswa');
+Route::get('/api/diagnostics/seluruh_materi/{kelas}', 'App\Http\Controllers\DosenController@diagnostics_seluruhMateri');
 
 // -- Profil
 Route::get('/dosen/profil', 'App\Http\Controllers\DosenController@profil');

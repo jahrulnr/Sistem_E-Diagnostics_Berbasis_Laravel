@@ -15,6 +15,8 @@
 <script src="/vendor/datatables/js/dataTables.bootstrap5.min.js"></script>
 <script src="/vendor/datatables/js/dataTables.responsive.min.js"></script>
 <script src="/vendor/datatables/js/responsive.bootstrap5.min.js"></script>
+<!-- jQuery ajax Proggress -->
+<script src="/vendor/jq-ajax-progress/jq-ajax-progress.min.js"></script>
 
 <div class="container-fluid px-4">
 	<div class="d-flex justify-content-between my-4">
@@ -23,72 +25,72 @@
 			Kategori Diagnosis
 		</button>
 		<div class="modal fade" id="rumus_diagnosis" tabindex="-1" aria-hidden="true">
-		  <div class="modal-dialog modal-md">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h5 class="modal-title me-3">Kategori Tingkat Pemahaman Mahasiswa</h5>
-		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		      </div>
-		      <div class="modal-body">
-		        <table class="table table-bordered mb-1">
-		        	<tr>
-		        		<th>Nilai</th>
-		        		<th>Kategori</th>
-		        	</tr>
-		        	<tr>
-		        		<td>0-30</td>
-		        		<td>Kurang Dipahami</td>
-		        	</tr>
-		        	<tr>
-		        		<td>&gt; 30-60</td>
-		        		<td>Cukup Dipahami</td>
-		        	</tr>
-		        	<tr>
-		        		<td>&gt; 60-100</td>
-		        		<td>Mudah Dipahami</td>
-		        	</tr>
-		        </table>
-		        <table class="table table-borderless mb-0">
-		        	<tr>
-		        		<td class="p-0">Referensi: </td>
-		        		<td class="py-0 ps-1 pe-0 text-justify">
-		        			<a href="http://ejournal.uin-suska.ac.id/index.php/JNSI/article/view/9911" target="_blank">Identifikasi Miskonsepsi dan Tingkat Pemahaman Mahasiswa Tadris Fisika pada Materi Listrik Dinamis Menggunakan 3-Tier Diagnostic Test (Hal. 131)</a>
-		        		</td>
-		        	</tr>
-		        </table>
-	        	
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
-		      </div>
-		    </div>
-		  </div>
+			<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h5 class="modal-title me-3">Kategori Tingkat Pemahaman Mahasiswa</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+				<table class="table table-bordered mb-1">
+					<tr>
+						<th>Nilai</th>
+						<th>Kategori</th>
+					</tr>
+					<tr>
+						<td>0-30</td>
+						<td>Kurang Dipahami</td>
+					</tr>
+					<tr>
+						<td>&gt; 30-60</td>
+						<td>Cukup Dipahami</td>
+					</tr>
+					<tr>
+						<td>&gt; 60-100</td>
+						<td>Mudah Dipahami</td>
+					</tr>
+				</table>
+				<table class="table table-borderless mb-0">
+					<tr>
+						<td class="p-0">Referensi: </td>
+						<td class="py-0 ps-1 pe-0 text-justify">
+							<a href="http://ejournal.uin-suska.ac.id/index.php/JNSI/article/view/9911" target="_blank">Identifikasi Miskonsepsi dan Tingkat Pemahaman Mahasiswa Tadris Fisika pada Materi Listrik Dinamis Menggunakan 3-Tier Diagnostic Test (Hal. 131)</a>
+						</td>
+					</tr>
+				</table>
+				
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+				</div>
+			</div>
+			</div>
 		</div>
 	</div>
 	<div class="card shadow">
 		<div class="card-body">
 			<!-- <h3>Diagnosis Per Materi</h3> -->
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
-			  	<li class="nav-item" role="presentation">
-			    	<button class="nav-link active" id="tabPerMateri-tab" data-bs-toggle="tab" data-bs-target="#tabPerMateri" type="button" role="tab" aria-controls="tabPerMateri" aria-selected="true">Diagnosis per Materi</button>
-			  	</li>
-			  	<li class="nav-item" role="presentation">
-			    	<button class="nav-link" id="tabPerMahasiswa-tab" data-bs-toggle="tab" data-bs-target="#tabPerMahasiswa" type="button" role="tab" aria-controls="tabPerMahasiswa" aria-selected="false">Diagnosis per Mahasiswa</button>
-			  	</li>
-			  	<li class="nav-item" role="presentation">
-			    	<button class="nav-link" id="tabSeluruhMateri-tab" data-bs-toggle="tab" data-bs-target="#tabSeluruhMateri" type="button" role="tab" aria-controls="tabSeluruhMateri" aria-selected="false">Diagnosis Seluruh Materi</button>
-			  	</li>
-			  	<li class="nav-item" role="presentation">
-			    	<button class="nav-link" id="tabSeluruhMahasiswa-tab" data-bs-toggle="tab" data-bs-target="#tabSeluruhMahasiswa" type="button" role="tab" aria-controls="tabSeluruhMahasiswa" aria-selected="false">Diagnosis Seluruh Mahasiswa</button>
-			  	</li>
-			  	<li class="nav-item" role="presentation">
-			    	<button class="nav-link" id="tabSeluruhSoal-tab" data-bs-toggle="tab" data-bs-target="#tabSeluruhSoal" type="button" role="tab" aria-controls="tabSeluruhSoal" aria-selected="false">Diagnosis Seluruh Soal</button>
-			  	</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="tabPerMateri-tab" data-bs-toggle="tab" data-bs-target="#tabPerMateri" type="button" role="tab" aria-controls="tabPerMateri" aria-selected="true">Diagnosis per Materi</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="tabPerMahasiswa-tab" data-bs-toggle="tab" data-bs-target="#tabPerMahasiswa" type="button" role="tab" aria-controls="tabPerMahasiswa" aria-selected="false">Diagnosis per Mahasiswa</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="tabSeluruhMateri-tab" data-bs-toggle="tab" data-bs-target="#tabSeluruhMateri" type="button" role="tab" aria-controls="tabSeluruhMateri" aria-selected="false">Diagnosis Seluruh Materi</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="tabSeluruhMahasiswa-tab" data-bs-toggle="tab" data-bs-target="#tabSeluruhMahasiswa" type="button" role="tab" aria-controls="tabSeluruhMahasiswa" aria-selected="false">Diagnosis Seluruh Mahasiswa</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="tabSeluruhSoal-tab" data-bs-toggle="tab" data-bs-target="#tabSeluruhSoal" type="button" role="tab" aria-controls="tabSeluruhSoal" aria-selected="false">Diagnosis Seluruh Soal</button>
+				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
 				<!-- tabPerMateri ------------------------------------------------------>
-			  	<div class="tab-pane fade show active" id="tabPerMateri" role="tabpanel" aria-labelledby="tabPerMateri-tab">
-			  		<table class="table table-borderless table-header w-auto">
+				<div class="tab-pane fade show active" id="tabPerMateri" role="tabpanel" aria-labelledby="tabPerMateri-tab">
+					<table class="table table-borderless table-header w-auto">
 						<tr>
 							<td>Materi</td>
 							<td>: 
@@ -113,7 +115,12 @@
 									<option value="{{ $k->kelas }}">{{ $k->kelas }}</option>
 									@endforeach
 								</select>
+								<div id="perMateri_loader" class="d-inline-block"></div>
 							</td>
+						</tr>
+						<tr>
+							<td>Nilai Rata-Rata Kelas</td>
+							<td>: <span id="r2_nilaiPerMateri">-</td>
 						</tr>
 					</table>
 						
@@ -124,7 +131,6 @@
 								<th>NPM</th>
 								<th>Nama Mahasiswa</th>
 								<th>Hasil Tes</th>
-								<th>Rata-rata Kelas</th>
 								<th>Hasil Diagnosis</th>
 							</tr>
 						</thead>
@@ -132,11 +138,11 @@
 						
 						</tbody>
 					</table>
-			  	</div>
+				</div>
 
 				<!-- tabPerMahasiswa ------------------------------------------------------>
-			  	<div class="tab-pane fade" id="tabPerMahasiswa" role="tabpanel" aria-labelledby="tabPerMahasiswa-tab">
-			  		<table class="table table-borderless table-header w-auto">
+				<div class="tab-pane fade" id="tabPerMahasiswa" role="tabpanel" aria-labelledby="tabPerMahasiswa-tab">
+					<table class="table table-borderless table-header w-auto">
 						<tr>
 							<td>Kelas</td>
 							<td>: 
@@ -146,6 +152,7 @@
 									<option value="{{ $k->kelas }}">{{ $k->kelas }}</option>
 									@endforeach
 								</select>
+								<div id="perMahasiswa-kelas_loader" class="d-inline-block"></div>
 							</td>
 						</tr>
 						<tr>
@@ -154,19 +161,12 @@
 								<select class="form-select form-select-sm w-auto d-inline" name="npm">
 									<option selected disabled>-- Pilih Mahasiswa</option>
 								</select>
+								<div id="perMahasiswa-npm_loader" class="d-inline-block"></div>
 							</td>
 						</tr>
 						<tr>
-							<td>Rata-rata Nilai</td>
+							<td>Nilai Rata-Rata Mahasiswa</td>
 							<td id="td_rata2_permhs">: -</td>
-						</tr>
-						<tr class="d-none">
-							<td>NPM</td>
-							<td class="td_npm">: </td>
-						</tr>
-						<tr class="d-none">
-							<td>Nama Mahasiswa</td>
-							<td class="td_namaMhs">: </td>
 						</tr>
 					</table>
 						
@@ -184,10 +184,10 @@
 						
 						</tbody>
 					</table>
-			  	</div>
+				</div>
 
 				<!-- tabSeluruhMateri ------------------------------------------------------>
-			  	<div class="tab-pane fade" id="tabSeluruhMateri" role="tabpanel" aria-labelledby="tabSeluruhMateri-tab">
+				<div class="tab-pane fade" id="tabSeluruhMateri" role="tabpanel" aria-labelledby="tabSeluruhMateri-tab">
 					<div class="row">
 						<div class="col-12 mb-3" style="height: 300px;">
 							<canvas id="canvasSeluruhMateri" class="w-100"></canvas>
@@ -202,29 +202,46 @@
 									SeluruhSoal: []
 								};
 							</script>
+							<data id="template_SeluruhMateri" class="d-none">
+								<div class="filter_form d-inline">
+									| Kelas: <select class="form-select form-select-sm" id="f_tabSeluruhMateri">
+										<option value="all" selected>Seluruh Kelas</option>
+										@foreach($kelas as $k)
+										<option value="{{ $k->kelas }}">{{ $k->kelas }}</option>
+										@endforeach
+									</select>
+									<div class="d-inline-block seluruhMateri_loader"></div>
+								</div>
+							</data>
+							@php 
+								$i = 1; $rata_rata = $r = 0;
+								foreach($seluruhMateri as $m){
+									if($m->rata_rata != null){
+										$rata_rata += $m->rata_rata;
+										$r++;
+									}
+								}
+								if ($r > 0)
+									$rata_rata /= $r;
+								$rata_rata = round($rata_rata, 2);
+							@endphp
+
+							<div class="col-12 mt-1" for="r2SeluruhMateri">
+								<label class="border p-1 m-0">
+									Rata-rata Seluruh Materi: 
+									<span id="r2_nilaiSeluruhMateri">{{ $rata_rata }}</span>
+								</label>
+							</div>
 							<table class="table table-bordered" id="tableSeluruhMateri">
 								<thead>
 									<tr>
 										<th>No.</th>
 										<th>Materi</th>
 										<th>Rata-Rata Hasil Tes</th>
-										<th>Rata-rata Seluruh Materi</th>
 										<th>Hasil Diagnosis</th>
 									</tr>
 								</thead>
 								<tbody>
-								<?php 
-									$i = 1; $rata_rata = $r = 0;
-									foreach($seluruhMateri as $m){
-										if($m->rata_rata != null){
-											$rata_rata += $m->rata_rata;
-											$r++;
-										}
-									}
-									if ($r > 0)
-										$rata_rata /= $r;
-									$rata_rata = round($rata_rata, 2);
-								?>
 								@foreach($seluruhMateri as $m)
 									<tr>
 										<td align="center">{{ $i++ }}.</td>
@@ -237,21 +254,10 @@
 											@endif
 										</td>
 										<td>
-											{{ $rata_rata }}
-										</td>
-										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhMateri.push({{ $m->rata_rata == null ? "0" : $m->rata_rata  }})
 											</script>
-										@if($m->rata_rata == null)
-											-
-										@elseif($m->rata_rata > $pemahaman[2])
-											Mudah dipahami
-										@elseif($m->rata_rata > $pemahaman[1])
-											Cukup dipahami
-										@else
-											Kurang dipahami
-										@endif
+											<?=customConfig::kategori_pemahaman($m->rata_rata)?>
 										</td>
 									</tr>
 								@endforeach
@@ -259,13 +265,31 @@
 							</table>
 						</div>
 					</div>
-			  	</div>
+				</div>
 
 				<!-- tabSeluruhMahasiswa ------------------------------------------------------>
-			  	<div class="tab-pane fade" id="tabSeluruhMahasiswa" role="tabpanel" aria-labelledby="tabSeluruhMahasiswa-tab">
+				<div class="tab-pane fade" id="tabSeluruhMahasiswa" role="tabpanel" aria-labelledby="tabSeluruhMahasiswa-tab">
 					<div class="row">
 						<div class="col-12 mb-3" style="height: 200px;">
 							<canvas id="canvasSeluruhKelas" class="w-100"></canvas>
+						</div>
+						@php 
+							$i = 1; $rata_rata = $r = 0;
+							foreach($seluruhKelas as $k){
+								if($k->rata_rata != null){
+									$rata_rata += $k->rata_rata;
+									$r++;
+								}
+							}
+							if ($r > 0)
+								$rata_rata /= $r;
+							$rata_rata = round($rata_rata, 2);
+						@endphp
+						<div class="col-12 mt-1" for="r2SeluruhMahasiswa">
+							<label class="border p-1 m-0">
+								Rata-rata Seluruh Mahasiswa: 
+								<span id="r2_nilaiSeluruhMahasiswa">{{ $rata_rata }}</span>
+							</label>
 						</div>
 						<div class="col-12 mb-3">
 							<div class="border-bottom border-gray mb-3"></div>
@@ -275,23 +299,10 @@
 										<th>No.</th>
 										<th>Kelas</th>
 										<th>Rata-Rata Hasil Tes</th>
-										<th>Rata-Rata Seluruh Kelas</th>
 										<th>Hasil Diagnosis</th>
 									</tr>
 								</thead>
 								<tbody>
-								<?php 
-									$i = 1; $rata_rata = $r = 0;
-									foreach($seluruhKelas as $k){
-										if($k->rata_rata != null){
-											$rata_rata += $k->rata_rata;
-											$r++;
-										}
-									}
-									if ($r > 0)
-										$rata_rata /= $r;
-									$rata_rata = round($rata_rata, 2);
-								?>
 								@foreach($seluruhKelas as $k)
 									<tr>
 										<td align="center">{{ $i++ }}.</td>
@@ -304,21 +315,10 @@
 											@endif
 										</td>
 										<td>
-											{{ $rata_rata }}
-										</td>
-										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhKelas.push({{ $k->rata_rata == null ? "0" : $k->rata_rata  }})
 											</script>
-										@if($k->rata_rata == null)
-											-
-										@elseif($k->rata_rata > $pemahaman[2])
-											Mudah dipahami
-										@elseif($k->rata_rata > $pemahaman[1])
-											Cukup dipahami
-										@else
-											Kurang dipahami
-										@endif
+											<?=customConfig::kategori_pemahaman($k->rata_rata)?>
 										</td>
 									</tr>
 								@endforeach
@@ -335,7 +335,6 @@
 										<th>Nama</th>
 										<th>Kelas</th>
 										<th>Rata-Rata Hasil Tes</th>
-										<th>Rata-Rata Seluruh Mhs.</th>
 										<th>Hasil Diagnosis</th>
 									</tr>
 								</thead>
@@ -354,21 +353,10 @@
 											@endif
 										</td>
 										<td>
-											{{ $rata_rata }}
-										</td>
-										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhMahasiswa.push({{ $sm->rata_rata == null ? "0" : $sm->rata_rata  }})
 											</script>
-										@if($sm->rata_rata == null)
-											-
-										@elseif($sm->rata_rata > $pemahaman[2])
-											Mudah dipahami
-										@elseif($sm->rata_rata > $pemahaman[1])
-											Cukup dipahami
-										@else
-											Kurang dipahami
-										@endif
+											<?=customConfig::kategori_pemahaman($sm->rata_rata)?>
 										</td>
 									</tr>
 								@endforeach
@@ -376,13 +364,19 @@
 							</table>
 						</div>
 					</div>
-			  	</div>
+				</div>
 
 				<!-- tabSeluruhSoal ------------------------------------------------------>
-			  	<div class="tab-pane fade" id="tabSeluruhSoal" role="tabpanel" aria-labelledby="tabSeluruhSoal-tab">
+				<div class="tab-pane fade" id="tabSeluruhSoal" role="tabpanel" aria-labelledby="tabSeluruhSoal-tab">
 					<div class="row">
 						<div class="col-12 mb-3" style="height: 200px;">
 							<canvas id="canvasSeluruhSoal" class="w-100"></canvas>
+						</div>
+						<div class="col-12 mt-1" for="r2SeluruhSoal">
+							<label class="border p-1 m-0">
+								Rata-rata Seluruh Soal: 
+								<span id="r2_nilaiSeluruhSoal">{{ $rata_rata }}</span>
+							</label>
 						</div>
 						<div class="col-12">
 							<div class="border-bottom border-gray mb-3"></div>
@@ -393,7 +387,6 @@
 										<th>Materi</th>
 										<th>Soal</th>
 										<th>Rata-Rata Hasil Tes</th>
-										<th>Rata-Rata Seluruh Soal</th>
 										<th>Hasil Diagnosis</th>
 									</tr>
 								</thead>
@@ -415,21 +408,10 @@
 											@endif
 										</td>
 										<td>
-											{{ $rata_rata }}
-										</td>
-										<td>
 											<script type="text/javascript">
 												chart_data.SeluruhSoal.push({{ $s->rata_rata == null ? "0" : $s->rata_rata }})
 											</script>
-										@if($s->rata_rata == null)
-											-
-										@elseif($s->rata_rata > $pemahaman[2])
-											Mudah dipahami
-										@elseif($s->rata_rata > $pemahaman[1])
-											Cukup dipahami
-										@else
-											Kurang dipahami
-										@endif
+											<?=customConfig::kategori_pemahaman($s->rata_rata)?>
 										</td>
 									</tr>
 								@endforeach
@@ -437,7 +419,7 @@
 							</table>
 						</div>
 					</div>
-			  	</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -453,6 +435,9 @@
 				</table>
 			</li>
 		</div>
+		<div class="progress">
+			<progress class="proggress_form" style="width: 100px;display: none;" value="" min="0" max="100"></progress>
+		</div>
 	</div>
 </div>
 
@@ -467,17 +452,35 @@
 	var tableSeluruhMahasiswa = $('#tableSeluruhMahasiswa');
 	var tableSeluruhSoal = $('#tableSeluruhSoal');
 
+	const progress = $(".progress").html();
+	let perMateri_loader = $("#perMateri_loader").html(progress);
+	let perMahasiswaK_loader = $("#perMahasiswa-kelas_loader").html(progress);
+	let perMahasiswaN_loader = $("#perMahasiswa-npm_loader").html(progress);
+	let seluruhMateri_loader;
+
+	function pemahamanMateri(nilai){
+		var diagnosis = "-";
+		if( nilai > <?=customConfig::pemahaman[2]?> )
+			diagnosis = "Mudah Dipahami";
+		else if(nilai > <?=customConfig::pemahaman[1]?>)
+			diagnosis = "Cukup Dipahami";
+		else if(nilai != null)
+			diagnosis = "Kurang Dipahami";
+
+		return diagnosis;
+	}
+
 	$(document).ready(function(){
 		$.each($('body').find('select, input'), function(i, v){
 			$(this).val("");
 		});
 		var dataTable_opt = {
-		  "responsive": true,
-		  "autoWidth": false,
-		  "language": {
-			  url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/id.json'
-		  },
-		  "bDestroy": true
+			"responsive": true,
+			"autoWidth": false,
+			"language": {
+				url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/id.json'
+			},
+			"bDestroy": true
 		};
 
 		// Action tab
@@ -505,83 +508,98 @@
 				$.ajax({
 					url: "/api/diagnostics/permateri/" + materi +"/"+ kelas,
 					type: "GET",
+					beforeSend: function(){
+						perMateri_loader.find("progress").show();
+					},
+					complete: function(){
+						perMateri_loader.find("progress").hide();
+					},
 					success: function(msg){
 						if(msg == false){
 							table_draw(tablePerMateri, []);
+							$("#r2_nilaiPerMateri").html("-");
 						}
 						else{
 							$.each(msg, function(i, v){
+								data_temp = [(i+1) + ".", v.npm, v.nama_mhs, v.nilai_akhir, pemahamanMateri(v.nilai_akhir)];
+								tb.push(data_temp);
 								rata_rata += v.nilai_akhir;
 							});
 							rata_rata /= msg.length;
-							$.each(msg, function(i, v){
-								var diagnosis;
-								if( v.nilai_akhir > {{ $pemahaman[2] }} )
-									diagnosis = "Mudah Dipahami";
-								else if(v.nilai_akhir > {{ $pemahaman[1] }})
-									diagnosis = "Cukup Dipahami";
-								else 
-									diagnosis = "Kurang Dipahami";
-								data_temp = [(i+1) + ".", v.npm, v.nama_mhs, v.nilai_akhir, rata_rata, diagnosis];
-								tb.push(data_temp);
-							});
 							table_draw(tablePerMateri, tb);
+							$("#r2_nilaiPerMateri").html(rata_rata);
 						}
 					}
 				})
 				.fail(function(jqXHR, textStatus) {
-				  alert( "Jaringan Error, Coba lagi nanti. (" + textStatus + ")");
+					alert( "Jaringan Error, Coba lagi nanti. (" + textStatus + ")");
 				});
 		}
 
 		// Per Mahasiswa --------------------------------------------------------------
 		tablePerMahasiswa = tablePerMahasiswa.DataTable(dataTable_opt);
 		$('#tabPerMahasiswa [name="kelas"]').change(function(){
-			if($(this).val() == null) return;
+			if($(this).val() == null){
+				table_draw(tablePerMahasiswa, []);
+				return;
+			}
 			var mhs = $('#tabPerMahasiswa [name="npm"]');
 			var data_temp = "<option selected disabled>-- Pilih Mahasiswa</option>";
 			$.ajax({
 				url: "/api/diagnostics/kelas/"+ $(this).val(),
 				type: "GET",
+				beforeSend: function(){
+					perMahasiswaK_loader.find("progress").show();
+				},
+				complete: function(){
+					perMahasiswaK_loader.find("progress").hide();
+				},
 				success: function(msg){
-					if(msg == false) return;
-					$.each(msg, function(i, v){
-						data_temp += '<option value="'+v.npm+'">'+v.npm+'/'+v.nama_mhs+'</option>';
-					});
+					if(msg == false){
+						data_temp = "";
+					}else{
+						$.each(msg, function(i, v){
+							data_temp += '<option value="'+v.npm+'">'+v.npm+'/'+v.nama_mhs+'</option>';
+						});
+					}
 					mhs.html(data_temp);
+					table_draw(tablePerMahasiswa, []);
 				}
 			})
 			.fail(function(jqXHR, textStatus) {
-			  alert( "Jaringan Error, Coba lagi nanti. (" + textStatus + ")");
+				alert( "Jaringan Error, Coba lagi nanti. (" + textStatus + ")");
 			});
 		});
 		$('#tabPerMahasiswa [name="npm"]').change(function(){
-			if($(this).val() == null) return;
+			if($(this).val() == null){
+				table_draw(tablePerMahasiswa, []);
+				return;
+			}
 			var tb = [];
 			var rata_rata = 0.0;
 			var data_temp;
 			var data = $('#tabPerMahasiswa [name="npm"] option:selected').html().split('/');
-			// $('#tabPerMahasiswa .td_npm').html(": " + data[0]);
-			// $('#tabPerMahasiswa .td_namaMhs').html(": " + data[1]);
 			$.ajax({
 				url: "/api/diagnostics/permahasiswa/" + $('#tabPerMahasiswa [name="kelas"]').val() +"/"+ data[0],
 				type: "GET",
+				beforeSend: function(){
+					perMahasiswaN_loader.find("progress").show();
+				},
+				complete: function(){
+					perMahasiswaN_loader.find("progress").hide();
+				},
 				success: function(msg){
-					if(msg == false) return;
+					if(msg == false){
+						table_draw(tablePerMahasiswa, []);
+						return;
+					}
 					$.each(msg.materi, function(i, v){
 						rata_rata += v.nilai_akhir;
 					});
 					rata_rata /= msg.materi.length;
 					$.each(msg.materi, function(i, v){
 						var rata_kelas = msg.rata_rata_kelas[i].rata_rata;
-						var diagnosis;
-						if( v.nilai_akhir > {{ $pemahaman[2] }} )
-							diagnosis = "Mudah Dipahami";
-						else if(v.nilai_akhir > {{ $pemahaman[1] }})
-							diagnosis = "Cukup Dipahami";
-						else 
-							diagnosis = "Kurang Dipahami";
-						data_temp = [v.pertemuan, v.judul_materi, v.nilai_akhir, msg.rata_rata_kelas[i].rata_rata, diagnosis];
+						data_temp = [v.pertemuan + ".", v.judul_materi, v.nilai_akhir, msg.rata_rata_kelas[i].rata_rata, pemahamanMateri(v.nilai_akhir)];
 						tb.push(data_temp);
 					});
 					$('#td_rata2_permhs').html(": " + rata_rata);
@@ -589,16 +607,69 @@
 				}
 			})
 			.fail(function(jqXHR, textStatus) {
-			  alert( "Jaringan Error, Coba lagi nanti. (" + textStatus + ")");
+				alert( "Jaringan Error, Coba lagi nanti. (" + textStatus + ")");
 			});
 		});
 
 		// Seluruh Materi --------------------------------------------------------------
 		var dataTable_opt_temp = dataTable_opt;
+		var form_filter = "#tableSeluruhMateri_length #f_tabSeluruhMateri";
+		dataTable_opt_temp.initComplete = function( settings, json ) {
+			if($(form_filter).length == 0){
+				$("#tableSeluruhMateri_length").append($("data#template_SeluruhMateri .filter_form").html());
+				$("#tableSeluruhMateri_wrapper .row:first").append($("div[for=\"r2SeluruhMateri\"]"));
+				seluruhMateri_loader = $(".seluruhMateri_loader").html(progress);
+				$(form_filter).change(function(){
+					$.ajax({						
+						url: "/api/diagnostics/seluruh_materi/" + $(this).val(),
+								type: "GET",
+						beforeSend: function(){
+							seluruhMateri_loader.find("progress").show();
+						},
+						complete: function(){
+							seluruhMateri_loader.find("progress").hide();
+						},
+						success: function(msg){
+							updateSeluruhMateri(msg);
+						},
+					});
+				});
+			}
+		}
 		tableSeluruhMateri = tableSeluruhMateri.DataTable(dataTable_opt_temp);
+		function updateSeluruhMateri(msg){
+			var tb = [];
+			var materi = [];
+			var rata_rata = 0;
+			var data_temp;
+			var c = 0;
+			chart_data.SeluruhMateri = [];
+			csm.destroy();
+			$.each(msg, function(i, v){
+				rata_rata += v.rata_rata;
+				materi.push(v.judul_materi);
+				chart_data.SeluruhMateri.push(v.rata_rata == null ? 0 : Math.round(v.rata_rata*100)/100);
+				data_temp = [
+					(i+1) + ".",
+					v.judul_materi,
+					v.rata_rata == null ? "-" : Math.round(v.rata_rata*100)/100,
+					pemahamanMateri(v.rata_rata)
+				];
+				tb.push(data_temp);
+				if(v.rata_rata != null) c++;
+			});
+			rata_rata /= c;
+			csm = createChart($("#canvasSeluruhMateri"), materi, chart_data.SeluruhMateri);
+			table_draw(tableSeluruhMateri, tb);
+			$("#r2_nilaiSeluruhMateri").html(Math.round(rata_rata*100)/100);
+		}
 
 		// Seluruh Kelas --------------------------------------------------------------
 		var dataTable_opt_temp = dataTable_opt;
+		dataTable_opt_temp.initComplete = function(){
+			if($("#tableSeluruhKelas_wrapper .row:first div[for=\"r2SeluruhMahasiswa\"]").length == 0)
+				$("#tableSeluruhKelas_wrapper .row:first").append($("div[for=\"r2SeluruhMahasiswa\"]"));
+		}
 		tableSeluruhKelas = tableSeluruhKelas.DataTable(dataTable_opt_temp);
 
 		// Seluruh Mahasiswa --------------------------------------------------------------
@@ -607,69 +678,73 @@
 
 		// Seluruh Soal --------------------------------------------------------------
 		var dataTable_opt_temp = dataTable_opt;
+		dataTable_opt_temp.initComplete = function(){
+			if($("#tableSeluruhSoal_wrapper .row:first div[for=\"r2SeluruhSoal\"]").length == 0)
+				$("#tableSeluruhSoal_wrapper .row:first").append($("div[for=\"r2SeluruhSoal\"]"));
+		}
 		tableSeluruhSoal = tableSeluruhSoal.DataTable(dataTable_opt_temp);
 
 		function table_draw(table, data){
 			table.clear();
-		    table.rows.add(data);
-		    table.draw();
+			table.rows.add(data);
+			table.draw();
 		}
 
 		// Action Chart
 		const canvasSeluruhMateri = $('#canvasSeluruhMateri');
 		const canvasSeluruhKelas = $('#canvasSeluruhKelas');
 		const canvasSeluruhSoal = $('#canvasSeluruhSoal');
-		createChart(canvasSeluruhMateri, [
-        	@foreach($materi as $m)
-        	'{{ $m->judul_materi }}',
-        	@endforeach
-        ], chart_data.SeluruhMateri);
-		createChart(canvasSeluruhKelas, [
-        	@foreach($kelas as $k)
-        	'Kelas {{ $k->kelas }}',
-        	@endforeach
-        ], chart_data.SeluruhKelas);
-		createChart(canvasSeluruhSoal, [<?php $i=1;?>
-        	@foreach($seluruhSoal as $s)
-        	'Soal {{ $i++ }}',
-        	@endforeach
-        ], chart_data.SeluruhSoal);
+		let csm = createChart(canvasSeluruhMateri, [
+			@foreach($materi as $m)
+			'{{ $m->judul_materi }}',
+			@endforeach
+		], chart_data.SeluruhMateri);
+		let csk = createChart(canvasSeluruhKelas, [
+			@foreach($kelas as $k)
+			'Kelas {{ $k->kelas }}',
+			@endforeach
+		], chart_data.SeluruhKelas);
+		let css = createChart(canvasSeluruhSoal, [<?php $i=1;?>
+			@foreach($seluruhSoal as $s)
+			'Soal {{ $i++ }}',
+			@endforeach
+		], chart_data.SeluruhSoal);
 
 		function createChart(id, label_data, data){
 			var data_temp = data.length;
 
-			new Chart(id, {
-			    type: 'bar',
-			    data: {
-			        labels: label_data,
-			        datasets: [{
-			            label: 'Nilai Rata-Rata',
-			            data: data,
-			            borderWidth: 1
-			        }]
-			    },
-			    options: {
-			    	responsive: true,
-				    maintainAspectRatio: false,
-			        scales: {
-				        y: {
-				            beginAtZero: true,
-			                max: 100,
-			                min: 0
-				        }
-			        },
-			        plugins: {
-					    legend: {
-					        display: false
-					    },
-				        autocolors: {
-				        	mode: 'datasets'
-				        }
+			return new Chart(id, {
+				type: 'bar',
+				data: {
+					labels: label_data,
+					datasets: [{
+						label: 'Nilai Rata-Rata',
+						data: data,
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						y: {
+							beginAtZero: true,
+							max: 100,
+							min: 0
+						}
+					},
+					plugins: {
+						legend: {
+							display: false
+						},
+						autocolors: {
+							mode: 'datasets'
+						}
 					}
-			    },
-			    plugins: [
-			    	window['chartjs-plugin-autocolors']
-			    ]
+				},
+				plugins: [
+					window['chartjs-plugin-autocolors']
+				]
 			});
 		}
 	});
